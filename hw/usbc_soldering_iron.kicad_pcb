@@ -349,6 +349,110 @@
 			)
 		)
 	)
+	(footprint "Connector_Wire:SolderWirePad_1x01_SMD_1x2mm"
+		(layer "F.Cu")
+		(uuid "03ff65e9-f8a8-427a-8e75-6d146e2d0035")
+		(at 158.05 139.85)
+		(descr "Wire Pad, Square, SMD Pad,  1mm x 2mm")
+		(tags "MeasurementPoint Square SMDPad 1mmx2mm ")
+		(property "Reference" "J9"
+			(at 0 -2 0)
+			(layer "F.SilkS")
+			(uuid "516770cb-33ba-4ae3-a46c-40a9a1b62163")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Value" "TIP_K"
+			(at 0 2.54 0)
+			(layer "F.Fab")
+			(uuid "2eb9f0dc-a4ee-4ad6-ba94-7cd925092d76")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "fab1b02e-ffe8-442c-bf29-995f1a32d4ee")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "4abc3d61-377c-4eea-a938-6b530004fa07")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property ki_fp_filters "Connector*:*_1x??_*")
+		(path "/a194de68-e0e9-4d02-a739-c6afecbece44")
+		(sheetname "/")
+		(sheetfile "usbc_soldering_iron.kicad_sch")
+		(attr exclude_from_pos_files)
+		(fp_rect
+			(start -0.75 -1.25)
+			(end 0.75 1.25)
+			(stroke
+				(width 0.05)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "e8dc5056-8eaf-4bce-8a8d-fa9f3997ea7e")
+		)
+		(fp_rect
+			(start -0.65 -1.15)
+			(end 0.65 1.15)
+			(stroke
+				(width 0.1)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.Fab")
+			(uuid "84e20d2e-3bf0-4c1a-b914-3ccc53d421e7")
+		)
+		(fp_text user "${REFERENCE}"
+			(at 0 0 0)
+			(layer "F.Fab")
+			(uuid "b5c7958a-1c8f-4896-9276-8f4c85bd788b")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(pad "1" smd roundrect
+			(at 0 0)
+			(size 1 2)
+			(layers "F.Cu" "F.Mask")
+			(roundrect_rratio 0.25)
+			(net 26 "/TIP_K")
+			(pinfunction "Pin_1")
+			(pintype "passive")
+			(uuid "2c695185-6149-4f33-ace5-7a1a4f66876d")
+		)
+		(embedded_fonts no)
+	)
 	(footprint "Capacitor_SMD:C_0603_1608Metric"
 		(layer "F.Cu")
 		(uuid "06584ec1-a149-4de4-b036-f3513de21400")
@@ -1080,6 +1184,110 @@
 				(xyz 0 0 0)
 			)
 		)
+	)
+	(footprint "Connector_Wire:SolderWirePad_1x01_SMD_1x2mm"
+		(layer "F.Cu")
+		(uuid "1742b295-9dbd-4ba4-aa97-d4459e9e9aea")
+		(at 165.7 136.3)
+		(descr "Wire Pad, Square, SMD Pad,  1mm x 2mm")
+		(tags "MeasurementPoint Square SMDPad 1mmx2mm ")
+		(property "Reference" "J8"
+			(at 0 -2 0)
+			(layer "F.SilkS")
+			(uuid "ca34dfb6-e24d-421b-a986-5c1e556a3f40")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Value" "TIP_H"
+			(at 0 2.54 0)
+			(layer "F.Fab")
+			(uuid "ee0b83f2-0a59-4b06-a110-6f9669b05ab8")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "18e40787-12b3-43fb-81e7-982db5623706")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "e3df7ea6-eed2-460e-a790-0b1656c65bb3")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property ki_fp_filters "Connector*:*_1x??_*")
+		(path "/fc247b4e-0891-4fda-b1a2-694e9535205c")
+		(sheetname "/")
+		(sheetfile "usbc_soldering_iron.kicad_sch")
+		(attr exclude_from_pos_files)
+		(fp_rect
+			(start -0.75 -1.25)
+			(end 0.75 1.25)
+			(stroke
+				(width 0.05)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "769ad8c3-10ea-47c7-87e6-2a614bf13b01")
+		)
+		(fp_rect
+			(start -0.65 -1.15)
+			(end 0.65 1.15)
+			(stroke
+				(width 0.1)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.Fab")
+			(uuid "5519f8ec-c593-4557-8de3-8b76865cb7f9")
+		)
+		(fp_text user "${REFERENCE}"
+			(at 0 0 0)
+			(layer "F.Fab")
+			(uuid "979bc897-2236-4778-83ee-e282bc368574")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(pad "1" smd roundrect
+			(at 0 0)
+			(size 1 2)
+			(layers "F.Cu" "F.Mask")
+			(roundrect_rratio 0.25)
+			(net 19 "/TIP_H")
+			(pinfunction "Pin_1")
+			(pintype "passive")
+			(uuid "2dbd4224-33d7-4b4e-8380-cf07e42d6202")
+		)
+		(embedded_fonts no)
 	)
 	(footprint "Resistor_SMD:R_0603_1608Metric"
 		(layer "F.Cu")
@@ -2034,6 +2242,110 @@
 			)
 		)
 	)
+	(footprint "Connector_Wire:SolderWirePad_1x01_SMD_1x2mm"
+		(layer "F.Cu")
+		(uuid "2faf8d7d-0fa8-48b4-bcfd-4b61e2fcc41a")
+		(at 160.6 139.85)
+		(descr "Wire Pad, Square, SMD Pad,  1mm x 2mm")
+		(tags "MeasurementPoint Square SMDPad 1mmx2mm ")
+		(property "Reference" "J10"
+			(at 0 -2 0)
+			(layer "F.SilkS")
+			(uuid "d8440ae9-d7b7-4d9c-abef-82c584f82f50")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Value" "TIP_L"
+			(at 0 2.54 0)
+			(layer "F.Fab")
+			(uuid "481ff2f9-d9dc-4712-af3c-0ae236a53e51")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "33888e0a-8e99-4d93-8442-a29fa177aa65")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "e99ab542-2a3c-4a44-b4a4-87be6881fc13")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property ki_fp_filters "Connector*:*_1x??_*")
+		(path "/36e23f46-3e36-4d6b-9ae7-c7efcdd503bb")
+		(sheetname "/")
+		(sheetfile "usbc_soldering_iron.kicad_sch")
+		(attr exclude_from_pos_files)
+		(fp_rect
+			(start -0.75 -1.25)
+			(end 0.75 1.25)
+			(stroke
+				(width 0.05)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "0c618183-9ea8-4755-af43-69b93fbd98d7")
+		)
+		(fp_rect
+			(start -0.65 -1.15)
+			(end 0.65 1.15)
+			(stroke
+				(width 0.1)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.Fab")
+			(uuid "c43acb02-94f2-4082-881c-6e17238b493d")
+		)
+		(fp_text user "${REFERENCE}"
+			(at 0 0 0)
+			(layer "F.Fab")
+			(uuid "8f7a5ef6-9c00-4257-a037-7727ebeba476")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(pad "1" smd roundrect
+			(at 0 0)
+			(size 1 2)
+			(layers "F.Cu" "F.Mask")
+			(roundrect_rratio 0.25)
+			(net 62 "/SHUNT_H")
+			(pinfunction "Pin_1")
+			(pintype "passive")
+			(uuid "18f1018c-fcda-4f7f-8c6c-9e5962131ce4")
+		)
+		(embedded_fonts no)
+	)
 	(footprint "Capacitor_SMD:C_0603_1608Metric"
 		(layer "F.Cu")
 		(uuid "30813640-ecab-48e1-b260-a5ddc868aa56")
@@ -2601,6 +2913,110 @@
 				(xyz 0 0 0)
 			)
 		)
+	)
+	(footprint "Connector_Wire:SolderWirePad_1x01_SMD_1x2mm"
+		(layer "F.Cu")
+		(uuid "3a129071-3032-45c4-a946-72c909ad20b0")
+		(at 163.15 139.85)
+		(descr "Wire Pad, Square, SMD Pad,  1mm x 2mm")
+		(tags "MeasurementPoint Square SMDPad 1mmx2mm ")
+		(property "Reference" "J11"
+			(at 0 -2 0)
+			(layer "F.SilkS")
+			(uuid "3507df80-8c6e-401a-9a49-53e5679d066b")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Value" "TIP_H"
+			(at 0 2.54 0)
+			(layer "F.Fab")
+			(uuid "e80e5748-8e21-4ea4-9ca7-50b3ab6ffa89")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "9641de79-8f37-476b-b919-c8c8fd1d294e")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "9b70b6b6-1601-47ed-af1f-4d6fd21e10b3")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property ki_fp_filters "Connector*:*_1x??_*")
+		(path "/5857f7ef-b692-4139-a789-8ff6d7faa14c")
+		(sheetname "/")
+		(sheetfile "usbc_soldering_iron.kicad_sch")
+		(attr exclude_from_pos_files)
+		(fp_rect
+			(start -0.75 -1.25)
+			(end 0.75 1.25)
+			(stroke
+				(width 0.05)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "5a8e2980-2dd8-437f-b585-9c5bd7513680")
+		)
+		(fp_rect
+			(start -0.65 -1.15)
+			(end 0.65 1.15)
+			(stroke
+				(width 0.1)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.Fab")
+			(uuid "ebfc1d05-13bb-4682-aa19-0905e4edf68f")
+		)
+		(fp_text user "${REFERENCE}"
+			(at 0 0 0)
+			(layer "F.Fab")
+			(uuid "1dd9ff39-3d1a-4ff5-abce-99ed120cc5f4")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(pad "1" smd roundrect
+			(at 0 0)
+			(size 1 2)
+			(layers "F.Cu" "F.Mask")
+			(roundrect_rratio 0.25)
+			(net 19 "/TIP_H")
+			(pinfunction "Pin_1")
+			(pintype "passive")
+			(uuid "f8e010ab-d953-4b0e-b1c9-04ff3d949ca2")
+		)
+		(embedded_fonts no)
 	)
 	(footprint "Capacitor_SMD:C_0805_2012Metric"
 		(layer "F.Cu")
@@ -3554,6 +3970,110 @@
 			)
 		)
 	)
+	(footprint "Connector_Wire:SolderWirePad_1x01_SMD_1x2mm"
+		(layer "F.Cu")
+		(uuid "45d90a12-1a15-4eaf-bce7-3fed9e0e69ea")
+		(at 165.7 143.4)
+		(descr "Wire Pad, Square, SMD Pad,  1mm x 2mm")
+		(tags "MeasurementPoint Square SMDPad 1mmx2mm ")
+		(property "Reference" "J16"
+			(at 0 -2 0)
+			(layer "F.SilkS")
+			(uuid "1993973b-9688-4ff2-8b30-f666dc829228")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Value" "TIP_L"
+			(at 0 2.54 0)
+			(layer "F.Fab")
+			(uuid "a46d5878-a3cb-497b-b3dd-4f2228306cc7")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "2677b0af-e4a4-42fe-aa34-ded5fe58197d")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "4aef43a4-f991-4e4a-b221-eb7bc5c79b3e")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property ki_fp_filters "Connector*:*_1x??_*")
+		(path "/e54bf41f-198b-4ec4-86d6-4084a6e8543b")
+		(sheetname "/")
+		(sheetfile "usbc_soldering_iron.kicad_sch")
+		(attr exclude_from_pos_files)
+		(fp_rect
+			(start -0.75 -1.25)
+			(end 0.75 1.25)
+			(stroke
+				(width 0.05)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "b0ea7cca-847a-4efb-9020-6f1cce006890")
+		)
+		(fp_rect
+			(start -0.65 -1.15)
+			(end 0.65 1.15)
+			(stroke
+				(width 0.1)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.Fab")
+			(uuid "8ca2cba7-ab3d-45e5-952d-e7d435b69a34")
+		)
+		(fp_text user "${REFERENCE}"
+			(at 0 0 0)
+			(layer "F.Fab")
+			(uuid "433b89b4-56ed-4e14-8685-63c1016f01fd")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(pad "1" smd roundrect
+			(at 0 0)
+			(size 1 2)
+			(layers "F.Cu" "F.Mask")
+			(roundrect_rratio 0.25)
+			(net 62 "/SHUNT_H")
+			(pinfunction "Pin_1")
+			(pintype "passive")
+			(uuid "2b56c5e6-9ca0-4444-b877-c5bf2292a6b5")
+		)
+		(embedded_fonts no)
+	)
 	(footprint "Capacitor_SMD:C_0603_1608Metric"
 		(layer "F.Cu")
 		(uuid "48c336ac-a015-48fa-a064-a24d90d0b166")
@@ -3695,6 +4215,110 @@
 				(xyz 0 0 0)
 			)
 		)
+	)
+	(footprint "Connector_Wire:SolderWirePad_1x01_SMD_1x2mm"
+		(layer "F.Cu")
+		(uuid "507ea52f-e734-49ef-b9e9-4647c968f0b4")
+		(at 163.15 143.4)
+		(descr "Wire Pad, Square, SMD Pad,  1mm x 2mm")
+		(tags "MeasurementPoint Square SMDPad 1mmx2mm ")
+		(property "Reference" "J15"
+			(at 0 -2 0)
+			(layer "F.SilkS")
+			(uuid "1195e8db-f49e-4a74-9603-097f511dcf2a")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Value" "TIP_K"
+			(at 0 2.54 0)
+			(layer "F.Fab")
+			(uuid "228872ef-b1fb-4a27-8888-f0594567486b")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "e63159e3-a4d3-4c00-ae84-2c6f36f87891")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "2ebcdbae-fa22-4591-a4eb-bd19bc37ac01")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property ki_fp_filters "Connector*:*_1x??_*")
+		(path "/12199ef4-103c-420c-aa3a-aa60f648c844")
+		(sheetname "/")
+		(sheetfile "usbc_soldering_iron.kicad_sch")
+		(attr exclude_from_pos_files)
+		(fp_rect
+			(start -0.75 -1.25)
+			(end 0.75 1.25)
+			(stroke
+				(width 0.05)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "37ba6d8a-e030-4831-b7f4-9eb55b57f1ab")
+		)
+		(fp_rect
+			(start -0.65 -1.15)
+			(end 0.65 1.15)
+			(stroke
+				(width 0.1)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.Fab")
+			(uuid "5557146b-1f28-41fc-8f2b-a4043d1fc55e")
+		)
+		(fp_text user "${REFERENCE}"
+			(at 0 0 0)
+			(layer "F.Fab")
+			(uuid "a69387f1-f734-4c72-8375-5eddfd9c5b8a")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(pad "1" smd roundrect
+			(at 0 0)
+			(size 1 2)
+			(layers "F.Cu" "F.Mask")
+			(roundrect_rratio 0.25)
+			(net 26 "/TIP_K")
+			(pinfunction "Pin_1")
+			(pintype "passive")
+			(uuid "a866617c-f2b2-49c1-a389-46ffbb44fa8f")
+		)
+		(embedded_fonts no)
 	)
 	(footprint "Connector_USB:USB_C_Receptacle_G-Switch_GT-USB-7025"
 		(layer "F.Cu")
@@ -4219,6 +4843,110 @@
 			)
 		)
 	)
+	(footprint "Connector_Wire:SolderWirePad_1x01_SMD_1x2mm"
+		(layer "F.Cu")
+		(uuid "559ff84a-7f77-42ab-bff1-c940fc2608a5")
+		(at 160.6 136.3)
+		(descr "Wire Pad, Square, SMD Pad,  1mm x 2mm")
+		(tags "MeasurementPoint Square SMDPad 1mmx2mm ")
+		(property "Reference" "J6"
+			(at 0 -2 0)
+			(layer "F.SilkS")
+			(uuid "54bee48a-daf2-4252-ad3c-64195910e9fe")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Value" "TIP_K"
+			(at 0 2.54 0)
+			(layer "F.Fab")
+			(uuid "49a61504-f184-46a6-9feb-d28c2e06fd7a")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "4343fc3f-158e-4115-afd3-15e0ad66e597")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "4eaac01d-0018-4f1f-bf6e-b51db9fd6b0f")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property ki_fp_filters "Connector*:*_1x??_*")
+		(path "/22ef89ed-937a-465f-ab2d-5398f01ce2bf")
+		(sheetname "/")
+		(sheetfile "usbc_soldering_iron.kicad_sch")
+		(attr exclude_from_pos_files)
+		(fp_rect
+			(start -0.75 -1.25)
+			(end 0.75 1.25)
+			(stroke
+				(width 0.05)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "00c79e7e-436f-4a32-9547-cd325996b78d")
+		)
+		(fp_rect
+			(start -0.65 -1.15)
+			(end 0.65 1.15)
+			(stroke
+				(width 0.1)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.Fab")
+			(uuid "1be5cb51-7f73-45df-bc2d-b80174fac74e")
+		)
+		(fp_text user "${REFERENCE}"
+			(at 0 0 0)
+			(layer "F.Fab")
+			(uuid "bd35defb-3565-40ff-8969-f4688114ef8c")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(pad "1" smd roundrect
+			(at 0 0)
+			(size 1 2)
+			(layers "F.Cu" "F.Mask")
+			(roundrect_rratio 0.25)
+			(net 26 "/TIP_K")
+			(pinfunction "Pin_1")
+			(pintype "passive")
+			(uuid "ede8f2d0-4c76-4fc6-b12e-839165142fce")
+		)
+		(embedded_fonts no)
+	)
 	(footprint "Resistor_SMD:R_0603_1608Metric"
 		(layer "F.Cu")
 		(uuid "58ac7d45-d038-41d5-aacd-b701880cf3a9")
@@ -4360,6 +5088,110 @@
 				(xyz 0 0 0)
 			)
 		)
+	)
+	(footprint "Connector_Wire:SolderWirePad_1x01_SMD_1x2mm"
+		(layer "F.Cu")
+		(uuid "5a06a14f-0221-49fd-ad7e-b827fa004dfb")
+		(at 165.7 139.85)
+		(descr "Wire Pad, Square, SMD Pad,  1mm x 2mm")
+		(tags "MeasurementPoint Square SMDPad 1mmx2mm ")
+		(property "Reference" "J12"
+			(at 0 -2 0)
+			(layer "F.SilkS")
+			(uuid "cf2dc2e4-f118-4d78-b37f-d981ce366fbd")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Value" "TIP_K"
+			(at 0 2.54 0)
+			(layer "F.Fab")
+			(uuid "619ae91b-c106-4b53-91db-4e872758a039")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "603f388f-ee80-4715-83dc-d540e217c5e5")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "78b116ac-5f11-4785-b0db-8d5cc81b60bc")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property ki_fp_filters "Connector*:*_1x??_*")
+		(path "/520e5043-a4f0-438e-8f5b-101cfa82cb83")
+		(sheetname "/")
+		(sheetfile "usbc_soldering_iron.kicad_sch")
+		(attr exclude_from_pos_files)
+		(fp_rect
+			(start -0.75 -1.25)
+			(end 0.75 1.25)
+			(stroke
+				(width 0.05)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "03e50614-9598-4ed3-b8fb-d6d8736f4497")
+		)
+		(fp_rect
+			(start -0.65 -1.15)
+			(end 0.65 1.15)
+			(stroke
+				(width 0.1)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.Fab")
+			(uuid "cae0ee8a-69f2-4cb8-b575-6785be93d958")
+		)
+		(fp_text user "${REFERENCE}"
+			(at 0 0 0)
+			(layer "F.Fab")
+			(uuid "3201b4f1-df58-4be0-a839-fc9e7f0d5d5d")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(pad "1" smd roundrect
+			(at 0 0)
+			(size 1 2)
+			(layers "F.Cu" "F.Mask")
+			(roundrect_rratio 0.25)
+			(net 26 "/TIP_K")
+			(pinfunction "Pin_1")
+			(pintype "passive")
+			(uuid "73e7040e-b091-45bf-a0d9-edb27030a1c7")
+		)
+		(embedded_fonts no)
 	)
 	(footprint "Capacitor_SMD:C_0603_1608Metric"
 		(layer "F.Cu")
@@ -8159,6 +8991,110 @@
 			)
 		)
 	)
+	(footprint "Connector_Wire:SolderWirePad_1x01_SMD_1x2mm"
+		(layer "F.Cu")
+		(uuid "93fb7f29-e94b-4a8f-8fae-451df545afae")
+		(at 163.15 136.3)
+		(descr "Wire Pad, Square, SMD Pad,  1mm x 2mm")
+		(tags "MeasurementPoint Square SMDPad 1mmx2mm ")
+		(property "Reference" "J7"
+			(at 0 -2 0)
+			(layer "F.SilkS")
+			(uuid "04ebfc24-bf14-4bc5-98e5-9ce3e0149fa1")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Value" "TIP_L"
+			(at 0 2.54 0)
+			(layer "F.Fab")
+			(uuid "0b3c1db9-bc18-46cc-b500-947f18e0532d")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "12ccd121-ce79-4bd6-acec-aff1ea0985d1")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "899e0adf-4eda-4596-9358-f97689348c6d")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property ki_fp_filters "Connector*:*_1x??_*")
+		(path "/b69d3025-bf14-4417-b0b8-abb696e5b553")
+		(sheetname "/")
+		(sheetfile "usbc_soldering_iron.kicad_sch")
+		(attr exclude_from_pos_files)
+		(fp_rect
+			(start -0.75 -1.25)
+			(end 0.75 1.25)
+			(stroke
+				(width 0.05)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "0e9559d9-5452-4f93-a1ab-257791b2a608")
+		)
+		(fp_rect
+			(start -0.65 -1.15)
+			(end 0.65 1.15)
+			(stroke
+				(width 0.1)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.Fab")
+			(uuid "04f39571-818d-48b7-827b-4125c9ffded0")
+		)
+		(fp_text user "${REFERENCE}"
+			(at 0 0 0)
+			(layer "F.Fab")
+			(uuid "0345a495-83f3-4599-a5a3-7289ac0eefd3")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(pad "1" smd roundrect
+			(at 0 0)
+			(size 1 2)
+			(layers "F.Cu" "F.Mask")
+			(roundrect_rratio 0.25)
+			(net 62 "/SHUNT_H")
+			(pinfunction "Pin_1")
+			(pintype "passive")
+			(uuid "b5412666-f305-4898-9db9-d8285b564ecb")
+		)
+		(embedded_fonts no)
+	)
 	(footprint "Capacitor_SMD:C_0603_1608Metric"
 		(layer "F.Cu")
 		(uuid "96a68f5f-285c-40ac-b8be-70a171e5200c")
@@ -8566,6 +9502,110 @@
 				(xyz 0 0 0)
 			)
 		)
+	)
+	(footprint "Connector_Wire:SolderWirePad_1x01_SMD_1x2mm"
+		(layer "F.Cu")
+		(uuid "9c98b0ec-ca42-4a60-a838-c88a06a9c1cf")
+		(at 158.05 136.3)
+		(descr "Wire Pad, Square, SMD Pad,  1mm x 2mm")
+		(tags "MeasurementPoint Square SMDPad 1mmx2mm ")
+		(property "Reference" "J5"
+			(at 0 -2 0)
+			(layer "F.SilkS")
+			(uuid "8b5340d3-e83c-49ba-ac63-5d844740510b")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Value" "TIP_H"
+			(at 0 2.54 0)
+			(layer "F.Fab")
+			(uuid "847f885a-11a5-48a0-9ef0-cde561305193")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "68029ee4-464a-4426-b710-c6da13b6fa4a")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "59c33ad7-8996-4bee-beda-6d81f1ebfb1b")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property ki_fp_filters "Connector*:*_1x??_*")
+		(path "/06c20382-7aa6-4a30-afe5-a5dc52e23f3a")
+		(sheetname "/")
+		(sheetfile "usbc_soldering_iron.kicad_sch")
+		(attr exclude_from_pos_files)
+		(fp_rect
+			(start -0.75 -1.25)
+			(end 0.75 1.25)
+			(stroke
+				(width 0.05)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "698f2573-b47f-4e63-a7ff-91c434f211fb")
+		)
+		(fp_rect
+			(start -0.65 -1.15)
+			(end 0.65 1.15)
+			(stroke
+				(width 0.1)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.Fab")
+			(uuid "607060be-5110-49ef-8817-b86ea77effce")
+		)
+		(fp_text user "${REFERENCE}"
+			(at 0 0 0)
+			(layer "F.Fab")
+			(uuid "b73c07f3-a6f2-4e58-a164-a1af23ee6324")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(pad "1" smd roundrect
+			(at 0 0)
+			(size 1 2)
+			(layers "F.Cu" "F.Mask")
+			(roundrect_rratio 0.25)
+			(net 19 "/TIP_H")
+			(pinfunction "Pin_1")
+			(pintype "passive")
+			(uuid "e492db84-9284-4d63-a5d0-4acd48ce7aa9")
+		)
+		(embedded_fonts no)
 	)
 	(footprint "Capacitor_SMD:C_0603_1608Metric"
 		(layer "F.Cu")
@@ -9803,6 +10843,110 @@
 			)
 		)
 	)
+	(footprint "Connector_Wire:SolderWirePad_1x01_SMD_1x2mm"
+		(layer "F.Cu")
+		(uuid "af0fe53e-f4fe-465a-b4bb-04290098a84a")
+		(at 160.6 143.4)
+		(descr "Wire Pad, Square, SMD Pad,  1mm x 2mm")
+		(tags "MeasurementPoint Square SMDPad 1mmx2mm ")
+		(property "Reference" "J14"
+			(at 0 -2 0)
+			(layer "F.SilkS")
+			(uuid "b5c92f22-8114-4851-9df1-848faf835dce")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Value" "TIP_H"
+			(at 0 2.54 0)
+			(layer "F.Fab")
+			(uuid "b8b0752c-d9bd-4f14-a6fb-b7fc2ffab797")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "66f51c07-a863-45c9-9925-a2a0685fefe4")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "7b5dff35-6070-4a84-aa49-37f88332f0d0")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property ki_fp_filters "Connector*:*_1x??_*")
+		(path "/62cff932-4d2a-4ca7-8010-a89805411780")
+		(sheetname "/")
+		(sheetfile "usbc_soldering_iron.kicad_sch")
+		(attr exclude_from_pos_files)
+		(fp_rect
+			(start -0.75 -1.25)
+			(end 0.75 1.25)
+			(stroke
+				(width 0.05)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "1fe96936-b8f7-459c-8d8b-85b939b30eb7")
+		)
+		(fp_rect
+			(start -0.65 -1.15)
+			(end 0.65 1.15)
+			(stroke
+				(width 0.1)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.Fab")
+			(uuid "3fdbdcc8-3fcd-4148-a232-9564cc35807e")
+		)
+		(fp_text user "${REFERENCE}"
+			(at 0 0 0)
+			(layer "F.Fab")
+			(uuid "983d6224-6ea8-42f7-b8c7-94aa4dafd53f")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(pad "1" smd roundrect
+			(at 0 0)
+			(size 1 2)
+			(layers "F.Cu" "F.Mask")
+			(roundrect_rratio 0.25)
+			(net 19 "/TIP_H")
+			(pinfunction "Pin_1")
+			(pintype "passive")
+			(uuid "3cae562f-0fc0-4ec4-8ecd-cb5bb2975229")
+		)
+		(embedded_fonts no)
+	)
 	(footprint "Capacitor_SMD:C_0805_2012Metric"
 		(layer "F.Cu")
 		(uuid "b374da10-9e5f-4bef-973b-7b20bf6f796f")
@@ -10763,106 +11907,6 @@
 			)
 		)
 	)
-	(footprint "MountingHole:MountingHole_2.2mm_M2"
-		(layer "F.Cu")
-		(uuid "ba8ac209-c2ca-4fa1-b5c8-8ab903017781")
-		(at 184.9 152.7)
-		(descr "Mounting Hole 2.2mm, M2, no annular, generated by kicad-footprint-generator mountinghole.py")
-		(tags "mountinghole M2")
-		(property "Reference" "H2"
-			(at 0 -3.15 0)
-			(layer "F.SilkS")
-			(hide yes)
-			(uuid "0139e568-4b42-459e-83c5-a505dbba9023")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Value" "MountingHole"
-			(at 0 3.15 0)
-			(layer "F.Fab")
-			(uuid "2c41ab83-2e9e-42c5-84ca-ab5930dec3e6")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 0 0 0)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "86b4fece-6eed-48e0-a37e-819e77ce1308")
-			(effects
-				(font
-					(size 1.27 1.27)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property "Description" "Mounting Hole without connection"
-			(at 0 0 0)
-			(layer "F.Fab")
-			(hide yes)
-			(uuid "97fa30ed-5e39-4c49-8816-749b4530e54c")
-			(effects
-				(font
-					(size 1.27 1.27)
-					(thickness 0.15)
-				)
-			)
-		)
-		(property ki_fp_filters "MountingHole*")
-		(path "/86a36a92-93c2-48e5-ba4a-8cb8127f0353")
-		(sheetname "/")
-		(sheetfile "usbc_soldering_iron.kicad_sch")
-		(attr exclude_from_pos_files exclude_from_bom)
-		(fp_circle
-			(center 0 0)
-			(end 2.2 0)
-			(stroke
-				(width 0.15)
-				(type solid)
-			)
-			(fill no)
-			(layer "Cmts.User")
-			(uuid "f436ed8e-914e-4e89-bed0-fb5f5bd476de")
-		)
-		(fp_circle
-			(center 0 0)
-			(end 2.45 0)
-			(stroke
-				(width 0.05)
-				(type solid)
-			)
-			(fill no)
-			(layer "F.CrtYd")
-			(uuid "d788be71-0e16-4fa8-852a-e91bfa0cef99")
-		)
-		(fp_text user "${REFERENCE}"
-			(at 0 0 0)
-			(layer "F.Fab")
-			(uuid "e6b7cd11-6eaf-477c-8bbe-e8f9b99faaab")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
-		(pad "" np_thru_hole circle
-			(at 0 0)
-			(size 2.2 2.2)
-			(drill 2.2)
-			(layers "*.Cu" "*.Mask")
-			(uuid "1f7c66b0-e7c4-496b-bb1b-5e4354df5bb8")
-		)
-		(embedded_fonts no)
-	)
 	(footprint "Resistor_SMD:R_0603_1608Metric"
 		(layer "F.Cu")
 		(uuid "c1c72d86-3eb3-431c-81e8-23cacfa50658")
@@ -11258,6 +12302,110 @@
 				(xyz 0 0 0)
 			)
 		)
+	)
+	(footprint "Connector_Wire:SolderWirePad_1x01_SMD_1x2mm"
+		(layer "F.Cu")
+		(uuid "c3ad0d4e-7a2e-4ac5-a05b-6b4a301b545b")
+		(at 158.05 143.4)
+		(descr "Wire Pad, Square, SMD Pad,  1mm x 2mm")
+		(tags "MeasurementPoint Square SMDPad 1mmx2mm ")
+		(property "Reference" "J13"
+			(at 0 -2 0)
+			(layer "F.SilkS")
+			(uuid "30489e82-40bc-4f27-be1f-db861d054dab")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Value" "TIP_L"
+			(at 0 2.54 0)
+			(layer "F.Fab")
+			(uuid "b5c1e14d-a45f-45fb-b383-6b0841eb35cb")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "f598caf4-48a8-4370-b899-ec83b7e6c4e6")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "076da915-d3f9-4da8-ae98-ce0d314c9563")
+			(effects
+				(font
+					(size 1.27 1.27)
+					(thickness 0.15)
+				)
+			)
+		)
+		(property ki_fp_filters "Connector*:*_1x??_*")
+		(path "/dcdaa0dc-4397-4817-9cae-eaef69ae7bdd")
+		(sheetname "/")
+		(sheetfile "usbc_soldering_iron.kicad_sch")
+		(attr exclude_from_pos_files)
+		(fp_rect
+			(start -0.75 -1.25)
+			(end 0.75 1.25)
+			(stroke
+				(width 0.05)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.CrtYd")
+			(uuid "eff87eee-2798-4e66-894e-ac07ce99ca82")
+		)
+		(fp_rect
+			(start -0.65 -1.15)
+			(end 0.65 1.15)
+			(stroke
+				(width 0.1)
+				(type solid)
+			)
+			(fill no)
+			(layer "F.Fab")
+			(uuid "c596e207-df94-49d2-a114-7ca47a99fef9")
+		)
+		(fp_text user "${REFERENCE}"
+			(at 0 0 0)
+			(layer "F.Fab")
+			(uuid "dd2de8d2-83a5-49bf-a00d-c684a83a9f09")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
+		(pad "1" smd roundrect
+			(at 0 0)
+			(size 1 2)
+			(layers "F.Cu" "F.Mask")
+			(roundrect_rratio 0.25)
+			(net 62 "/SHUNT_H")
+			(pinfunction "Pin_1")
+			(pintype "passive")
+			(uuid "dd8d3316-4ac3-4588-a0c8-a340161e09e1")
+		)
+		(embedded_fonts no)
 	)
 	(footprint "Button_Switch_SMD:SW_SPST_TS-1088-xR020"
 		(layer "F.Cu")
