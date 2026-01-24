@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="34.986000000000004mm"
+   height="6.186mm"
+   viewBox="0 0 34.986000000000004 6.186"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="c245-903-TipSketch001.svg"
+   inkscape:version="1.4.3 (0d15f75042, 2025-12-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="8.9767454"
+     inkscape:cx="96.638587"
+     inkscape:cy="29.68782"
+     inkscape:window-width="1920"
+     inkscape:window-height="1052"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1" />
+  <g
+     id="Part__Part2DObjectPython"
+     transform="translate(-14.057000,3.093000) scale(1,-1)">
+    <path
+       id="Part__Part2DObjectPython_w0000"
+       d="M 42.7 -1.5 L 48.7 -1.5 L 48.7 1.5 L 42.7 1.5 L 42.7 -1.5 "
+       stroke="#f1f3f5"
+       stroke-width="0.7 px"
+       style="stroke-width:0.1;stroke-miterlimit:4;stroke-dasharray:none;stroke-linecap:square;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000" />
+    <path
+       id="Part__Part2DObjectPython_w0001"
+       d="M 30.2 -2.0 L 38.2 -2.0 L 38.2 2.0 L 30.2 2.0 L 30.2 -2.0 "
+       stroke="#f1f3f5"
+       stroke-width="0.7 px"
+       style="stroke-width:0.1;stroke-miterlimit:4;stroke-dasharray:none;stroke-linecap:square;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000" />
+    <path
+       id="Part__Part2DObjectPython_w0002"
+       d="M 14.399999999999999 -2.75 L 22.4 -2.75 L 22.4 2.75 L 14.399999999999999 2.75 L 14.399999999999999 -2.75 "
+       stroke="#f1f3f5"
+       stroke-width="0.7 px"
+       style="stroke-width:0.1;stroke-miterlimit:4;stroke-dasharray:none;stroke-linecap:square;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000" />
+    <title
+       id="title1">b'Part__Part2DObjectPython'</title>
+  </g>
+</svg>
