@@ -16785,15 +16785,15 @@
 	(symbol
 		(lib_id "Transistor_FET:DMP3013SFV")
 		(at 302.26 165.1 0)
+		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "73fe4467-b39b-4d44-a54e-32c3bebc2772")
 		(property "Reference" "Q2"
-			(at 308.61 163.8299 0)
+			(at 308.61 166.3701 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16802,7 +16802,7 @@
 			)
 		)
 		(property "Value" "DMP3013SFV"
-			(at 308.61 166.3699 0)
+			(at 308.61 163.8301 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16811,7 +16811,7 @@
 			)
 		)
 		(property "Footprint" "Package_SON:Diodes_PowerDI3333-8"
-			(at 307.34 167.005 0)
+			(at 307.34 163.195 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16822,7 +16822,7 @@
 			)
 		)
 		(property "Datasheet" "https://www.diodes.com/assets/Datasheets/DMP3013SFV.pdf"
-			(at 307.34 168.91 0)
+			(at 307.34 161.29 0)
 			(effects
 				(font
 					(size 1.27 1.27)
