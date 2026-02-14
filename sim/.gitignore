@@ -3,3 +3,4 @@
 *.op.raw
 *.net
 *.plt
+*.fft
