@@ -4,59 +4,14 @@
 - https://www.printables.com/model/1548831-miniware-ts21/files modello a dimensione vera di un ts21, utile per confrontare le dimensioni
 - https://www.printables.com/model/1435424-sliding-box-for-miniware-ts21 case per ts21 con storage per punte
 
-## Monitoring della Potenza di Uscita
 
-Tocca necessariamente leggere la tensione di uscita e la corrente. Posso leggerla sia in ingresso che in uscita, solo uscita o solo ingresso.
-
-Monitoring della tensione:
-
-- Partitore resistivo: non costa nulla e va bene
-- Minitoring della corrente: va fatto in high-side (per non rompere il percordo di terra), quindi la tensione a modo comune sulla resistenza di shunt è comparabile con la VBUS. Ci sono pochi operazionali che vanno bene e in generale ho veramente poco spazio.
-    - Opzione con operazionali: alto numero di componenti, almeno 5 resistenze, due condensatori e l’operazionale, basso costo solo forse.
-    - Opzione con integrato: pochi componenti ma il costo diventa di almeno 1 euro per componente.
-
-Di monitor di corrente esistono con uscita di tensione, uscita di corrente o uscita digitale.
-
-- [TPA191A2](https://static.3peak.com/res/doc/ds/Datasheet_TPA191.pdf), amplificatore per resistenze di shunt che supporta resistenze molto piccole (6mOmh), basso drift e anche basso costo. Però deo usare un pin dell’ADC integrato del micro.
-- [INA230](https://www.lcsc.com/product-detail/C882784.html), monitor di potenza, legge sia tensione che corrente con una resistenza di shunt, funziona sia in high side che low side e comunica con I2C. Costa circa 4 volte tanto.
-
-# Contatti per la Punta
-
-- https://gemini.google.com/u/1/app/e4471496c44c6df4?redirect=home&hl=it-CH&pageId=none, https://docs.google.com/document/d/1U8rUoMMFAPvZ7w_13txEcqI1aR3U4lESME8EN6RBatY/edit?pli=1&tab=t.0
-- https://gemini.google.com/u/1/app/d3044d69355f695f?pageId=none
-
-## Induttori
-
-In ogni caso gli induttori sono esterni.
-
-<aside>
-⚠️
-
-~~Alcuni modelli:~~ DIVERSO DA QUELLI NUOVI
-
-- https://www.lcsc.com/product-detail/C49232924.html
-- https://www.lcsc.com/product-detail/C51883189.html
-- https://www.lcsc.com/product-detail/C52128625.html
-- https://www.lcsc.com/product-detail/C22446690.html
-</aside>
-
-Dalla dimensione dell’induttore si determina poi la frequenza di switching, la capacità di ingresso e uscita (in base al ripple) e altre cose.
-
-Package 4.1x4.1mm
-
-Valore 1.5uH
-
-Esempio: https://www.lcsc.com/product-detail/C50326262.html
-
-ce ne sono molte
-
-Alcune risorse:
+# Buck
 
 - [https://www.monolithicpower.com/en/inductor-selector-tool](https://www.monolithicpower.com/en/inductor-selector-tool)
 - [Selecting Inductors for Buck Converters](https://www.ti.com/lit/an/snva038b/snva038b.pdf?ts=1769296550256)
 - https://it.wikipedia.org/wiki/Convertitore_buck
 
-[i.sstatic.net](https://i.sstatic.net/zsEMf.png)
+![i.sstatic.net](https://i.sstatic.net/zsEMf.png)
 
 ## Versione con Buck Discreto
 
@@ -174,12 +129,6 @@ Alcuni gate driver:
 
 # Filtro Pi per Ridurre i Picchi di Corrente
 
-Dato che non me ne frega un cazzo che la tensione o la corrente di uscita sia costante, ma solamente che la corrente di ingresso sia stabile e non abbia picchi, allora la soluzione più semplice è di usare un filtro pi passa-basso per filtrare le componenti armoniche della corrente
-
-![image.png](Saldatore%20USB-C/image%205.png)
-
-https://resources.altium.com/it/p/pi-filter-designs-power-supplies
-
 Non serve allora che si usi nessun tipo di controllore, basta che la frequenza di PWM della parte switching sia maggiore della frequenza di taglio del filtro.
 
 Si risparmia in termini di spazio perchè basta un mosfet e il suo driver, allora posso rendere l’induttore più grande e usare pochi condensatori. Inoltre in termini di controllo è molto molto più sempplice, si risparmia su DAC, resistenze di precisione e altri componenti particolari. Essendo un solo NMOS allora anche la dissiapzione è minore e le perdite switching possono essere piccole rispetto al buck dato che la frequenza di switching rimane sulle decine di kHz.
@@ -188,21 +137,6 @@ Si risparmia in termini di spazio perchè basta un mosfet e il suo driver, allor
 
 ### Induttori
 
-| **MODELLO** | **VALORE** | **DCR** | **PACKAGE** |
-| --- | --- | --- | --- |
-| https://www.lcsc.com/product-detail/C5329540.html | 10u | 27m | 6.6x6.4 |
-| https://www.lcsc.com/product-detail/C51913009.html | 10u | 30m | 6.6x6.4 |
-| https://www.lcsc.com/product-detail/C49261494.html | 10u | 30m | 6.6x6.4 |
-| https://www.lcsc.com/product-detail/C51913007.html | 4.7u | 15m | 6.6x6.4 |
-| https://www.lcsc.com/product-detail/C50326286.html | 4.7u | 15m | 6.6x6.4 |
-| https://www.lcsc.com/product-detail/C49261490.html | 4.7u | 15m | 6.6x6.4 |
-| https://www.lcsc.com/product-detail/C49261301.html | 4.7u | 15m | 6.6x6.4 |
-| **[FC-ALX 4030D-2R2MT](https://www.lcsc.com/product-detail/C5370906.html)** | **2.2u** | **11m** | **4.2x4.2** |
-| https://www.lcsc.com/product-detail/C50345893.html | 2.2u | 23m | 4.2x4.2 |
-| https://www.lcsc.com/product-detail/C45385247.html | 2.2u | 22m | 4.2x4.2 |
-| https://www.lcsc.com/product-detail/C39846868.html | 2.2u | 19m | 4.2x4.2 |
-| https://www.lcsc.com/product-detail/C5370911.html | 3.3u | 17m | 5.3x5.1 |
-| https://www.lcsc.com/product-detail/C5370910.html | 2.2u | 12m | 5.3x5.1 |
 
 Un problema è la corrente di inrush che spengerebbe l’alimentatore, quindi bisogna attivamente limitare la corrente ed effettuare un soft-start. Esistono vari integrati fatti apposta.
 
