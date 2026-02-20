@@ -81,6 +81,51 @@ Alcuni induttori considerati, in **bold** quelli buoni:
 ### Corrente di Inrush
 ### MOSFET e Driver
 
+La scelta dei mosfet è fondamentale per ridurre la potenza dissipata, per semplificare il sistema ho scelto di usare uno [switching high-side](https://techweb.rohm.com/product/power-device/switches/23727/), mentre per ridurre le perdite sul mosfet ho deciso di usare un canale N. 
+I mosfet canale N hanno resistenza di canale minore e minore carica di gate, quindi permettono di minimizzare sia le perdite di conduzione che le perdite di commutazione. Il problema è che usare un mosfet a canale n in configurazione high side richiede un driver fatto apposta.
+
+Le perdite a causa della conduzione del mosfet si calcolano con l'espressione:
+$$
+P_\text{cond} = \frac{I^2}{R_{\text{DS}_\text{on}}} D
+$$
+Dove $I$ è la corrente che scorre nel mosfet quando acceso, approssimabile come $I=V_\text{BUS}/R_\text{tip}$, $T$ è il periodo di commutazione e $D$ è il duty cycle.
+
+    NOTA: si arriva ad una espressione migliore se si considera che pure D dipende dalla potenza che voglio alla punta
+
+Mentre la potenza persa durante la commutazione è stimabile come:
+$$
+P_\text{SW} = \frac{I\ V_{\text{BUS}}\ t_{\text{SW}}\ f}{2}
+$$
+Dove $t_\text{SW} = t_r + t_f$ è la somma del tempo di commutazione alto e basso del mosfet, si ricava dalla corrente di uscita del driver e dalla carica di gate del mosfet.
+
+Lista di MOSFET canale n buoni:
+|**MODELLO**|**VDS**|**RDSon**|**Qg**|
+|---|---|---|---|
+|[AGM6014AP](https://www.lcsc.com/product-detail/C6719405.html)|60|4.3m|33n|
+
+Lista di driver buoni e non:
+| **LINK** | **NOTE** | **PACKAGE** | **DIODO BOOT** |
+| --- | --- | --- | --- |
+| https://www.lcsc.com/product-detail/C5795658.html | half bridge, consigliato per notebook e quindi tensione minore | dfn 2x2 |  |
+| https://www.lcsc.com/product-detail/C116731.html | half bridge per buck | dfn 2x2 |  |
+| https://www.lcsc.com/product-detail/C892859.html | half bridge per buck | dfn 2x2 |  |
+| https://www.lcsc.com/product-detail/C606336.html | half bridge per buck | dfn 3x3 |  |
+| https://www.lcsc.com/product-detail/C533032.html | low-side ma anche high-side con configurazione strana, input differenziale | sot 23 |  |
+| https://www.lcsc.com/product-detail/C5481755.html | high e low-side per mosfet SiC, input differenziale e configurazione strana | sot 23 |  |
+| https://www.lcsc.com/product-detail/C964602.html | half bridge per buck | dfn 2x2 | interno |
+| https://www.lcsc.com/product-detail/C2677203.html | logica 5V | sot 23 | esterno |
+| **[IRS10752LTRPBF](https://www.lcsc.com/product-detail/C126923.html)** |  | sot 23 | esteno |
+| [IRS20752LTRPBF](https://www.lcsc.com/product-detail/C495818.html) |  | sot 23 | esterno |
+| [IRS25752LTRPBF](https://www.lcsc.com/product-detail/C538346.html) |  | sot 23 | esterno |
+| **[NSG10752](https://www.lcsc.com/product-detail/C41414522.html)** | pin-compatible con quelli infineon | sot 23 | esterno |
+| https://www.lcsc.com/product-detail/C603811.html | half-bridge per buck, discontinuato | dfn 2x2 | interno |
+| https://www.lcsc.com/product-detail/C603810.html | half bridge per buck, versione di replacement per NCP81161 | dfn 2x2 | interno |
+| https://www.lcsc.com/product-detail/C2677131.html | half bridge per buck | dfn 3x3 | interno |
+| https://www.lcsc.com/product-detail/C41414473.html | half bridge per buck | dfn 3x3 | esterno |
+| https://www.lcsc.com/product-detail/C154581.html | half bridge per buck | dfn 3x3 | interno |
+
+Il problema dei driver selezionati è che hanno una UVLO molto alta (10V) che quindi richiede un buck ulteriore per alimentarli, aumentando il costo e numero dei componenti.
+
 ## Altre Soluzioni
 
 ## Altri Saldatori

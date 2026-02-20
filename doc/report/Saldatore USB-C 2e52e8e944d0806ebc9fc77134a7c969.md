@@ -33,15 +33,6 @@ Alcuni MOSFET:
 - https://www.lcsc.com/product-detail/C464808.html
 - https://www.lcsc.com/product-detail/C269268.html
 
-Potenza persa sul mosfet:
-
-![image.png](Saldatore%20USB-C/image%204.png)
-
-Qg=5.6nC, I=2A, Io=7.2A, Rdson=10m, vin=28, vout=18, fsw=1MHz (mosfet vishay)
-
-Pupper=0.535W, Plower=0.185W
-
-Ptot=0.72W
 
 ### Driver
 
@@ -150,28 +141,6 @@ Integrati per protezione di inrush (efuse, hotswap controllers, etc.):
 - [RT1720](https://www.lcsc.com/datasheet/C147997.pdf)
 - [TPS249x](https://www.lcsc.com/datasheet/C273636.pdf)
 - [TPS25980](https://www.ti.com/lit/ds/symlink/tps25980.pdf?ts=1770547961735)
-
-### High-Side Gate Drivers
-
-| **LINK** | **NOTE** | **PACKAGE** | **DIODO BOOT** |
-| --- | --- | --- | --- |
-| https://www.lcsc.com/product-detail/C5795658.html | half bridge, consigliato per notebook e quindi tensione minore | dfn 2x2 |  |
-| https://www.lcsc.com/product-detail/C116731.html | half bridge per buck | dfn 2x2 |  |
-| https://www.lcsc.com/product-detail/C892859.html | half bridge per buck | dfn 2x2 |  |
-| https://www.lcsc.com/product-detail/C606336.html | half bridge per buck | dfn 3x3 |  |
-| https://www.lcsc.com/product-detail/C533032.html | low-side ma anche high-side con configurazione strana, input differenziale | sot 23 |  |
-| https://www.lcsc.com/product-detail/C5481755.html | high e low-side per mosfet SiC, input differenziale e configurazione strana | sot 23 |  |
-| https://www.lcsc.com/product-detail/C964602.html?s_z=n_ISL95808 | half bridge per buck | dfn 2x2 | interno |
-| https://www.lcsc.com/product-detail/C2677203.html?s_z=n_MAX15054 | logica 5V | sot 23 | esterno |
-| https://www.lcsc.com/product-detail/C126923.html?s_z=n_IRS10752L |  | sot 23 | esteno |
-| https://www.lcsc.com/product-detail/C495818.html |  | sot 23 | esterno |
-| https://www.lcsc.com/product-detail/C538346.html?utm_source=octopart&utm_medium=cpc&utm_campaign=IRS25752LTRPBF |  | sot 23 | esterno |
-| https://www.lcsc.com/product-detail/C41414522.html | pin-compatible con quelli infineon | sot 23 | esterno |
-| https://www.lcsc.com/product-detail/C603811.html | half-bridge per buck, discontinuato | dfn 2x2 | interno |
-| https://www.lcsc.com/product-detail/C603810.html | half bridge per buck, versione di replacement per NCP81161 | dfn 2x2 | interno |
-| https://www.lcsc.com/product-detail/C2677131.html | half bridge per buck | dfn 3x3 | interno |
-| https://www.lcsc.com/product-detail/C41414473.html | half bridge per buck | dfn 3x3 | esterno |
-| https://www.lcsc.com/product-detail/C154581.html | half bridge per buck | dfn 3x3 | interno |
 
 **Switch per Input Side:**
 
