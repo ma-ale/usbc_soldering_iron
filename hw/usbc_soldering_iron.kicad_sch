@@ -4649,7 +4649,7 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "Regulator_Switching:AP63201WU"
+		(symbol "Regulator_Switching:AP63203WU"
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
@@ -4661,7 +4661,7 @@
 					)
 				)
 			)
-			(property "Value" "AP63201WU"
+			(property "Value" "AP63203WU"
 				(at 2.54 6.35 0)
 				(effects
 					(font
@@ -4687,7 +4687,7 @@
 					(hide yes)
 				)
 			)
-			(property "Description" "2A, 500kHz Buck DC/DC Converter, adjustable output voltage, TSOT-23-6"
+			(property "Description" "2A, 1.1MHz Buck DC/DC Converter, fixed 3.3V output voltage, TSOT-23-6"
 				(at 0 0 0)
 				(effects
 					(font
@@ -4714,7 +4714,7 @@
 					(hide yes)
 				)
 			)
-			(symbol "AP63201WU_0_1"
+			(symbol "AP63203WU_0_1"
 				(rectangle
 					(start -7.62 5.08)
 					(end 7.62 -5.08)
@@ -4727,7 +4727,7 @@
 					)
 				)
 			)
-			(symbol "AP63201WU_1_1"
+			(symbol "AP63203WU_1_1"
 				(pin power_in line
 					(at -10.16 2.54 0)
 					(length 2.54)
@@ -7365,7 +7365,7 @@
 	)
 	(rectangle
 		(start 103.505 13.97)
-		(end 187.96 50.8)
+		(end 176.53 50.8)
 		(stroke
 			(width 0)
 			(type default)
@@ -7823,12 +7823,6 @@
 		(uuid "4e457d4d-37fd-4b51-a420-85ebb8dc04c5")
 	)
 	(junction
-		(at 168.91 35.56)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "57d2e74f-9c65-42d1-a47a-8230db07f92e")
-	)
-	(junction
 		(at 137.16 181.61)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -7851,18 +7845,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "5fbb3de9-86ee-49ad-a284-eb55f1cc692a")
-	)
-	(junction
-		(at 168.91 43.18)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "660d2309-d1aa-4d86-b95c-854e50c0a293")
-	)
-	(junction
-		(at 168.91 27.94)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "691dc945-779c-4911-8f56-5300f4d58275")
 	)
 	(junction
 		(at 233.68 22.86)
@@ -7893,12 +7875,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "84b1d133-5555-4f34-9259-4c4a00397909")
-	)
-	(junction
-		(at 158.75 35.56)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "85eb43cd-2fb7-4c1a-b0ce-7e338a2da686")
 	)
 	(junction
 		(at 215.9 196.85)
@@ -7971,6 +7947,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "c4f19431-f823-4a18-902b-e25529b1c304")
+	)
+	(junction
+		(at 166.37 27.94)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "caa23b1a-fb60-423d-84ed-a4ec6bda7dc1")
 	)
 	(junction
 		(at 71.12 144.78)
@@ -8063,12 +8045,6 @@
 		(uuid "ea9ea449-1699-40d7-8a1c-89a1d2111f96")
 	)
 	(junction
-		(at 180.34 27.94)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "efddc068-f25b-4568-b3c6-1c6aa0f4c97e")
-	)
-	(junction
 		(at 106.68 27.94)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -8140,7 +8116,7 @@
 	)
 	(wire
 		(pts
-			(xy 180.34 25.4) (xy 180.34 27.94)
+			(xy 166.37 25.4) (xy 166.37 27.94)
 		)
 		(stroke
 			(width 0)
@@ -8399,16 +8375,6 @@
 		)
 		(uuid "0fdf5b0f-14a7-4ff5-aee8-91dcf3e80430")
 	)
-	(wire
-		(pts
-			(xy 168.91 35.56) (xy 158.75 35.56)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "1190a964-f3bd-43e5-a242-6444d80cf4b2")
-	)
 	(polyline
 		(pts
 			(xy 86.995 277.495) (xy 93.98 277.495)
@@ -8529,16 +8495,6 @@
 			(type default)
 		)
 		(uuid "16a6ad92-1a6b-4d2b-93f1-5652f5947dbb")
-	)
-	(wire
-		(pts
-			(xy 168.91 29.21) (xy 168.91 27.94)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "16beecb1-a5ab-433f-9aa9-d5c8af0be23d")
 	)
 	(polyline
 		(pts
@@ -8692,16 +8648,6 @@
 		)
 		(uuid "1cf9f715-8924-4551-8321-2cb14bcb7a4b")
 	)
-	(wire
-		(pts
-			(xy 168.91 43.18) (xy 127 43.18)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "1efe1ac7-40f4-4f17-9d42-17e1c9f0de6b")
-	)
 	(polyline
 		(pts
 			(xy 94.615 262.89) (xy 95.25 262.255)
@@ -8774,7 +8720,7 @@
 	)
 	(wire
 		(pts
-			(xy 180.34 43.18) (xy 168.91 43.18)
+			(xy 127 43.18) (xy 166.37 43.18)
 		)
 		(stroke
 			(width 0)
@@ -8812,16 +8758,6 @@
 			(color 128 77 0 1)
 		)
 		(uuid "23b27315-c748-4e5f-bfe8-f12b825cfb87")
-	)
-	(wire
-		(pts
-			(xy 168.91 34.29) (xy 168.91 35.56)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "24d5a81f-7436-4451-bff0-11fbe42d2c28")
 	)
 	(wire
 		(pts
@@ -9115,7 +9051,7 @@
 	)
 	(wire
 		(pts
-			(xy 180.34 29.21) (xy 180.34 27.94)
+			(xy 166.37 29.21) (xy 166.37 27.94)
 		)
 		(stroke
 			(width 0)
@@ -9405,16 +9341,6 @@
 	)
 	(wire
 		(pts
-			(xy 168.91 35.56) (xy 168.91 36.83)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "4f4c64e9-e529-4f2c-af20-cc0cf916c658")
-	)
-	(wire
-		(pts
 			(xy 377.19 173.99) (xy 377.19 168.91)
 		)
 		(stroke
@@ -9425,7 +9351,7 @@
 	)
 	(wire
 		(pts
-			(xy 180.34 34.29) (xy 180.34 43.18)
+			(xy 166.37 34.29) (xy 166.37 43.18)
 		)
 		(stroke
 			(width 0)
@@ -9928,16 +9854,6 @@
 	)
 	(wire
 		(pts
-			(xy 158.75 34.29) (xy 158.75 35.56)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "6c09848a-e484-4122-b858-fd7144ecd0eb")
-	)
-	(wire
-		(pts
 			(xy 186.69 203.2) (xy 186.69 204.47)
 		)
 		(stroke
@@ -10280,16 +10196,6 @@
 	)
 	(wire
 		(pts
-			(xy 158.75 27.94) (xy 158.75 29.21)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "8178755c-dd9b-46a1-bfb6-ebabdf75e012")
-	)
-	(wire
-		(pts
 			(xy 349.25 116.84) (xy 353.06 116.84)
 		)
 		(stroke
@@ -10519,16 +10425,6 @@
 			(type default)
 		)
 		(uuid "92512e3f-3cc7-4489-aa91-727a5adb3bba")
-	)
-	(wire
-		(pts
-			(xy 168.91 41.91) (xy 168.91 43.18)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "93521c10-6c6d-4578-9a69-91a458568039")
 	)
 	(wire
 		(pts
@@ -11073,7 +10969,7 @@
 	)
 	(wire
 		(pts
-			(xy 168.91 27.94) (xy 158.75 27.94)
+			(xy 158.75 27.94) (xy 166.37 27.94)
 		)
 		(stroke
 			(width 0)
@@ -11141,16 +11037,6 @@
 			(type default)
 		)
 		(uuid "c6ad2707-338b-42bc-ac2d-48d718e57ea2")
-	)
-	(wire
-		(pts
-			(xy 168.91 27.94) (xy 180.34 27.94)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c7819ba1-4999-4573-9853-ab9a1b989c49")
 	)
 	(wire
 		(pts
@@ -12026,7 +11912,7 @@
 	)
 	(wire
 		(pts
-			(xy 158.75 35.56) (xy 158.75 39.37)
+			(xy 158.75 27.94) (xy 158.75 39.37)
 		)
 		(stroke
 			(width 0)
@@ -13948,7 +13834,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "10u"
+		(property "Value" "4.7u"
 			(at 109.22 33.0262 0)
 			(effects
 				(font
@@ -14067,7 +13953,7 @@
 	)
 	(symbol
 		(lib_id "Device:C_Small")
-		(at 180.34 31.75 0)
+		(at 166.37 31.75 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -14076,7 +13962,7 @@
 		(fields_autoplaced yes)
 		(uuid "22a44612-6994-40d7-ad39-c0ab03d9b973")
 		(property "Reference" "C12"
-			(at 182.88 30.4862 0)
+			(at 168.91 30.4862 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14085,7 +13971,7 @@
 			)
 		)
 		(property "Value" "22u"
-			(at 182.88 33.0262 0)
+			(at 168.91 33.0262 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14094,7 +13980,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
-			(at 180.34 31.75 0)
+			(at 166.37 31.75 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14103,7 +13989,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 180.34 31.75 0)
+			(at 166.37 31.75 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14112,7 +13998,7 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor, small symbol"
-			(at 180.34 31.75 0)
+			(at 166.37 31.75 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17425,44 +17311,33 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:R_Small")
-		(at 168.91 31.75 0)
+		(lib_id "Regulator_Switching:AP63203WU")
+		(at 127 30.48 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(fields_autoplaced yes)
-		(uuid "711db0ec-cf02-4d89-a789-2507156bdf51")
-		(property "Reference" "R8"
-			(at 171.45 30.4799 0)
-			(effects
-				(font
-					(size 1.016 1.016)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "196k"
-			(at 171.45 33.0199 0)
+		(uuid "7008a1f7-716a-4e7b-aaf9-54124d9cd3fc")
+		(property "Reference" "U10"
+			(at 127 20.32 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 168.91 31.75 0)
+		(property "Value" "AP63203WU"
+			(at 127 22.86 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
-			(at 168.91 31.75 0)
+		(property "Footprint" "Package_TO_SOT_SMD:TSOT-23-6"
+			(at 127 53.34 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17470,8 +17345,8 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Resistor, small symbol"
-			(at 168.91 31.75 0)
+		(property "Datasheet" "https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf"
+			(at 127 30.48 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17479,16 +17354,37 @@
 				(hide yes)
 			)
 		)
-		(pin "1"
-			(uuid "ab98f339-cbaf-43a3-bcf2-34f9220e9254")
+		(property "Description" "2A, 1.1MHz Buck DC/DC Converter, fixed 3.3V output voltage, TSOT-23-6"
+			(at 127 30.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
 		)
 		(pin "2"
-			(uuid "986d2aeb-2191-4f88-9da9-2535e5222ac5")
+			(uuid "1b528cb6-82b9-487f-ae45-3dac6616d8c7")
+		)
+		(pin "4"
+			(uuid "b6ef2a1f-3066-4411-8d58-3204713c3536")
+		)
+		(pin "1"
+			(uuid "c2fa9156-6a29-4f09-a88a-cbb70235b74d")
+		)
+		(pin "6"
+			(uuid "99aa9b5b-cdd0-444b-a724-00185fe9884a")
+		)
+		(pin "3"
+			(uuid "c8f97a54-ff89-4d49-bc27-8e8dd1ab228b")
+		)
+		(pin "5"
+			(uuid "8080b237-397e-4f25-85e3-5cccb33d3901")
 		)
 		(instances
-			(project "usbc_soldering_iron"
+			(project ""
 				(path "/7095b018-eac3-4b01-b374-28e3216c4fd8"
-					(reference "R8")
+					(reference "U10")
 					(unit 1)
 				)
 			)
@@ -19368,76 +19264,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:C_Small")
-		(at 158.75 31.75 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "ac5e2246-551a-4546-98f8-6b1b25b5ce0f")
-		(property "Reference" "C11"
-			(at 161.29 30.4862 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "100p"
-			(at 161.29 33.0262 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 158.75 31.75 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 158.75 31.75 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Unpolarized capacitor, small symbol"
-			(at 158.75 31.75 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "2"
-			(uuid "00d366fc-8eb9-4fd0-83a6-c2f68c1de7ee")
-		)
-		(pin "1"
-			(uuid "88ea9855-5d0d-4a0e-9faf-7ee9a66b2599")
-		)
-		(instances
-			(project "usbc_soldering_iron"
-				(path "/7095b018-eac3-4b01-b374-28e3216c4fd8"
-					(reference "C11")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:GND")
 		(at 205.74 86.36 0)
 		(unit 1)
@@ -21109,86 +20935,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Regulator_Switching:AP63201WU")
-		(at 127 30.48 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "d0f4d535-3d98-4bd9-9458-f43b1964b43b")
-		(property "Reference" "U4"
-			(at 127 20.32 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "AP63201WU"
-			(at 127 22.86 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Package_TO_SOT_SMD:TSOT-23-6"
-			(at 127 53.34 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf"
-			(at 127 30.48 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "2A, 500kHz Buck DC/DC Converter, adjustable output voltage, TSOT-23-6"
-			(at 127 30.48 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "5"
-			(uuid "ad588502-5552-4a39-9776-3c406045e1fb")
-		)
-		(pin "3"
-			(uuid "cb98c9a3-19d9-4626-a789-f262fddf6b91")
-		)
-		(pin "1"
-			(uuid "a26eccd8-b874-4cb8-81bb-c23d495193db")
-		)
-		(pin "4"
-			(uuid "53d968ed-b647-4c8b-a7cb-cfd47cf98665")
-		)
-		(pin "2"
-			(uuid "d85b3866-a232-4184-af92-b08fa7ba8095")
-		)
-		(pin "6"
-			(uuid "d35ca131-0d42-4fbc-a722-0affd78db1b4")
-		)
-		(instances
-			(project ""
-				(path "/7095b018-eac3-4b01-b374-28e3216c4fd8"
-					(reference "U4")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:R_Small")
 		(at 313.69 171.45 0)
 		(mirror y)
@@ -21604,7 +21350,7 @@
 	)
 	(symbol
 		(lib_id "power:+3.3V")
-		(at 180.34 25.4 0)
+		(at 166.37 25.4 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -21613,7 +21359,7 @@
 		(fields_autoplaced yes)
 		(uuid "dc19ed41-8ec7-443f-bd2c-81230c58ae6e")
 		(property "Reference" "#PWR031"
-			(at 180.34 29.21 0)
+			(at 166.37 29.21 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21622,7 +21368,7 @@
 			)
 		)
 		(property "Value" "+3.3V"
-			(at 180.34 20.32 0)
+			(at 166.37 20.32 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21630,7 +21376,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 180.34 25.4 0)
+			(at 166.37 25.4 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21639,7 +21385,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 180.34 25.4 0)
+			(at 166.37 25.4 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21648,7 +21394,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"+3.3V\""
-			(at 180.34 25.4 0)
+			(at 166.37 25.4 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -23257,76 +23003,6 @@
 			(project "usbc_soldering_iron"
 				(path "/7095b018-eac3-4b01-b374-28e3216c4fd8"
 					(reference "#PWR050")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R_Small")
-		(at 168.91 39.37 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "fe37838d-55c2-42c5-b428-4ca1ce1f002d")
-		(property "Reference" "R9"
-			(at 171.45 38.0999 0)
-			(effects
-				(font
-					(size 1.016 1.016)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "62k"
-			(at 171.45 40.6399 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 168.91 39.37 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 168.91 39.37 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor, small symbol"
-			(at 168.91 39.37 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "44cbdc35-b5db-48eb-84b3-2448bbf5e067")
-		)
-		(pin "2"
-			(uuid "4d89d1cd-2372-4ae3-9002-541e809eac47")
-		)
-		(instances
-			(project "usbc_soldering_iron"
-				(path "/7095b018-eac3-4b01-b374-28e3216c4fd8"
-					(reference "R9")
 					(unit 1)
 				)
 			)
