@@ -1,27 +1,25 @@
 ﻿Index,LCSC#,MPN,Manufacturer,Package,Customer #,Description,RoHS,Quantity,MOQ,Multiple,Unit Price(€),Extended Price(€),Product Link
 1,C963213,GT-USB-7025,G-Switch,SMD,,"USB-C (USB TYPE-C) Receptacle Connector 16 Position Surface Mount, Right Angle",yes,5,1,1,0.5466,2.73,https://www.lcsc.com/product-detail/C963213.html
-2,C138714,TPD4E05U06DQAR,TI,USON-10(1x2.5),,14VC Clamp 2.5A@8/20us Ipp TVS DIODE USON-10(1x2.5),yes,10,5,5,0.0629,0.63,https://www.lcsc.com/product-detail/C138714.html
-3,C2071868,AP63200WU-7,DIODES,TSOT-23-6,,500kHz Buck Adjustable 2A TSOT-23-6 Voltage Regulators - DC DC Switching Regulators RoHS,yes,5,5,5,0.3300,1.65,https://www.lcsc.com/product-detail/C2071868.html
-4,C473369,TLV333IDBVR,TI,SOT-23-5,,"2uV 70pA 0.16V/us 102dB 17uA 350kHz 1 Rail-to-Rail Input, Rail-to-Rail Output SOT-23-5 Amplifiers RoHS",yes,5,5,5,0.2020,1.01,https://www.lcsc.com/product-detail/C473369.html
-5,C19274408,SC7A20HTR,Hangzhou Silan Microelectronics,LGA-12(2x2),,LGA-12(2x2) Accelerometers RoHS,yes,5,1,1,0.2417,1.21,https://www.lcsc.com/product-detail/C19274408.html
-6,C132291,FUSB302BMPX,onsemi,WFQFN-14(2.5x2.5),,Controller USB 3.1 WFQFN-14(2.5x2.5) Interface Controllers RoHS,yes,5,1,1,0.6769,3.38,https://www.lcsc.com/product-detail/C132291.html
-7,C52741377,CPN201610H6R8MT,Magnetsyc,0806,,820mA 6.8uH 1.1A 545mΩ ±20% 0806 Fixed Inductors RoHS,yes,20,20,20,0.0277,0.55,https://www.lcsc.com/product-detail/C52741377.html
-8,C5142280,CH32V203G6U6,WCH,QFN28X4,,Others QFN28X4 Microcontrollers RoHS,yes,5,1,1,0.6019,3.01,https://www.lcsc.com/product-detail/C5142280.html
-9,C338080,C2012X5R1V226MT000E,TDK,0805,,22uF ±20% 35V Ceramic Capacitor X5R 0805,yes,30,10,10,0.1238,3.71,https://www.lcsc.com/product-detail/C338080.html
-10,C18723015,X087-2832TSWIG02-H14,Wisevision,-,,"0.87 128x32 SSD1312 chip I2C LCD, OLED, Graphic RoHS",yes,5,1,1,1.5826,7.91,https://www.lcsc.com/product-detail/C18723015.html
-11,C107335,MPZ1608S601ATA00,TDK,0603,,600Ω@100MHz 1 Line Ferrite Bead 0603 1A 150mΩ,yes,10,10,10,0.0112,0.11,https://www.lcsc.com/product-detail/C107335.html
-12,C110776,RT0603BRD071KL,YAGEO,0603,,100mW 1kΩ 75V Thin Film Resistor ±25ppm/℃ ±0.1% 0603 Chip Resistor - Surface Mount RoHS,yes,20,20,20,0.0193,0.39,https://www.lcsc.com/product-detail/C110776.html
-13,C49164935,JER1206F1R006,JIERR,1206,,1W 6mΩ Current Sense Resistor ±50ppm/℃ ±1% 1206 Current Sense Resistors RoHS,yes,10,10,10,0.0371,0.37,https://www.lcsc.com/product-detail/C49164935.html
-14,C162670,NCU18XH103F6SRB,muRata,0603,,NTC Thermistor 10kΩ Surface Mount 0603,yes,10,10,10,0.0533,0.53,https://www.lcsc.com/product-detail/C162670.html
-15,C49851,INA226AIDGSR,TI,MSOP-10,,300mV~40V 2.5uV 10nA MSOP-10 Current Regulation/Management RoHS,yes,5,1,1,0.6081,3.04,https://www.lcsc.com/product-detail/C49851.html
-16,C46818248,SIQ-02FVS3,LZG,-,,Encoders - Industrial RoHS,yes,5,1,1,0.9816,4.91,https://www.lcsc.com/product-detail/C46818248.html
-17,C41414522,NSG10752,WXNSIC,SOT-23-6,,High Side Gate Driver IC MOSFET IGBT SOT-23-6,yes,5,1,1,0.4600,2.30,https://www.lcsc.com/product-detail/C41414522.html
-18,C2932326,MT3608L,XI'AN Aerosemi Tech,SOT-23-6,,1.2MHz Boost Adjustable 2.5A SOT-23-6 Voltage Regulators - DC DC Switching Regulators RoHS,yes,10,10,10,0.0373,0.37,https://www.lcsc.com/product-detail/C2932326.html
-19,C30584800,CD4148WTP,YONGYUTAI,0603,,Diode Independent 75V 150mA Surface Mount 0603,yes,20,20,20,0.0207,0.41,https://www.lcsc.com/product-detail/C30584800.html
-20,C5370906,FC-ALX 4030D-2R2MT,FANGCHENG,"SMD,4.2x4.2mm",,"8.1A 2.2uH 8.1A 10.7mΩ Molded Inductor ±20% SMD,4.2x4.2mm Fixed Inductors RoHS",yes,5,1,1,0.4781,2.39,https://www.lcsc.com/product-detail/C5370906.html
-21,C76799,MLZ1608M4R7WT000,TDK,0603,,350mA 4.7uH 120mA 500mΩ Multilayer inductor ±20% 0603 Fixed Inductors RoHS,yes,10,10,10,0.0365,0.37,https://www.lcsc.com/product-detail/C76799.html
-22,C4169844,RS73F1JTTD2703B,KOA,0603,,200mW 270kΩ Thick Film Resistor ±25ppm/℃ ±0.1% 0603 Chip Resistor - Surface Mount RoHS,yes,5,5,5,0.0891,0.45,https://www.lcsc.com/product-detail/C4169844.html
-23,C2974032,FRC0603F1963TS,FOJAN,0603,,196kΩ ±1% 100mW 0603 Thick Film Resistor,yes,100,100,100,0.0010,0.10,https://www.lcsc.com/product-detail/C2974032.html
-24,C2907059,FRC0603F6202TS,FOJAN,0603,,62kΩ ±1% 100mW 0603 Thick Film Resistor,yes,200,100,100,0.0011,0.22,https://www.lcsc.com/product-detail/C2907059.html
-25,C2906999,FRC0603F1803TS,FOJAN,0603,,180kΩ ±1% 100mW 0603 Thick Film Resistor,yes,100,100,100,0.0011,0.11,https://www.lcsc.com/product-detail/C2906999.html
-26,C7466527,AGM403AP,AGMSEMI,PDFN3.3x3.3-8,,N-Channel 40V 65A 69W Surface Mount PDFN3.3x3.3,yes,5,5,5,0.2447,1.22,https://www.lcsc.com/product-detail/C7466527.html
+2,C138714,TPD4E05U06DQAR,TI,USON-10(1x2.5),,14VC Clamp 2.5A@8/20us Ipp TVS DIODE USON-10(1x2.5),yes,5,5,5,0.0629,0.31,https://www.lcsc.com/product-detail/C138714.html
+3,C473369,TLV333IDBVR,TI,SOT-23-5,,"2uV 70pA 0.16V/us 102dB 17uA 350kHz 1 Rail-to-Rail Input, Rail-to-Rail Output SOT-23-5 Amplifiers RoHS",yes,5,5,5,0.2020,1.01,https://www.lcsc.com/product-detail/C473369.html
+4,C19274408,SC7A20HTR,Hangzhou Silan Microelectronics,LGA-12(2x2),,LGA-12(2x2) Accelerometers RoHS,yes,5,1,1,0.2417,1.21,https://www.lcsc.com/product-detail/C19274408.html
+5,C52741377,CPN201610H6R8MT,Magnetsyc,0806,,820mA 6.8uH 1.1A 545mΩ ±20% 0806 Fixed Inductors RoHS,yes,20,20,20,0.0277,0.55,https://www.lcsc.com/product-detail/C52741377.html
+6,C338080,C2012X5R1V226MT000E,TDK,0805,,22uF ±20% 35V Ceramic Capacitor X5R 0805,yes,30,10,10,0.1238,3.71,https://www.lcsc.com/product-detail/C338080.html
+7,C18723015,X087-2832TSWIG02-H14,Wisevision,-,,"0.87 128x32 SSD1312 chip I2C LCD, OLED, Graphic RoHS",yes,5,1,1,1.5826,7.91,https://www.lcsc.com/product-detail/C18723015.html
+8,C110776,RT0603BRD071KL,YAGEO,0603,,100mW 1kΩ 75V Thin Film Resistor ±25ppm/℃ ±0.1% 0603 Chip Resistor - Surface Mount RoHS,yes,20,20,20,0.0193,0.39,https://www.lcsc.com/product-detail/C110776.html
+9,C49164935,JER1206F1R006,JIERR,1206,,1W 6mΩ Current Sense Resistor ±50ppm/℃ ±1% 1206 Current Sense Resistors RoHS,yes,10,10,10,0.0371,0.37,https://www.lcsc.com/product-detail/C49164935.html
+10,C162670,NCU18XH103F6SRB,muRata,0603,,NTC Thermistor 10kΩ Surface Mount 0603,yes,10,10,10,0.0533,0.53,https://www.lcsc.com/product-detail/C162670.html
+11,C46818248,SIQ-02FVS3,LZG,-,,Encoders - Industrial RoHS,yes,5,1,1,0.9816,4.91,https://www.lcsc.com/product-detail/C46818248.html
+12,C41414522,NSG10752,WXNSIC,SOT-23-6,,High Side Gate Driver IC MOSFET IGBT SOT-23-6,yes,5,1,1,0.4600,2.30,https://www.lcsc.com/product-detail/C41414522.html
+13,C2932326,MT3608L,XI'AN Aerosemi Tech,SOT-23-6,,1.2MHz Boost Adjustable 2.5A SOT-23-6 Voltage Regulators - DC DC Switching Regulators RoHS,yes,10,10,10,0.0373,0.37,https://www.lcsc.com/product-detail/C2932326.html
+14,C30584800,CD4148WTP,YONGYUTAI,0603,,Diode Independent 75V 150mA Surface Mount 0603,yes,20,20,20,0.0207,0.41,https://www.lcsc.com/product-detail/C30584800.html
+15,C5370906,FC-ALX 4030D-2R2MT,FANGCHENG,"SMD,4.2x4.2mm",,"8.1A 2.2uH 8.1A 10.7mΩ Molded Inductor ±20% SMD,4.2x4.2mm Fixed Inductors RoHS",yes,5,1,1,0.4781,2.39,https://www.lcsc.com/product-detail/C5370906.html
+16,C76799,MLZ1608M4R7WT000,TDK,0603,,350mA 4.7uH 120mA 500mΩ Multilayer inductor ±20% 0603 Fixed Inductors RoHS,yes,10,10,10,0.0340,0.34,https://www.lcsc.com/product-detail/C76799.html
+17,C4169844,RS73F1JTTD2703B,KOA,0603,,200mW 270kΩ Thick Film Resistor ±25ppm/℃ ±0.1% 0603 Chip Resistor - Surface Mount RoHS,yes,5,5,5,0.0891,0.45,https://www.lcsc.com/product-detail/C4169844.html
+18,C2906999,FRC0603F1803TS,FOJAN,0603,,180kΩ ±1% 100mW 0603 Thick Film Resistor,yes,100,100,100,0.0011,0.11,https://www.lcsc.com/product-detail/C2906999.html
+19,C7466527,AGM403AP,AGMSEMI,PDFN3.3x3.3-8,,N-Channel 40V 65A 69W Surface Mount PDFN3.3x3.3,yes,5,5,5,0.2447,1.22,https://www.lcsc.com/product-detail/C7466527.html
+20,C780769,AP63203WU-7,DIODES,TSOT-23-6,,1.1MHz Buck Fixed 2A 3.3V TSOT-23-6 Voltage Regulators - DC DC Switching Regulators RoHS,yes,5,1,1,0.4123,2.06,https://www.lcsc.com/product-detail/C780769.html
+21,C42442062,CH32X035F8U6,WCH,QFN-20-EP(3x3),,QFN-20-EP(3x3) Microcontrollers RoHS,yes,5,1,1,0.4460,2.23,https://www.lcsc.com/product-detail/C42442062.html
+22,C51933397,TPA191A1Q-SC6R-S,3PEAK,SOT-363,,SOT-363 Amplifiers RoHS,yes,5,1,1,0.3810,1.91,https://www.lcsc.com/product-detail/C51933397.html
+23,C52754543,RB521S30T1G-HXY,HXY MOSFET,SOD-523,,1A 1 Independent 30V 350mV@10mA 200mA SOD-523 Single Diodes RoHS,yes,20,20,20,0.0202,0.40,https://www.lcsc.com/product-detail/C52754543.html
+24,C2999960,MM5Z3V3,Slkor,SOD-523,,Zener Diode Independent 3.3V 200mW Surface Mount SOD-523,yes,20,20,20,0.0179,0.36,https://www.lcsc.com/product-detail/C2999960.html
