@@ -3,4 +3,5 @@
   (lib (name "custom_library")(type "KiCad")(uri "${KIPRJMOD}/symbols/custom_library.kicad_sym")(options "")(descr ""))
   (lib (name "MCU_WCH_CH32V0")(type "KiCad")(uri "${KIPRJMOD}/symbols/MCU_WCH_CH32V0.kicad_sym")(options "")(descr ""))
   (lib (name "MCU_WCH_RiscV")(type "KiCad")(uri "${KIPRJMOD}/symbols/MCU_WCH_RiscV.kicad_sym")(options "")(descr ""))
+  (lib (name "MCU_WCH")(type "KiCad")(uri "${KIPRJMOD}/symbols/MCU_WCH.kicad_sym")(options "")(descr ""))
 )
