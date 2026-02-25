@@ -3,9 +3,9 @@ SymbolType BLOCK
 RECTANGLE Normal -64 -56 64 120
 WINDOW 0 0 -56 Bottom 2
 WINDOW 3 1 120 Top 2
-SYMATTR Prefix X
 SYMATTR Value IRS10752L
-SYMATTR ModelFile C:\users\ale\Documents\Projects\usbc_soldering_iron\sim\IRS10752L.lib
+SYMATTR Prefix X
+SYMATTR ModelFile IRS10752L.lib
 PIN 64 32 RIGHT 8
 PINATTR PinName HO
 PINATTR SpiceOrder 1
