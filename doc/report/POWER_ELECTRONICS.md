@@ -103,9 +103,17 @@ $$
 Dove $t_\text{SW} = t_r + t_f$ è la somma del tempo di commutazione alto e basso del mosfet, si ricava dalla corrente di uscita del driver e dalla carica di gate del mosfet.
 
 Lista di MOSFET canale n buoni:
-|**MODELLO**|**VDS**|**RDSon**|**Qg**|
+|**MODELLO**|**VDS**|**RDSon**|**Qg [C]**|
 |---|---|---|---|
 |[AGM6014AP](https://www.lcsc.com/product-detail/C6719405.html)|60|4.3m|33n|
+|                               [CSD18543Q3A](https://www.lcsc.com/product-detail/C840100.html)                               | 60 |  8.1m  |  11.1n |
+|                                                               [AGM403AP](https://www.lcsc.com/product-detail/C7466527.html)                                                              |  40  |    2.7m    |    10n    |
+|                                                                                             [AGM312AP](https://www.lcsc.com/product-detail/C22364314.html)                                                                                             |   30   |      9m      |      4.1n     |
+|                                                                                                                            [AON7544](https://www.lcsc.com/product-detail/C315567.html)                                                                                                                            |    30    |       5m       |        22.5n       |
+|                                                                                                                                                          [60N04D](https://www.lcsc.com/product-detail/C7543822.html)                                                                                                                                                         |     40     |        6.9m        |          5.8n          |
+|                                                                                                                                                                                       [HD304N070SG](https://www.lcsc.com/product-detail/C50132379.html)                                                                                                                                                                                       |      40      |          6.5m          |            16n            |
+|                                                                                                                                                                                                                        [TMG0069N04DF](https://www.lcsc.com/product-detail/C19189166.html)                                                                                                                                                                                                                       |       40       |            6.9m            |              5.8n             |
+|                                                                                                                                                                                                                                                         [DOZ55N04](https://www.lcsc.com/product-detail/C42420928.html)                                                                                                                                                                                                                                                        |        40        |              5m              |                19.5n               |
 
 Lista di driver buoni e non:
 | **LINK** | **NOTE** | **PACKAGE** | **DIODO BOOT** |
