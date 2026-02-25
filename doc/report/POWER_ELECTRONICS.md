@@ -78,6 +78,10 @@ Alcuni induttori considerati, in **bold** quelli buoni:
 | [FC-ALX 5030D-2R2MT](https://www.lcsc.com/product-detail/C5370910.html) | 2.2u | 12m | 5.3x5.1 |
 
 ### Scelta dei Condensatori
+
+[Derating](https://www.microtype.io/blog/dc-bias-effect-in-ceramic-capacitors) per DC bias.
+[Modelli](https://product.tdk.com/en/technicalsupport/tvcl/general/mlcc.html) fatti bene della TDK. [Modelli](https://www.chemi-con.co.jp/en/faq/detail.php?id=How2LTspice) della Chemicon.
+
 ### Corrente di Inrush
 ### MOSFET e Driver
 
@@ -125,6 +129,7 @@ Lista di driver buoni e non:
 | https://www.lcsc.com/product-detail/C154581.html | half bridge per buck | dfn 3x3 | interno |
 
 Il problema dei driver selezionati è che hanno una UVLO molto alta (10V) che quindi richiede un buck ulteriore per alimentarli, aumentando il costo e numero dei componenti.
+
 
 ## Altre Soluzioni
 
