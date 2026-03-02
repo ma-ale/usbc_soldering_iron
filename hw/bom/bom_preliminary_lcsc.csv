@@ -1,27 +1,29 @@
 ﻿Index,LCSC#,MPN,Manufacturer,Package,Customer #,Description,RoHS,Quantity,MOQ,Multiple,Unit Price(€),Extended Price(€),Product Link
 1,C473369,TLV333IDBVR,TI,SOT-23-5,,"2uV 70pA 0.16V/us 102dB 17uA 350kHz 1 Rail-to-Rail Input, Rail-to-Rail Output SOT-23-5 Amplifiers RoHS",yes,5,5,5,0.2051,1.03,https://www.lcsc.com/product-detail/C473369.html
-2,C2827931,SS24L,Guangdong Hottech,SOD-123FL,,Diode Independent 40V 2A Surface Mount SOD-123FL,yes,20,20,20,0.0214,0.43,https://www.lcsc.com/product-detail/C2827931.html
-3,C2931472,U263-163N-4OS1735,XKB Connection,SMD,,USB-C (USB TYPE-C) Receptacle Connector 16 Position Surface Mount,yes,5,5,5,0.2495,1.25,https://www.lcsc.com/product-detail/C2931472.html
-4,C2999960,MM5Z3V3,Slkor,SOD-523,,Zener Diode Independent 3.3V 200mW Surface Mount SOD-523,yes,20,20,20,0.0179,0.36,https://www.lcsc.com/product-detail/C2999960.html
+2,C2827931,SS24L,Guangdong Hottech,SOD-123FL,,Diode Independent 40V 2A Surface Mount SOD-123FL,yes,20,20,20,0.0210,0.42,https://www.lcsc.com/product-detail/C2827931.html
+3,C2931472,U263-163N-4OS1735,XKB Connection,SMD,,USB-C (USB TYPE-C) Receptacle Connector 16 Position Surface Mount,yes,5,5,5,0.2518,1.26,https://www.lcsc.com/product-detail/C2931472.html
+4,C2999960,MM5Z3V3,Slkor,SOD-523,,Zener Diode Independent 3.3V 200mW Surface Mount SOD-523,yes,20,20,20,0.0181,0.36,https://www.lcsc.com/product-detail/C2999960.html
 5,C52754543,RB521S30T1G-HXY,HXY MOSFET,SOD-523,,1A 1 Independent 30V 350mV@10mA 200mA SOD-523 Single Diodes RoHS,yes,20,20,20,0.0212,0.42,https://www.lcsc.com/product-detail/C52754543.html
 6,C51933397,TPA191A1Q-SC6R-S,3PEAK,SOT-363,,SOT-363 Amplifiers RoHS,yes,5,1,1,0.3810,1.91,https://www.lcsc.com/product-detail/C51933397.html
 7,C42442062,CH32X035F8U6,WCH,QFN-20-EP(3x3),,QFN-20-EP(3x3) Microcontrollers RoHS,yes,5,1,1,0.4460,2.23,https://www.lcsc.com/product-detail/C42442062.html
 8,C780769,AP63203WU-7,DIODES,TSOT-23-6,,1.1MHz Buck Fixed 2A 3.3V TSOT-23-6 Voltage Regulators - DC DC Switching Regulators RoHS,yes,5,1,1,0.3955,1.98,https://www.lcsc.com/product-detail/C780769.html
 9,C7466527,AGM403AP,AGMSEMI,PDFN3.3x3.3-8,,N-Channel 40V 65A 69W Surface Mount PDFN3.3x3.3,yes,5,5,5,0.2575,1.29,https://www.lcsc.com/product-detail/C7466527.html
-10,C2906999,FRC0603F1803TS,FOJAN,0603,,180kΩ ±1% 100mW 0603 Thick Film Resistor,yes,100,100,100,0.0011,0.11,https://www.lcsc.com/product-detail/C2906999.html
+10,C2906999,FRC0603F1803TS,FOJAN,0603,,180kΩ ±1% 100mW 0603 Thick Film Resistor,yes,100,100,100,0.0010,0.10,https://www.lcsc.com/product-detail/C2906999.html
 11,C4169844,RS73F1JTTD2703B,KOA,0603,,200mW 270kΩ Thick Film Resistor ±25ppm/℃ ±0.1% 0603 Chip Resistor - Surface Mount RoHS,yes,5,5,5,0.0891,0.45,https://www.lcsc.com/product-detail/C4169844.html
-12,C76799,MLZ1608M4R7WT000,TDK,0603,,350mA 4.7uH 120mA 500mΩ Multilayer inductor ±20% 0603 Fixed Inductors RoHS,yes,10,10,10,0.0345,0.35,https://www.lcsc.com/product-detail/C76799.html
-13,C2932326,MT3608L,XI'AN Aerosemi Tech,SOT-23-6,,1.2MHz Boost Adjustable 2.5A SOT-23-6 Voltage Regulators - DC DC Switching Regulators RoHS,yes,10,10,10,0.0373,0.37,https://www.lcsc.com/product-detail/C2932326.html
-14,C41414522,NSG10752,WXNSIC,SOT-23-6,,High Side Gate Driver IC MOSFET IGBT SOT-23-6,yes,5,1,1,0.4842,2.42,https://www.lcsc.com/product-detail/C41414522.html
-15,C46818248,SIQ-02FVS3,LZG,-,,Encoders - Industrial RoHS,yes,5,1,1,0.9816,4.91,https://www.lcsc.com/product-detail/C46818248.html
-16,C162670,NCU18XH103F6SRB,muRata,0603,,NTC Thermistor 10kΩ Surface Mount 0603,yes,10,10,10,0.0533,0.53,https://www.lcsc.com/product-detail/C162670.html
-17,C49164935,JER1206F1R006,JIERR,1206,,1W 6mΩ ±50ppm/℃ Current Sense Resistor ±1% 1206 Current Sense Resistors RoHS,yes,10,10,10,0.0371,0.37,https://www.lcsc.com/product-detail/C49164935.html
-18,C110776,RT0603BRD071KL,YAGEO,0603,,100mW 1kΩ 75V Thin Film Resistor ±25ppm/℃ ±0.1% 0603 Chip Resistor - Surface Mount RoHS,yes,20,20,20,0.0187,0.37,https://www.lcsc.com/product-detail/C110776.html
-19,C18723015,X087-2832TSWIG02-H14,Wisevision,-,,"0.87 128x32 SSD1312 chip I2C LCD, OLED, Graphic RoHS",yes,5,1,1,1.5826,7.91,https://www.lcsc.com/product-detail/C18723015.html
-20,C52741377,CPN201610H6R8MT,Magnetsyc,0806,,820mA 6.8uH 1.1A 545mΩ ±20% 0806 Fixed Inductors RoHS,yes,20,20,20,0.0277,0.55,https://www.lcsc.com/product-detail/C52741377.html
-21,C19274408,SC7A20HTR,Hangzhou Silan Microelectronics,LGA-12(2x2),,LGA-12(2x2) Accelerometers RoHS,yes,5,1,1,0.2417,1.21,https://www.lcsc.com/product-detail/C19274408.html
-22,C138714,TPD4E05U06DQAR,TI,USON-10(1x2.5),,14VC Clamp 2.5A@8/20us Ipp TVS DIODE USON-10(1x2.5),yes,5,5,5,0.0635,0.32,https://www.lcsc.com/product-detail/C138714.html
+12,C2932326,MT3608L,XI'AN Aerosemi Tech,SOT-23-6,,1.2MHz Boost Adjustable 2.5A SOT-23-6 Voltage Regulators - DC DC Switching Regulators RoHS,yes,10,10,10,0.0373,0.37,https://www.lcsc.com/product-detail/C2932326.html
+13,C138714,TPD4E05U06DQAR,TI,USON-10(1x2.5),,14VC Clamp 2.5A@8/20us Ipp TVS DIODE USON-10(1x2.5),yes,5,5,5,0.0634,0.32,https://www.lcsc.com/product-detail/C138714.html
+14,C19274408,SC7A20HTR,Hangzhou Silan Microelectronics,LGA-12(2x2),,LGA-12(2x2) Accelerometers RoHS,yes,5,1,1,0.2417,1.21,https://www.lcsc.com/product-detail/C19274408.html
+15,C52741377,CPN201610H6R8MT,Magnetsyc,0806,,820mA 6.8uH 1.1A 545mΩ ±20% 0806 Fixed Inductors RoHS,yes,20,20,20,0.0277,0.55,https://www.lcsc.com/product-detail/C52741377.html
+16,C18723015,X087-2832TSWIG02-H14,Wisevision,-,,"0.87 128x32 SSD1312 chip I2C LCD, OLED, Graphic RoHS",yes,5,1,1,1.6435,8.22,https://www.lcsc.com/product-detail/C18723015.html
+17,C110776,RT0603BRD071KL,YAGEO,0603,,100mW 1kΩ 75V Thin Film Resistor ±25ppm/℃ ±0.1% 0603 Chip Resistor - Surface Mount RoHS,yes,20,20,20,0.0187,0.37,https://www.lcsc.com/product-detail/C110776.html
+18,C49164935,JER1206F1R006,JIERR,1206,,1W 6mΩ ±50ppm/℃ Current Sense Resistor ±1% 1206 Current Sense Resistors RoHS,yes,10,10,10,0.0371,0.37,https://www.lcsc.com/product-detail/C49164935.html
+19,C162670,NCU18XH103F6SRB,muRata,0603,,NTC Thermistor 10kΩ Surface Mount 0603,yes,10,10,10,0.0533,0.53,https://www.lcsc.com/product-detail/C162670.html
+20,C46818248,SIQ-02FVS3,LZG,-,,Encoders - Industrial RoHS,yes,5,1,1,0.9816,4.91,https://www.lcsc.com/product-detail/C46818248.html
+21,C41414522,NSG10752,WXNSIC,SOT-23-6,,High Side Gate Driver IC MOSFET IGBT SOT-23-6,yes,5,1,1,0.4842,2.42,https://www.lcsc.com/product-detail/C41414522.html
+22,C76799,MLZ1608M4R7WT000,TDK,0603,,350mA 4.7uH 120mA 500mΩ Multilayer inductor ±20% 0603 Fixed Inductors RoHS,yes,10,10,10,0.0344,0.34,https://www.lcsc.com/product-detail/C76799.html
 23,C98192,CL21A475KBQNNNE,Samsung Electro-Mechanics,0805,,4.7uF ±10% 50V Ceramic Capacitor X5R 0805,yes,10,10,10,0.0179,0.18,https://www.lcsc.com/product-detail/C98192.html
-24,C51934176,PB35V100M6X8,JIERR,"Through Hole,D6.3xL8mm",,"35V 100uF 28mΩ@100kHz 2.6A@100kHz ±20% Through Hole,D6.3xL8mm Aluminum - Polymer Capacitors RoHS",yes,10,5,5,0.1336,1.34,https://www.lcsc.com/product-detail/C51934176.html
-25,C29936,CL10B105KA8NNNC,Samsung Electro-Mechanics,0603,,1uF ±10% 25V Ceramic Capacitor X7R 0603,yes,50,50,50,0.0056,0.28,https://www.lcsc.com/product-detail/C29936.html
-26,C1590,CL10B104KA8NNNC,Samsung Electro-Mechanics,0603,,100nF ±10% 25V Ceramic Capacitor X7R 0603,yes,100,100,100,0.0032,0.32,https://www.lcsc.com/product-detail/C1590.html
+24,C29936,CL10B105KA8NNNC,Samsung Electro-Mechanics,0603,,1uF ±10% 25V Ceramic Capacitor X7R 0603,yes,50,50,50,0.0056,0.28,https://www.lcsc.com/product-detail/C29936.html
+25,C1590,CL10B104KA8NNNC,Samsung Electro-Mechanics,0603,,100nF ±10% 25V Ceramic Capacitor X7R 0603,yes,100,100,100,0.0032,0.32,https://www.lcsc.com/product-detail/C1590.html
+26,C2997487,MPD220M1VD19040R,Ymin,"SMD,7.3x4.3mm",,"35V 22uF 3.2A@100kHz 40mΩ@100kHz ±20% SMD,7.3x4.3mm Aluminum - Polymer Capacitors RoHS",yes,5,1,1,0.7063,3.53,https://www.lcsc.com/product-detail/C2997487.html
+27,C5796173,MCASU32MAB7106KPNA01,Taiyo Yuden,1210,,10uF ±10% 50V Ceramic Capacitor X7R 1210,yes,25,5,5,0.0982,2.46,https://www.lcsc.com/product-detail/C5796173.html
+28,C5370906,FC-ALX 4030D-2R2MT,FANGCHENG,"SMD,4.2x4.2mm",,"8.1A 2.2uH 8.1A 10.7mΩ Molded Inductor ±20% SMD,4.2x4.2mm Fixed Inductors RoHS",yes,5,1,1,0.4781,2.39,https://www.lcsc.com/product-detail/C5370906.html
