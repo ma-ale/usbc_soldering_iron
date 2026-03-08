@@ -11902,6 +11902,16 @@
 		)
 		(uuid "538a0e55-0724-476e-9fb5-9d5fc5bcdb10")
 	)
+	(label "JDN"
+		(at 76.2 71.12 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "5b663737-e9f5-4c79-85f6-25c9c420021d")
+	)
 	(label "ENC_A"
 		(at 87.63 69.85 0)
 		(effects
@@ -11982,6 +11992,16 @@
 		)
 		(uuid "732e6e35-6cd7-4939-9c0a-024cfa0554ae")
 	)
+	(label "JDP"
+		(at 76.2 76.2 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "73966b19-a6c4-4baf-a4e1-63d885c30f8f")
+	)
 	(label "HEATER_ON"
 		(at 69.85 153.67 180)
 		(effects
@@ -12051,16 +12071,6 @@
 			(justify left bottom)
 		)
 		(uuid "99e40916-691f-4bea-8826-b507f9d8e3cd")
-	)
-	(label "JDN"
-		(at 76.2 71.12 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "9b90c7d4-c612-4666-a131-793a22f3b2e3")
 	)
 	(label "VTIP"
 		(at 379.73 181.61 180)
@@ -12252,16 +12262,6 @@
 		)
 		(uuid "cf64021f-d1a3-42e7-bece-378cd68adb1c")
 	)
-	(label "JDP"
-		(at 41.91 76.2 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "d51bdd11-70be-4a45-8d68-fe969c853bde")
-	)
 	(label "TC_FB"
 		(at 69.85 140.97 180)
 		(effects
@@ -12323,12 +12323,12 @@
 		(uuid "eb31cffc-bde3-4360-a80c-08c6c196cd71")
 	)
 	(label "CC1"
-		(at 76.2 76.2 180)
+		(at 41.91 76.2 0)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify right bottom)
+			(justify left bottom)
 		)
 		(uuid "ecb87673-e1d3-49f5-825b-cfe5cd083ea7")
 	)
