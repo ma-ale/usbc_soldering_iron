@@ -14883,7 +14883,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100u"
+		(property "Value" "22u"
 			(at 205.74 123.9138 0)
 			(effects
 				(font
