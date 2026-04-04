@@ -1,3 +1,9 @@
 .zen
 .vscode
 .ccls-cache
+.cache
+*.bin
+*.lst
+*.map
+*.elf
+*.hex
