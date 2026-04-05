@@ -37,7 +37,7 @@ static inline void ConfigureIOForRVSWD(void)
 // Single wire input-output SDI (just SWDIO)
 static inline void ConfigureIOForRVSWIO(void)
 {
-	BB_PRINTF_DEBUG( "TODO: add support for SWIO\n" );
+	//BB_PRINTF_DEBUG( "TODO: add support for SWIO\n" );
 }
 
 
@@ -84,7 +84,7 @@ static void MCFWriteReg32( struct SWIOState * state, uint8_t command, uint32_t v
 {
 	// only supported mode is SWD
 	if (state->opmode != 2) {
-		BB_PRINTF_DEBUG( "TODO: add support for SWIO\n" );
+		//BB_PRINTF_DEBUG( "TODO: add support for SWIO\n" );
 		return;
 	}
 
@@ -138,7 +138,7 @@ static int MCFReadReg32( struct SWIOState * state, uint8_t command, uint32_t * v
 {
 	// only supported mode is SWD
 	if (state->opmode != 2) {
-		BB_PRINTF_DEBUG( "TODO: add support for SWIO\n" );
+		//BB_PRINTF_DEBUG( "TODO: add support for SWIO\n" );
 		return -1;
 	}
 
@@ -192,5 +192,6 @@ static int MCFReadReg32( struct SWIOState * state, uint8_t command, uint32_t * v
 read_end:
     interrupts();
     sleep_us(STOP_WAIT);
+    BB_PRINTF_DEBUG("wrong parity: %d\n", parity_read);
     return (parity == parity_read) ? 0 : -1;
 }

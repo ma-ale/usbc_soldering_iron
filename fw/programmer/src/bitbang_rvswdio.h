@@ -188,7 +188,7 @@ static int InitializeSWDSWIO( struct SWIOState * state )
 		if( MCFReadReg32( state, DMSTATUS, &dmstatus ) != 0 ||
 			MCFReadReg32( state, DMCONTROL, &dmcontrol ) != 0 )
 		{
-			//BB_PRINTF_DEBUG( "Could not read from RVSWD connection\n" );
+			BB_PRINTF_DEBUG( "Could not read from RVSWD connection\n" );
 			state->opmode = 0;
 			continue;
 		}
@@ -198,7 +198,7 @@ static int InitializeSWDSWIO( struct SWIOState * state )
 			( ( dmstatus >> 8 ) & 0xf ) != 0x03 ) ||
 			dmcontrol != 1 )
 		{
-			//BB_PRINTF_DEBUG( "DMSTATUS invalid (Probably no RVSWD chip)\n" );
+			BB_PRINTF_DEBUG( "DMSTATUS invalid (Probably no RVSWD chip)\n" );
 			state->opmode = 0;
 			continue;
 		}
@@ -207,7 +207,7 @@ static int InitializeSWDSWIO( struct SWIOState * state )
 		BB_PRINTF_DEBUG( "Found RVSWD interface\n" );
 		return 0;
 	}
-	//printf( "TIMEOUT\n" );
+	BB_PRINTF_DEBUG( "TIMEOUT\n" );
 	return -55;
 }
 
