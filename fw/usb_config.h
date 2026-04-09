@@ -7,16 +7,16 @@
 // Endpoint numbers, at least one (EP0)
 #define FUSB_CONFIG_EPS       4
 // Endpoint configuration for CDC TTY
-#define FUSB_EP1_MODE         USBFS_EP_TX // TX (IN), CDC Interrupt Endpoint
-#define FUSB_EP2_MODE         USBFS_EP_RX // RX (OUT), CDC Data OUT
-#define FUSB_EP3_MODE         USBFS_EP_TX // TX (IN), CDC Data IN
+#define FUSB_EP1_MODE         1 // TX (IN), CDC Interrupt Endpoint
+#define FUSB_EP2_MODE        -1 // RX (OUT), CDC Data OUT
+#define FUSB_EP3_MODE         1 // TX (IN), CDC Data IN
 // Other hardware configuration
 #define FUSB_SUPPORTS_SLEEP   0
 #define FUSB_HID_INTERFACES   0
 #define FUSB_CURSED_TURBO_DMA 0 // Hacky, but seems fine, shaves 2.5us off filling 64-byte buffers.
 #define FUSB_HID_USER_REPORTS 0
 #define FUSB_IO_PROFILE       0
-//#define FUSB_USE_HPE          FUNCONF_ENABLE_HPE
+#define FUSB_USE_HPE          FUNCONF_ENABLE_HPE
 #define FUSB_USER_HANDLERS    1
 #define FUSB_USE_DMA7_COPY    0
 #define FUSB_VDD_5V           0 // 3.3V
