@@ -10,3 +10,6 @@ FLASH_COMMAND=$(MINICHLINK)/minichlink -C isp -w $< $(WRITE_SECTION) -b
 
 flash : cv_flash
 clean : cv_clean
+
+monitor :
+	picocom --imap lfcrlf /dev/ttyACM0
