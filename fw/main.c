@@ -33,6 +33,9 @@ const int16_t ntc_table[64] = {
 
 
 uint8_t pin = 0;
+int16_t encoder = 0; // rotary encoder counter
+uint32_t last_interrupt = 0; // last time the encoder interrupt was triggered
+#define ENCODER_DEBOUNCE 6000
 
 
 // Convert the raw adc reading to a temperature in kelvin with the ntc lut,
@@ -92,6 +95,23 @@ void handle_usbfs_input(int numbytes, uint8_t *data)
 }
 
 
+// triggered on the falling edge of the rotary encoder PIN_A
+void EXTI15_8_IRQHandler(void) __attribute__((interrupt));
+void EXTI15_8_IRQHandler(void)
+{
+	uint32_t now = funSysTick32();
+	if (now - last_interrupt > ENCODER_DEBOUNCE) {
+		last_interrupt = now;
+		if (funDigitalRead(PIN_ENC_A)) {
+			encoder++;
+		} else {
+			encoder--;
+		}
+	}
+	EXTI->INTFR = EXTI_Line11;
+}
+
+
 __attribute__((noreturn)) int main(void)
 {
 	SystemInit();
@@ -110,9 +130,19 @@ __attribute__((noreturn)) int main(void)
 	funPinMode(PIN_HEATER, GPIO_CFGLR_OUT_10Mhz_PP);
 	funDigitalWrite(PIN_HEATER, 0);
 
-	funPinMode(PIN_ENC_A, GPIO_CFGLR_IN_PUPD);
-	funPinMode(PIN_ENC_B, GPIO_CFGLR_IN_PUPD);
+	funPinMode(PIN_ENC_A, GPIO_CFGLR_IN_PUPD); // enable pull-up/down
+	funDigitalWrite(PIN_ENC_A, 1); // specify pull-up
+	funPinMode(PIN_ENC_B, GPIO_CFGLR_IN_PUPD); // enable pull-up/down
+	funDigitalWrite(PIN_ENC_B, 1); // specify pull-up
 	funPinMode(PIN_BTN, GPIO_CFGLR_IN_FLOAT);
+
+ 	// Configure the IO as an interrupt.
+ 	// PIN_ENC_B is on port B, channel 11
+    AFIO->EXTICR1 = AFIO_EXTICR1_EXTI11_PB; // Port B channel (pin) 11
+    EXTI->INTENR = EXTI_INTENR_MR11; // Enable EXT11
+    EXTI->FTENR = EXTI_FTENR_TR11;  // Falling edge trigger
+    // enable interrupt
+    NVIC_EnableIRQ(EXTI15_8_IRQn);
 
 	Delay_Ms(500);
 
@@ -126,7 +156,7 @@ __attribute__((noreturn)) int main(void)
 			int16_t temp_k = get_temp_k(funAnalogRead(NTC_ADC_CHANNEL));
 			uint16_t temp_tip_k = funAnalogRead(TEMP_ADC_CHANNEL);
 
-			printf("[%d]: VBUS=%d, CURRENT=%d, TEMP=%d, TIP=%d\n", count++, vbus_mv, current_ma, temp_k, temp_tip_k);
+			printf("[%d]: VBUS=%d, CURRENT=%d, TEMP=%d, TIP=%d, COUNTER=%d\n", count++, vbus_mv, current_ma, temp_k, temp_tip_k, encoder);
 
 			funDigitalWrite(PIN_LED, pin);
 			pin = !pin;
