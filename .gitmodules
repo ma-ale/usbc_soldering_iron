@@ -1,3 +1,6 @@
 [submodule "fw/ch32fun"]
 	path = fw/ch32fun
 	url = https://github.com/cnlohr/ch32fun
+[submodule "fw/u8g2"]
+	path = fw/u8g2
+	url = https://github.com/olikraus/u8g2

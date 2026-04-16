@@ -3,17 +3,21 @@
 #include <stdio.h>
 #include <fsusb.h>
 
+#include "lib_i2c.h"
+#include "display.h"
+
+
 // Pin definitions
-#define PIN_LED     PA4  // debug led
-#define PIN_VBUS    PA0  // vbus voltage feedback
-#define PIN_CURRENT PA1  // current feedback
-#define PIN_NTC     PA2  // ntc temperature sensor
-#define PIN_TEMP    PA3  // thermocouple amplifier
-#define PIN_12V     PA5  // 12V regulator enable
-#define PIN_HEATER  PA6  // power mosfet gate control
-#define PIN_ENC_A   PB3  // rotary encoder A
-#define PIN_ENC_B   PB11 // rotary encoder B
-#define PIN_BTN     PB1  // rotary encoder button
+#define PIN_LED      PA4  // debug led
+#define PIN_VBUS     PA0  // vbus voltage feedback
+#define PIN_CURRENT  PA1  // current feedback
+#define PIN_NTC      PA2  // ntc temperature sensor
+#define PIN_TEMP     PA3  // thermocouple amplifier
+#define PIN_12V      PA5  // 12V regulator enable
+#define PIN_HEATER   PA6  // power mosfet gate control
+#define PIN_ENC_A    PB3  // rotary encoder A
+#define PIN_ENC_B    PB11 // rotary encoder B
+#define PIN_BTN      PB1  // rotary encoder button
 
 // Analog channel definitions
 #define VBUS_ADC_CHANNEL    ANALOG_0 // PA0
@@ -32,6 +36,7 @@ const int16_t ntc_table[64] = {
 };
 
 
+u8g2_t *u8g2;
 uint8_t pin = 0;
 int16_t encoder = 0; // rotary encoder counter
 uint32_t last_interrupt = 0; // last time the encoder interrupt was triggered
@@ -58,6 +63,12 @@ static inline int16_t get_tip_temp_k(uint16_t adc_reading, int16_t cold_temp_k)
 }
 
 
+void print_i2c_device(uint8_t addr)
+{
+	printf("Device found at 0x%02X\n", addr);
+}
+
+
 // this callback is mandatory when FUNCONF_USE_USBPRINTF is defined,
 // can be empty though
 void handle_usbfs_input(int numbytes, uint8_t *data)
@@ -81,7 +92,20 @@ void handle_usbfs_input(int numbytes, uint8_t *data)
 			printf(
 				"Available commands:\n"
 				"\tr : toggle the 12V regulator\n"
+				"\td : init display\n"
+				"\ts : scan I2C bus\n"
 			);
+			break;
+		case 'd':
+			printf("Initializing display...\n");
+			u8g2 = display_init();
+		    u8g2_ClearBuffer(u8g2);
+			u8g2_DrawBox(u8g2, 0, 0, 20, 10);
+			u8g2_SendBuffer(u8g2);
+			break;
+		case 's':
+			printf("Scanning I2C bus...\n");
+			i2c_scan(I2C1, print_i2c_device);
 			break;
 		default:
 			printf("Unknown command '%c'\n", data[0]);
@@ -129,12 +153,38 @@ __attribute__((noreturn)) int main(void)
 	funDigitalWrite(PIN_12V, 0);
 	funPinMode(PIN_HEATER, GPIO_CFGLR_OUT_10Mhz_PP);
 	funDigitalWrite(PIN_HEATER, 0);
+	funPinMode(PIN_DISP_RST, GPIO_CFGLR_OUT_10Mhz_PP);
+	funDigitalWrite(PIN_DISP_RST, 1); // start with display disabled
 
 	funPinMode(PIN_ENC_A, GPIO_CFGLR_IN_PUPD); // enable pull-up/down
 	funDigitalWrite(PIN_ENC_A, 1); // specify pull-up
 	funPinMode(PIN_ENC_B, GPIO_CFGLR_IN_PUPD); // enable pull-up/down
 	funDigitalWrite(PIN_ENC_B, 1); // specify pull-up
 	funPinMode(PIN_BTN, GPIO_CFGLR_IN_FLOAT);
+
+	Delay_Ms(5000);
+
+	/* -------- Code to get hardware I2C working on the CH32X035F8U6 -------- */
+	// Order here matters, first initialize the AFIO and I2C subsystems then
+	// change register values, do that the other way around and the configuration
+	// wont take effect
+	// Enable AFIO (Alternate Function IO)
+	RCC->APB2PCENR |= RCC_AFIOEN;
+	// Init I2C
+    i2c_init(I2C_TARGET, FUNCONF_SYSTEM_CORE_CLOCK, 100000);
+
+    // To utilize the I2C bus we need to disable SWD first, since the pins overlap
+	AFIO->PCFR1 &= ~(0b0111 << 24);
+	AFIO->PCFR1 |=   0b0100 << 24;
+
+	// Map SCL to PC18 and SDA to PC19
+	AFIO->PCFR1 |= 0b0101 << 2;
+	// Manually set the I2C pins to Alternate Function IO,  CNF=10b, MODE=10b
+	GPIOC->CFGXR &= ~((0xF << 8) | (0xF << 12)); // first clear the bits
+	// then set them
+	GPIOC->CFGXR |= 0b1010 << 8; // PC18
+	GPIOC->CFGXR |= 0b1010 << 12; // PC19
+
 
  	// Configure the IO as an interrupt.
  	// PIN_ENC_B is on port B, channel 11

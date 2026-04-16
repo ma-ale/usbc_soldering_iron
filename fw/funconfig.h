@@ -5,5 +5,7 @@
 #define FUNCONF_USE_USBPRINTF       1
 #define FUNCONF_DEBUG_HARDFAULT     0
 #define CH32X035                    1
+#define I2C_TARGET                  I2C1
 
-#endif
+
+#endif // _FUNCONFIG_H
