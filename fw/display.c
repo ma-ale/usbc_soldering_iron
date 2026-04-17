@@ -166,9 +166,12 @@ u8g2_t* display_init(void)
 #elif SSD1312_96X16 && SSD1312_96X16 == 1
 	// NOTE: display size is wrong, hardware is 96x16, but driver is configured for 120x28
 	u8g2_Setup_ssd1312_i2c_120x28_f(&u8g2, U8G2_R0, u8x8_byte_i2c, u8x8_gpio_and_delay);
+#else
+	static_assert(0, "unsupported display size");
 #endif
 	// TODO: log errors and return NULL on failure
     u8g2_InitDisplay(&u8g2);
     u8g2_SetPowerSave(&u8g2, 0);
+    u8g2_SetContrast(&u8g2, 255);
     return &u8g2;
 }
