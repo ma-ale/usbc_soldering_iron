@@ -137,6 +137,31 @@ void EXTI15_8_IRQHandler(void)
 }
 
 
+// Procedure to get hardware I2C working on the CH32X035F8U6
+static inline void setup_i2c(void)
+{
+	// Order here matters, first initialize the AFIO and I2C subsystems then
+	// change register values, do that the other way around and the configuration
+	// wont take effect
+	// Enable AFIO (Alternate Function IO)
+	RCC->APB2PCENR |= RCC_AFIOEN;
+	// Init I2C
+    i2c_init(I2C_TARGET, FUNCONF_SYSTEM_CORE_CLOCK, 100000);
+
+    // To utilize the I2C bus we need to disable SWD first, since the pins overlap
+	AFIO->PCFR1 &= ~(0b0111 << 24);
+	AFIO->PCFR1 |=   0b0100 << 24;
+
+	// Map SCL to PC18 and SDA to PC19
+	AFIO->PCFR1 |= 0b0101 << 2;
+	// Manually set the I2C pins to Alternate Function IO,  CNF=10b, MODE=10b
+	GPIOC->CFGXR &= ~((0xF << 8) | (0xF << 12)); // first clear the bits
+	// then set them
+	GPIOC->CFGXR |= 0b1010 << 8; // PC18
+	GPIOC->CFGXR |= 0b1010 << 12; // PC19
+}
+
+
 __attribute__((noreturn)) int main(void)
 {
 	SystemInit();
@@ -165,27 +190,7 @@ __attribute__((noreturn)) int main(void)
 
 	Delay_Ms(5000);
 
-	/* -------- Code to get hardware I2C working on the CH32X035F8U6 -------- */
-	// Order here matters, first initialize the AFIO and I2C subsystems then
-	// change register values, do that the other way around and the configuration
-	// wont take effect
-	// Enable AFIO (Alternate Function IO)
-	RCC->APB2PCENR |= RCC_AFIOEN;
-	// Init I2C
-    i2c_init(I2C_TARGET, FUNCONF_SYSTEM_CORE_CLOCK, 100000);
-
-    // To utilize the I2C bus we need to disable SWD first, since the pins overlap
-	AFIO->PCFR1 &= ~(0b0111 << 24);
-	AFIO->PCFR1 |=   0b0100 << 24;
-
-	// Map SCL to PC18 and SDA to PC19
-	AFIO->PCFR1 |= 0b0101 << 2;
-	// Manually set the I2C pins to Alternate Function IO,  CNF=10b, MODE=10b
-	GPIOC->CFGXR &= ~((0xF << 8) | (0xF << 12)); // first clear the bits
-	// then set them
-	GPIOC->CFGXR |= 0b1010 << 8; // PC18
-	GPIOC->CFGXR |= 0b1010 << 12; // PC19
-
+	setup_i2c();
 
  	// Configure the IO as an interrupt.
  	// PIN_ENC_B is on port B, channel 11
