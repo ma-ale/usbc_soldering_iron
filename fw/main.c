@@ -106,7 +106,7 @@ void handle_usbfs_input(int numbytes, uint8_t *data)
 			break;
 		case 's':
 			printf("Scanning I2C bus...\n");
-			i2c_scan(I2C1, print_i2c_device);
+			i2c_scan(I2C_TARGET, print_i2c_device);
 			break;
 		default:
 			printf("Unknown command '%c'\n", data[0]);
