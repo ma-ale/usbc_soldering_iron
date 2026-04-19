@@ -6,6 +6,7 @@
 #include "lib_i2c.h"
 #include "display.h"
 #include "filter.h"
+#include "u8g2.h"
 
 
 // Pin definitions
@@ -215,17 +216,16 @@ __attribute__((noreturn)) int main(void)
 		u8g2_SetBitmapMode(u8g2, 1);
 		u8g2_SetFontMode(u8g2, 1);
 		u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
-		u8g2_DrawStr(u8g2, 0, 7, "TIP:");
-		u8g2_DrawStr(u8g2, 20, 7, u8x8_u16toa(tip_mv, 4));
-		u8g2_DrawStr(u8g2, 0, 15, "VBUS:");
-		u8g2_DrawStr(u8g2, 25, 15, u8x8_u16toa(vbus_mv, 4));
-		u8g2_DrawLine(u8g2, 62, 19, 62, 0);
-		u8g2_DrawStr(u8g2, 71, 6, "TEMP:");
-		u8g2_DrawStr(u8g2, 96, 6, u8x8_u16toa(temp_k, 2));
-		u8g2_DrawFrame(u8g2, 0, 22, 128, 10);
-		encoder = encoder < -61 ? -61 : (encoder > 61 ? 61 : encoder);
-		u8g2_DrawBox(u8g2, 61+encoder, 23, 4, 8);
+#define x_off 0
+#define y_off 8
+		u8g2_DrawStr(u8g2, x_off+0, y_off+7, "TIP:");
+		u8g2_DrawStr(u8g2, x_off+20, y_off+7, u8x8_u16toa(tip_mv, 4));
+		u8g2_DrawStr(u8g2, x_off+0, y_off+15, "VBUS:");
+		u8g2_DrawStr(u8g2, x_off+25, y_off+15, u8x8_u16toa(vbus_mv, 4));
+		u8g2_DrawStr(u8g2, x_off+51, y_off+7, "TEMP:");
+		u8g2_DrawStr(u8g2, x_off+75, y_off+7, u8x8_u16toa(temp_k, 2));
 		u8g2_SendBuffer(u8g2);
+
 
 		printf("VBUS=%d, CURRENT=%d, TEMP=%d, TIP=%d, COUNTER=%d\n", vbus_mv, current_ma, temp_k, tip_mv, encoder);
 
