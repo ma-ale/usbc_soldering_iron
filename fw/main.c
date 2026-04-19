@@ -24,6 +24,8 @@
 #define NTC_ADC_CHANNEL     ANALOG_2 // PA2
 #define TEMP_ADC_CHANNEL    ANALOG_3 // PA3
 
+#define FRAME_TIME_MS 41 // roughly 24 fps
+
 // constants
 // LUT for converting NTC readings to degrees kelvin
 // Nominal: 1kOhm, Beta: 3380, Step: 64
@@ -66,13 +68,6 @@ static inline int16_t get_current_ma(uint16_t adc_reading)
 }
 
 
-// convert the raw tip reading from the adc to a temperature in kelvin
-static inline int16_t get_tip_temp_k(uint16_t adc_reading, int16_t cold_temp_k)
-{
-	return 0;
-}
-
-
 void print_i2c_device(uint8_t addr)
 {
 	printf("Device found at 0x%02X\n", addr);
@@ -105,13 +100,6 @@ void handle_usbfs_input(int numbytes, uint8_t *data)
 				"\td : init display\n"
 				"\ts : scan I2C bus\n"
 			);
-			break;
-		case 'd':
-			printf("Initializing display...\n");
-			u8g2 = display_init();
-		    u8g2_ClearBuffer(u8g2);
-			u8g2_DrawBox(u8g2, 0, 0, 20, 10);
-			u8g2_SendBuffer(u8g2);
 			break;
 		case 's':
 			printf("Scanning I2C bus...\n");
@@ -208,18 +196,40 @@ __attribute__((noreturn)) int main(void)
 
 	Delay_Ms(500);
 
-	unsigned int count = 0;
+	u8g2 = display_init();
 
-	for (uint32_t x = 0; true ; x++) {
+	for (;;) {
 		poll_input(); // usb
-		if ((x % 100) == 0) {
-			uint16_t vbus_mv = ((u32)funAnalogRead(VBUS_ADC_CHANNEL)*VCC_MV*11)/4096;
-			uint16_t current_ma = get_current_ma(funAnalogRead(CURRENT_ADC_CHANNEL));
-			int16_t temp_k = get_temp_k(funAnalogRead(NTC_ADC_CHANNEL));
-			uint16_t tip_mv = ((u32)funAnalogRead(TEMP_ADC_CHANNEL)*VCC_MV)/4096;
+	    u32 start = funSysTick32();
 
-			printf("[%d]: VBUS=%d, CURRENT=%d, TEMP=%d, TIP=%d, COUNTER=%d\n", count++, vbus_mv, current_ma, temp_k, tip_mv, encoder);
+		uint16_t vbus_mv = ((u32)funAnalogRead(VBUS_ADC_CHANNEL)*VCC_MV*11)/4096;
+		uint16_t current_ma = get_current_ma(funAnalogRead(CURRENT_ADC_CHANNEL));
+		int16_t temp_k = get_temp_k(funAnalogRead(NTC_ADC_CHANNEL));
+		uint16_t tip_mv = ((u32)funAnalogRead(TEMP_ADC_CHANNEL)*VCC_MV)/4096;
+
+		u8g2_ClearBuffer(u8g2);
+		u8g2_SetBitmapMode(u8g2, 1);
+		u8g2_SetFontMode(u8g2, 1);
+		u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
+		u8g2_DrawStr(u8g2, 0, 7, "TIP:");
+		u8g2_DrawStr(u8g2, 20, 7, u8x8_u16toa(tip_mv, 4));
+		u8g2_DrawStr(u8g2, 0, 15, "VBUS:");
+		u8g2_DrawStr(u8g2, 25, 15, u8x8_u16toa(vbus_mv, 4));
+		u8g2_DrawLine(u8g2, 62, 19, 62, 0);
+		u8g2_DrawStr(u8g2, 71, 6, "TEMP:");
+		u8g2_DrawStr(u8g2, 96, 6, u8x8_u16toa(temp_k, 2));
+		u8g2_DrawFrame(u8g2, 0, 22, 128, 10);
+		encoder = encoder < -61 ? -61 : (encoder > 61 ? 61 : encoder);
+		u8g2_DrawBox(u8g2, 61+encoder, 23, 4, 8);
+		u8g2_SendBuffer(u8g2);
+
+		printf("VBUS=%d, CURRENT=%d, TEMP=%d, TIP=%d, COUNTER=%d\n", vbus_mv, current_ma, temp_k, tip_mv, encoder);
+
+		u32 elapsed = funSysTick32() - start;
+		if (elapsed < Ticks_from_Ms(FRAME_TIME_MS)) {
+		    DelaySysTick(Ticks_from_Ms(FRAME_TIME_MS) - elapsed);
+		} else {
+		    printf("Frame took too long: %ld ms\n", elapsed/DELAY_MS_TIME);
 		}
-		Delay_Ms(1);
 	}
 }
