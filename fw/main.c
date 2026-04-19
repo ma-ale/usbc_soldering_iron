@@ -8,7 +8,6 @@
 
 
 // Pin definitions
-#define PIN_LED      PA4  // debug led
 #define PIN_VBUS     PA0  // vbus voltage feedback
 #define PIN_CURRENT  PA1  // current feedback
 #define PIN_NTC      PA2  // ntc temperature sensor
@@ -33,12 +32,12 @@ const int16_t ntc_lut[] = {
 	1316, 197, 155, 133, 119, 108, 100, 93, 87, 82, 77, 73, 69, 66, 63, 60,
 	57, 54, 52, 50, 47, 45, 43, 41, 39, 37, 35, 34, 32, 30, 28, 27,
 	25, 23, 22, 20, 19, 17, 15, 14, 12, 11, 9, 7, 6, 4, 2, 0,
-	-1, -3, -5, -7, -9, -11, -14, -16, -19, -22, -25, -28, -32, -38, -44, -55
+	-1, -3, -5, -7, -9, -11, -14, -16, -19, -22, -25, -28, -32, -38, -44, -55,
+	-55 // extra value to not have an extra if statement
 };
 
 
 u8g2_t *u8g2;
-uint8_t pin = 0;
 int16_t encoder = 0; // rotary encoder counter
 uint32_t last_interrupt = 0; // last time the encoder interrupt was triggered
 #define ENCODER_DEBOUNCE 6000
@@ -52,8 +51,18 @@ static inline int16_t get_temp_k(uint16_t adc_reading)
 	uint8_t index = adc_reading / ntc_step_size;
 	uint8_t remainder = adc_reading % ntc_step_size;
 	int16_t temp_base = index < 64 ? ntc_lut[index] : 0;
-    int16_t temp_next = index < 63 ? ntc_lut[index + 1] : temp_base;
+    int16_t temp_next = ntc_lut[index + 1];
     return temp_base + ((temp_next - temp_base) * remainder)/ntc_step_size;
+}
+
+
+// convert the raw TPA191 adc reading to a current in milliamps
+static inline int16_t get_current_ma(uint16_t adc_reading)
+{
+	// Rshunt = 4 milliOhm
+	// Gain = 100
+	u32 mv = ((u32)adc_reading * VCC_MV) / 4096;
+	return (mv * 10) / 4;
 }
 
 
@@ -174,7 +183,6 @@ __attribute__((noreturn)) int main(void)
 	funPinMode(PIN_NTC, GPIO_CFGLR_IN_ANALOG);
 	funPinMode(PIN_TEMP, GPIO_CFGLR_IN_ANALOG);
 
-	funPinMode(PIN_LED, GPIO_CFGLR_OUT_10Mhz_PP);
 	funPinMode(PIN_12V, GPIO_CFGLR_OUT_10Mhz_PP);
 	funDigitalWrite(PIN_12V, 0);
 	funPinMode(PIN_HEATER, GPIO_CFGLR_OUT_10Mhz_PP);
@@ -187,8 +195,6 @@ __attribute__((noreturn)) int main(void)
 	funPinMode(PIN_ENC_B, GPIO_CFGLR_IN_PUPD); // enable pull-up/down
 	funDigitalWrite(PIN_ENC_B, 1); // specify pull-up
 	funPinMode(PIN_BTN, GPIO_CFGLR_IN_FLOAT);
-
-	Delay_Ms(5000);
 
 	setup_i2c();
 
@@ -207,15 +213,12 @@ __attribute__((noreturn)) int main(void)
 	for (uint32_t x = 0; true ; x++) {
 		poll_input(); // usb
 		if ((x % 100) == 0) {
-			uint16_t vbus_mv = (funAnalogRead(VBUS_ADC_CHANNEL)*3300*11)/4095;
-			uint16_t current_ma = ((uint32_t)funAnalogRead(CURRENT_ADC_CHANNEL) * 4125 + 1024) / 2048;
+			uint16_t vbus_mv = ((u32)funAnalogRead(VBUS_ADC_CHANNEL)*VCC_MV*11)/4096;
+			uint16_t current_ma = get_current_ma(funAnalogRead(CURRENT_ADC_CHANNEL));
 			int16_t temp_k = get_temp_k(funAnalogRead(NTC_ADC_CHANNEL));
-			uint16_t temp_tip_k = funAnalogRead(TEMP_ADC_CHANNEL);
+			uint16_t tip_mv = ((u32)funAnalogRead(TEMP_ADC_CHANNEL)*VCC_MV)/4096;
 
-			printf("[%d]: VBUS=%d, CURRENT=%d, TEMP=%d, TIP=%d, COUNTER=%d\n", count++, vbus_mv, current_ma, temp_k, temp_tip_k, encoder);
-
-			funDigitalWrite(PIN_LED, pin);
-			pin = !pin;
+			printf("[%d]: VBUS=%d, CURRENT=%d, TEMP=%d, TIP=%d, COUNTER=%d\n", count++, vbus_mv, current_ma, temp_k, tip_mv, encoder);
 		}
 		Delay_Ms(1);
 	}

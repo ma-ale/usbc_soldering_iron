@@ -6,6 +6,7 @@
 #define FUNCONF_DEBUG_HARDFAULT     0
 #define CH32X035                    1
 #define I2C_TARGET                  I2C1
+#define VCC_MV                      3480
 
 
 #endif // _FUNCONFIG_H
