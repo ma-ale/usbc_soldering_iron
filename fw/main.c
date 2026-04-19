@@ -6,7 +6,6 @@
 #include "lib_i2c.h"
 #include "display.h"
 #include "filter.h"
-#include "u8g2.h"
 
 
 // Pin definitions
@@ -145,9 +144,9 @@ static inline void setup_i2c(void)
 	// Enable AFIO (Alternate Function IO)
 	RCC->APB2PCENR |= RCC_AFIOEN;
 	// Init I2C
-    i2c_init(I2C_TARGET, FUNCONF_SYSTEM_CORE_CLOCK, 100000);
+	i2c_init(I2C_TARGET, FUNCONF_SYSTEM_CORE_CLOCK, 100000);
 
-    // To utilize the I2C bus we need to disable SWD first, since the pins overlap
+	// To utilize the I2C bus we need to disable SWD first, since the pins overlap
 	AFIO->PCFR1 &= ~(0b0111 << 24);
 	AFIO->PCFR1 |=   0b0100 << 24;
 
@@ -188,13 +187,13 @@ __attribute__((noreturn)) int main(void)
 
 	setup_i2c();
 
- 	// Configure the IO as an interrupt.
- 	// PIN_ENC_B is on port B, channel 11
-    AFIO->EXTICR1 = AFIO_EXTICR1_EXTI11_PB; // Port B channel (pin) 11
-    EXTI->INTENR = EXTI_INTENR_MR11; // Enable EXT11
-    EXTI->FTENR = EXTI_FTENR_TR11;  // Falling edge trigger
-    // enable interrupt
-    NVIC_EnableIRQ(EXTI15_8_IRQn);
+	// Configure the IO as an interrupt.
+	// PIN_ENC_B is on port B, channel 11
+	AFIO->EXTICR1 = AFIO_EXTICR1_EXTI11_PB; // Port B channel (pin) 11
+	EXTI->INTENR = EXTI_INTENR_MR11; // Enable EXT11
+	EXTI->FTENR = EXTI_FTENR_TR11;  // Falling edge trigger
+	// enable interrupt
+	NVIC_EnableIRQ(EXTI15_8_IRQn);
 
 	Delay_Ms(500);
 
@@ -205,7 +204,7 @@ __attribute__((noreturn)) int main(void)
 		static int16_t temp_k;
 
 		poll_input(); // usb
-	    u32 start = funSysTick32();
+		u32 start = funSysTick32();
 
 		vbus_mv = U16_FP_EMA_K2(vbus_mv, ((u32)funAnalogRead(VBUS_ADC_CHANNEL)*VCC_MV*11)/4096);
 		current_ma = U16_FP_EMA_K2(current_ma, get_current_ma(funAnalogRead(CURRENT_ADC_CHANNEL)));
@@ -231,9 +230,9 @@ __attribute__((noreturn)) int main(void)
 
 		u32 elapsed = funSysTick32() - start;
 		if (elapsed < Ticks_from_Ms(FRAME_TIME_MS)) {
-		    DelaySysTick(Ticks_from_Ms(FRAME_TIME_MS) - elapsed);
+			DelaySysTick(Ticks_from_Ms(FRAME_TIME_MS) - elapsed);
 		} else {
-		    printf("Frame took too long: %ld ms\n", elapsed/DELAY_MS_TIME);
+			printf("Frame took too long: %ld ms\n", elapsed/DELAY_MS_TIME);
 		}
 	}
 }
