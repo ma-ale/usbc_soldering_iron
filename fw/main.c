@@ -5,6 +5,7 @@
 
 #include "lib_i2c.h"
 #include "display.h"
+#include "filter.h"
 
 
 // Pin definitions
@@ -199,13 +200,16 @@ __attribute__((noreturn)) int main(void)
 	u8g2 = display_init();
 
 	for (;;) {
+		static uint16_t tip_mv, vbus_mv, current_ma;
+		static int16_t temp_k;
+
 		poll_input(); // usb
 	    u32 start = funSysTick32();
 
-		uint16_t vbus_mv = ((u32)funAnalogRead(VBUS_ADC_CHANNEL)*VCC_MV*11)/4096;
-		uint16_t current_ma = get_current_ma(funAnalogRead(CURRENT_ADC_CHANNEL));
-		int16_t temp_k = get_temp_k(funAnalogRead(NTC_ADC_CHANNEL));
-		uint16_t tip_mv = ((u32)funAnalogRead(TEMP_ADC_CHANNEL)*VCC_MV)/4096;
+		vbus_mv = U16_FP_EMA_K2(vbus_mv, ((u32)funAnalogRead(VBUS_ADC_CHANNEL)*VCC_MV*11)/4096);
+		current_ma = U16_FP_EMA_K2(current_ma, get_current_ma(funAnalogRead(CURRENT_ADC_CHANNEL)));
+		temp_k = U16_FP_EMA_K2(temp_k, get_temp_k(funAnalogRead(NTC_ADC_CHANNEL)));
+		tip_mv = U16_FP_EMA_K2(tip_mv, (u32)(funAnalogRead(TEMP_ADC_CHANNEL)*VCC_MV)/4096);
 
 		u8g2_ClearBuffer(u8g2);
 		u8g2_SetBitmapMode(u8g2, 1);
