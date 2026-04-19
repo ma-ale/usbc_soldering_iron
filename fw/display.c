@@ -161,9 +161,9 @@ uint8_t u8x8_byte_i2c(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)
 
 u8g2_t* display_init(void)
 {
-#if SSD1306_128X32 && SSD1306_128X32 == 1
+#if defined(SSD1306_128X32) && SSD1306_128X32
 	u8g2_Setup_ssd1306_i2c_128x32_univision_f(&u8g2, U8G2_R0, u8x8_byte_i2c, u8x8_gpio_and_delay);
-#elif SSD1312_96X16 && SSD1312_96X16 == 1
+#elif defined(SSD1312_96X16) && SSD1312_96X16
 	// NOTE: display size is wrong, hardware is 96x16, but driver is configured for 120x28
 	u8g2_Setup_ssd1312_i2c_128x32_f(&u8g2, U8G2_R0, u8x8_byte_i2c, u8x8_gpio_and_delay);
 #else
