@@ -98,7 +98,6 @@ void handle_usbfs_input(int numbytes, uint8_t *data)
 			printf(
 				"Available commands:\n"
 				"\tr : toggle the 12V regulator\n"
-				"\td : init display\n"
 				"\ts : scan I2C bus\n"
 			);
 			break;
