@@ -3,6 +3,9 @@
 #include <stdio.h>
 #include <fsusb.h>
 
+#define USBPD_IMPLEMENTATION
+#include "usbpd.h"
+
 #include "lib_i2c.h"
 #include "display.h"
 #include "filter.h"
@@ -322,6 +325,39 @@ __attribute__((noreturn)) int main(void)
 
 	u8g2 = display_init();
 
+	// Init USBPD
+	USBPD_VCC_e vcc = eUSBPD_VCC_3V3;
+	USBPD_Result_e result = USBPD_Init(vcc);
+	if (result != eUSBPD_OK) {
+		printf("USBPD_Init failed: %d\n", result);
+	}
+
+//	USBPD_Reset();
+	bool has_pd = false;
+	u32 start = funSysTick32();
+	while (eUSBPD_BUSY == (result = USBPD_SinkNegotiate())) {
+		u32 now = funSysTick32();
+		if (now - start > Ticks_from_Ms(10000)) {
+			printf("USBPD_SinkNegotiate timed out\n");
+			break;
+		}
+
+		u8g2_ClearBuffer(u8g2);
+		u8g2_SetBitmapMode(u8g2, 1);
+		u8g2_SetFontMode(u8g2, 1);
+		u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
+		u8g2_DrawStr(u8g2, 0, 18, "waiting...");
+		u8g2_SendBuffer(u8g2);
+	}
+	if (result != eUSBPD_OK) {
+		printf("USBPD_SinkNegotiate failed: %s, state: %s\n",
+			USBPD_ResultToStr(result),
+			USBPD_StateToStr(USBPD_GetState())
+		);
+	} else {
+		has_pd = true;
+	}
+
 	for (;;) {
 		static uint16_t tip_mv, vbus_mv, current_ma;
 		static int16_t temp_k;
@@ -350,6 +386,9 @@ __attribute__((noreturn)) int main(void)
 		u8g2_DrawStr(u8g2, x_off+25, y_off+15, u8x8_u16toa(vbus_mv, 4));
 		u8g2_DrawStr(u8g2, x_off+51, y_off+7, "TEMP:");
 		u8g2_DrawStr(u8g2, x_off+75, y_off+7, u8x8_u16toa(temp_k, 2));
+		u8g2_DrawStr(u8g2, x_off+51, y_off+15, "PD:");
+		u8g2_DrawStr(u8g2, x_off+65, y_off+15, has_pd ? "YES" : "NO");
+
 		u8g2_SendBuffer(u8g2);
 
 
