@@ -160,17 +160,141 @@ static inline void setup_i2c(void)
 }
 
 
+// FIXME: this holds the max number of ADC channels, ideally this would be lower
+volatile uint16_t adc_buffer[16];
+// Set-up the adc to perform continous conversion of enabled channels, enable
+// channel injection and setup DMA to automatically transfer conversion results
+// to a buffer
+static inline void setup_adc_and_dma(uint8_t *channels, uint8_t ch_size, uint8_t *injected, uint8_t in_size)
+{
+	if (channels == NULL || ch_size == 0) return;
+	// FIXME: for now only support a single configuration register, so at max 6 channels
+	//        I don't want to implement logic to switch registers right now
+	// TODO: report an error
+	if (ch_size > 6) return;
+
+	// General ADC initialization, I use this only for enabling clocks and such
+	funAnalogInit(); // general initialization
+
+	// Set the SCAN and CONT bits to enter continous conversion mode
+	// Do not set the IAUTO bit to ensure injected channels are converted only
+	// when specified by software
+	// Set the regular channel trigger mode to software (EXTSEL = 0b111) to ensure
+	// conversion starts in sync with DMA (this should already be done by funAnalogInit())
+	ADC1->CTLR1 |= ADC_SCAN;
+	ADC1->CTLR2 |= ADC_CONT | ADC_EXTSEL;
+
+	// Setup regular channels (scanned continously)
+	// TODO: setup sampling time
+	for (uint8_t i = 0; i < ch_size; i++) {
+		// Increase sampling time to have less cross talk between channels
+		// 0b111 means 11 ADC clock cycles (max)
+		if (channels[i] < 10) {
+			ADC1->SAMPTR2 |= 0b111 << (channels[i]*3);
+		} else {
+			ADC1->SAMPTR1 |= 0b111 << ((channels[i]-10)*3);
+		}
+		ADC1->RSQR3 |= channels[i] << (i*5);
+	}
+	// Set the number of normal conversion channels
+	ADC1->RSQR1 |= (ch_size-1) << 20;
+
+	// Set-up injection channels
+	// The injection channel register allows for up to 4 channels, if the buffer is larger
+	// skip this step
+	// TODO: report an error
+	if (injected != NULL && in_size != 0 && in_size <= 4) {
+		// enable injection group
+		// JEXTSEL = 0b111 (software trigger)
+		ADC1->CTLR2 |= ADC_JEXTSEL;
+		for (uint8_t i = 0; i < in_size; i++) {
+			ADC1->ISQR |= injected[i] << ((4-in_size+i)*5);
+		}
+		// Set the number of injection channels
+		ADC1->ISQR |= (in_size-1) << 20;
+	}
+
+	// Set-up DMA, ADC is connected only to channel 1
+	// Turn on DMA
+	RCC->AHBPCENR |= RCC_AHBPeriph_DMA1;
+	// 1. Set the address of the source peripheral, in this case the output
+	//    register of the ADC
+	DMA1_Channel1->PADDR = (uint32_t)&(ADC1->RDATAR);
+	// 2. Set the destination (base) address of the data
+	DMA1_Channel1->MADDR = (uint32_t)adc_buffer;
+	// 3. Set the number of transfers to be done each cycle, in this case it's
+	//    the same as the number of regular conversion cycles
+	DMA1_Channel1->CNTR = ch_size;
+	// 4. Set mode: Peripheral to Memory, MEM2MEM=0 DIR=0
+	//    Circular mode CIRC=1, restart after CNTR transfers
+	//    Max priority to not lose conversions and offset values in the buffer
+	DMA1_Channel1->CFGR  =
+		DMA_M2M_Disable |
+		DMA_Priority_VeryHigh |
+		DMA_MemoryDataSize_HalfWord |
+		DMA_PeripheralDataSize_HalfWord |
+		DMA_MemoryInc_Enable |
+		DMA_Mode_Circular |
+		DMA_DIR_PeripheralSRC;
+	// Turn on DMA channel 1
+	DMA1_Channel1->CFGR |= DMA_CFGR1_EN;
+
+	// Enable DMA requests from the ADC
+	ADC1->CTLR2 |= ADC_DMA;
+	// Power up ADC again
+	ADC1->CTLR2 |= ADC_ADON;
+	// start conversion
+	ADC1->CTLR2 |= ADC_SWSTART;
+}
+
+
+volatile uint16_t injection_results[4];
+bool adc_injection_conversion() {
+	// Clear any pending flags
+	ADC1->STATR &= ~(ADC_JEOC);
+
+	// Start injection conversion using external trigger method
+	ADC1->CTLR2 |= ADC_JSWSTART;
+
+	// Wait for all conversions to complete
+	s32 timeout = 1000000;
+	while(!(ADC1->STATR & ADC_JEOC) && timeout--) {}
+
+	if (timeout <= 0) return false;
+
+	// Read all results
+	injection_results[0] = ADC1->IDATAR1 & 0x0FFF;
+	injection_results[1] = ADC1->IDATAR2 & 0x0FFF;
+	injection_results[2] = ADC1->IDATAR3 & 0x0FFF;
+	injection_results[3] = ADC1->IDATAR4 & 0x0FFF;
+
+	// Clear JEOC flag
+	ADC1->STATR &= ~ADC_JEOC;
+
+	return true;
+}
+
+
 __attribute__((noreturn)) int main(void)
 {
 	SystemInit();
 	funGpioInitAll();
-	funAnalogInit();
 	USBFSSetup();
 
 	funPinMode(PIN_VBUS, GPIO_CFGLR_IN_ANALOG);
 	funPinMode(PIN_CURRENT, GPIO_CFGLR_IN_ANALOG);
 	funPinMode(PIN_NTC, GPIO_CFGLR_IN_ANALOG);
 	funPinMode(PIN_TEMP, GPIO_CFGLR_IN_ANALOG);
+
+	uint8_t adc_channels[3] = {
+		VBUS_ADC_CHANNEL,
+		CURRENT_ADC_CHANNEL,
+		NTC_ADC_CHANNEL
+	};
+	uint8_t adc_injected[1] = {
+		TEMP_ADC_CHANNEL
+	};
+	setup_adc_and_dma(adc_channels, 3, adc_injected, 1);
 
 	funPinMode(PIN_12V, GPIO_CFGLR_OUT_10Mhz_PP);
 	funDigitalWrite(PIN_12V, 0);
@@ -202,14 +326,18 @@ __attribute__((noreturn)) int main(void)
 	for (;;) {
 		static uint16_t tip_mv, vbus_mv, current_ma;
 		static int16_t temp_k;
-
-		poll_input(); // usb
 		u32 start = funSysTick32();
 
-		vbus_mv = U16_FP_EMA_K2(vbus_mv, ((u32)funAnalogRead(VBUS_ADC_CHANNEL)*VCC_MV*11)/4096);
-		current_ma = U16_FP_EMA_K2(current_ma, get_current_ma(funAnalogRead(CURRENT_ADC_CHANNEL)));
-		temp_k = U16_FP_EMA_K2(temp_k, get_temp_k(funAnalogRead(NTC_ADC_CHANNEL)));
-		tip_mv = U16_FP_EMA_K2(tip_mv, (u32)(funAnalogRead(TEMP_ADC_CHANNEL)*VCC_MV)/4096);
+		poll_input(); // usb
+
+		vbus_mv = U16_FP_EMA_K2(vbus_mv, ((u32)adc_buffer[0]*VCC_MV*11)/4096);
+		current_ma = U16_FP_EMA_K2(current_ma, get_current_ma(adc_buffer[1]));
+		temp_k = U16_FP_EMA_K2(temp_k, get_temp_k(adc_buffer[2]));
+		if (!adc_injection_conversion()) {
+		    printf("injection conversion failed");
+		} else {
+		    tip_mv = U16_FP_EMA_K2(tip_mv, (u32)(injection_results[0]*VCC_MV)/4096);
+		}
 
 		u8g2_ClearBuffer(u8g2);
 		u8g2_SetBitmapMode(u8g2, 1);
