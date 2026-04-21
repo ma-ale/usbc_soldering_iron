@@ -144,7 +144,7 @@ static inline void setup_i2c(void)
 	// Enable AFIO (Alternate Function IO)
 	RCC->APB2PCENR |= RCC_AFIOEN;
 	// Init I2C
-	i2c_init(I2C_TARGET, FUNCONF_SYSTEM_CORE_CLOCK, 100000);
+	i2c_init(I2C_TARGET, FUNCONF_SYSTEM_CORE_CLOCK, 400000);
 
 	// To utilize the I2C bus we need to disable SWD first, since the pins overlap
 	AFIO->PCFR1 &= ~(0b0111 << 24);
