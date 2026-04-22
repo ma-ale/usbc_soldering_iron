@@ -334,10 +334,14 @@ __attribute__((noreturn)) int main(void)
 
 //	USBPD_Reset();
 	bool has_pd = false;
+	USBPD_SPR_CapabilitiesMessage_t *capabilities = NULL;
+	uint32_t cap_count = 0;
+	int max_v = 5;
+	int idx_9v = -1;
 	u32 start = funSysTick32();
 	while (eUSBPD_BUSY == (result = USBPD_SinkNegotiate())) {
 		u32 now = funSysTick32();
-		if (now - start > Ticks_from_Ms(10000)) {
+		if (now - start > Ticks_from_Ms(5000)) {
 			printf("USBPD_SinkNegotiate timed out\n");
 			break;
 		}
@@ -356,6 +360,33 @@ __attribute__((noreturn)) int main(void)
 		);
 	} else {
 		has_pd = true;
+		cap_count = USBPD_GetCapabilities(&capabilities);
+		for (u32 i = 0; i < cap_count; i++) {
+			USBPD_SinkPDO_t *pdo = &capabilities->Sink[i];
+			switch (pdo->Header.PDOType) {
+			case eUSBPD_PDO_FIXED:
+				if (pdo->FixedSupply.VoltageIn50mV/20 > max_v) {
+					max_v = pdo->FixedSupply.VoltageIn50mV/20;
+				}
+				if (pdo->FixedSupply.VoltageIn50mV/20 == 9) {
+					idx_9v = i;
+				}
+				break;
+			case eUSBPD_PDO_BATTERY:
+				if (pdo->BatterySupply.MaxVoltageIn50mV/20 > max_v) {
+					max_v = pdo->BatterySupply.MaxVoltageIn50mV/20;
+				}
+				break;
+			case eUSBPD_PDO_VARIABLE:
+				if (pdo->VariableSupply.MaxVoltageIn50mV/20 > max_v) {
+					max_v = pdo->VariableSupply.MaxVoltageIn50mV/20;
+				}
+				break;
+			case eUSBPD_PDO_AUGMENTED:
+				// TODO
+				break;
+			}
+		}
 	}
 
 	for (;;) {
@@ -386,13 +417,17 @@ __attribute__((noreturn)) int main(void)
 		u8g2_DrawStr(u8g2, x_off+25, y_off+15, u8x8_u16toa(vbus_mv, 4));
 		u8g2_DrawStr(u8g2, x_off+51, y_off+7, "TEMP:");
 		u8g2_DrawStr(u8g2, x_off+75, y_off+7, u8x8_u16toa(temp_k, 2));
-		u8g2_DrawStr(u8g2, x_off+51, y_off+15, "PD:");
-		u8g2_DrawStr(u8g2, x_off+65, y_off+15, has_pd ? "YES" : "NO");
+		u8g2_DrawStr(u8g2, x_off+51, y_off+15, "V:");
+		u8g2_DrawStr(u8g2, x_off+60, y_off+15, u8x8_u16toa(max_v, 2));
 
 		u8g2_SendBuffer(u8g2);
 
+		if (idx_9v != -1 && funDigitalRead(PIN_BTN) == 0) {
+			USBPD_SelectPDO(idx_9v, 0);
+			Delay_Ms(200);
+		}
 
-		printf("VBUS=%d, CURRENT=%d, TEMP=%d, TIP=%d, COUNTER=%d\n", vbus_mv, current_ma, temp_k, tip_mv, encoder);
+//		printf("VBUS=%d, CURRENT=%d, TEMP=%d, TIP=%d, COUNTER=%d\n", vbus_mv, current_ma, temp_k, tip_mv, encoder);
 
 		u32 elapsed = funSysTick32() - start;
 		if (elapsed < Ticks_from_Ms(FRAME_TIME_MS)) {
