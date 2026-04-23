@@ -23,8 +23,8 @@ void i2c_scan(I2C_TypeDef* I2Cx, void (*onPingFound)(u8 address));
 //! I2C SEND FUNCTION
 //! ####################################
 
-u8 i2c_sendBytes_noStop(I2C_TypeDef* I2Cx, u8 i2cAddress, u8* buffer, u8 len);
-u8 i2c_sendBytes(I2C_TypeDef* I2Cx, u8 i2cAddress, u8* buffer, u8 len);
+u8 i2c_sendBytes_noStop(I2C_TypeDef* I2Cx, u8 i2cAddress, const u8* buffer, u8 len);
+u8 i2c_sendBytes(I2C_TypeDef* I2Cx, u8 i2cAddress, const u8* buffer, u8 len);
 u8 i2c_sendByte(I2C_TypeDef* I2Cx, u8 i2cAddress, u8 data);
 
 //! ####################################
