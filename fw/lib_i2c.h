@@ -17,8 +17,6 @@
 void i2c_init(I2C_TypeDef* I2Cx, u32 PCLK, u32 i2cSpeed_Hz);
 u8 i2c_start(I2C_TypeDef* I2Cx, u8 i2cAddress, u8 isRead);
 void i2c_stop(I2C_TypeDef* I2Cx);
-u8 i2c_write(I2C_TypeDef* I2Cx, u8 i2cAddress, u8 reg, u8 data);
-u8 i2c_read(I2C_TypeDef* I2Cx, u8 i2cAddress, u8 reg, u8* buffer, u8 len);
 void i2c_scan(I2C_TypeDef* I2Cx, void (*onPingFound)(u8 address));
 
 //! ####################################
