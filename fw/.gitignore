@@ -7,4 +7,6 @@
 *.map
 *.elf
 *.hex
+*.o
+.build
 compile_commands.json
