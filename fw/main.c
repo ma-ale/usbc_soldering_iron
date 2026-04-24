@@ -9,6 +9,7 @@
 #include "lib_i2c.h"
 #include "display.h"
 #include "filter.h"
+#include "sc7a20.h"
 
 
 // Pin definitions
@@ -324,6 +325,7 @@ __attribute__((noreturn)) int main(void)
 	Delay_Ms(500);
 
 	u8g2 = display_init();
+	sc7a20_init();
 
 	// Init USBPD
 	USBPD_VCC_e vcc = eUSBPD_VCC_3V3;
@@ -396,13 +398,13 @@ __attribute__((noreturn)) int main(void)
 
 		poll_input(); // usb
 
-		vbus_mv = U16_FP_EMA_K2(vbus_mv, ((u32)adc_buffer[0]*VCC_MV*11)/4096);
-		current_ma = U16_FP_EMA_K2(current_ma, get_current_ma(adc_buffer[1]));
-		temp_k = U16_FP_EMA_K2(temp_k, get_temp_k(adc_buffer[2]));
+		vbus_mv = U16_FP_EMA_K4(vbus_mv, ((u32)adc_buffer[0]*VCC_MV*11)/4096);
+		current_ma = U16_FP_EMA_K4(current_ma, get_current_ma(adc_buffer[1]));
+		temp_k = I16_FP_EMA_K4(temp_k, get_temp_k(adc_buffer[2]));
 		if (!adc_injection_conversion()) {
 		    printf("injection conversion failed");
 		} else {
-		    tip_mv = U16_FP_EMA_K2(tip_mv, (u32)(injection_results[0]*VCC_MV)/4096);
+		    tip_mv = U16_FP_EMA_K4(tip_mv, (u32)(injection_results[0]*VCC_MV)/4096);
 		}
 
 		u8g2_ClearBuffer(u8g2);
@@ -411,20 +413,36 @@ __attribute__((noreturn)) int main(void)
 		u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
 #define x_off 0
 #define y_off 8
-		u8g2_DrawStr(u8g2, x_off+0, y_off+7, "TIP:");
-		u8g2_DrawStr(u8g2, x_off+20, y_off+7, u8x8_u16toa(tip_mv, 4));
-		u8g2_DrawStr(u8g2, x_off+0, y_off+15, "VBUS:");
-		u8g2_DrawStr(u8g2, x_off+25, y_off+15, u8x8_u16toa(vbus_mv, 4));
-		u8g2_DrawStr(u8g2, x_off+51, y_off+7, "TEMP:");
-		u8g2_DrawStr(u8g2, x_off+75, y_off+7, u8x8_u16toa(temp_k, 2));
-		u8g2_DrawStr(u8g2, x_off+51, y_off+15, "V:");
-		u8g2_DrawStr(u8g2, x_off+60, y_off+15, u8x8_u16toa(max_v, 2));
+		static bool mode = true;
+		if (mode) {
+			u8g2_DrawStr(u8g2, x_off+0, y_off+7, "TIP:");
+			u8g2_DrawStr(u8g2, x_off+20, y_off+7, u8x8_u16toa(tip_mv, 4));
+			u8g2_DrawStr(u8g2, x_off+0, y_off+15, "VBUS:");
+			u8g2_DrawStr(u8g2, x_off+25, y_off+15, u8x8_u16toa(vbus_mv, 4));
+			u8g2_DrawStr(u8g2, x_off+51, y_off+7, "TEMP:");
+			u8g2_DrawStr(u8g2, x_off+75, y_off+7, u8x8_u16toa(temp_k, 2));
+			u8g2_DrawStr(u8g2, x_off+51, y_off+15, "V:");
+			u8g2_DrawStr(u8g2, x_off+60, y_off+15, u8x8_u16toa(max_v, 2));
+		} else {
+			static int16_t ax, ay, az;
+			sc7a20_get_readings(&ax, &ay, &az);
+			u8g2_DrawStr(u8g2, x_off+0, y_off+7, ax > 0 ? "AX:+" : "AX:-");
+			u8g2_DrawStr(u8g2, x_off+20, y_off+7, u8x8_u16toa(ax > 0 ? ax : -ax, 5));
+			u8g2_DrawStr(u8g2, x_off+0, y_off+15, ay > 0 ? "AY:+" : "AY:-");
+			u8g2_DrawStr(u8g2, x_off+20, y_off+15, u8x8_u16toa(ay > 0 ? ay : -ay, 5));
+			u8g2_DrawStr(u8g2, x_off+50, y_off+7, az > 0 ? "AZ:+" : "AZ:-");
+			u8g2_DrawStr(u8g2, x_off+70, y_off+7, u8x8_u16toa(az > 0 ? az : -az, 5));
+		}
 
 		u8g2_SendBuffer(u8g2);
 
 		if (idx_9v != -1 && funDigitalRead(PIN_BTN) == 0) {
 			USBPD_SelectPDO(idx_9v, 0);
 			Delay_Ms(200);
+		}
+		if (encoder != 0) {
+			mode = !mode;
+			encoder = 0;
 		}
 
 //		printf("VBUS=%d, CURRENT=%d, TEMP=%d, TIP=%d, COUNTER=%d\n", vbus_mv, current_ma, temp_k, tip_mv, encoder);
