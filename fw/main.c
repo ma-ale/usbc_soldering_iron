@@ -251,8 +251,10 @@ static inline void setup_adc_and_dma(uint8_t *channels, uint8_t ch_size, uint8_t
 }
 
 
+// Perform a conversion on the injected ADC channels, this is synchronous and
+// halts conversion on the normal channels until it completes
 volatile uint16_t injection_results[4];
-bool adc_injection_conversion() {
+static inline bool adc_injection_conversion() {
 	// Clear any pending flags
 	ADC1->STATR &= ~(ADC_JEOC);
 
@@ -334,7 +336,6 @@ __attribute__((noreturn)) int main(void)
 		printf("USBPD_Init failed: %d\n", result);
 	}
 
-//	USBPD_Reset();
 	bool has_pd = false;
 	USBPD_SPR_CapabilitiesMessage_t *capabilities = NULL;
 	uint32_t cap_count = 0;
