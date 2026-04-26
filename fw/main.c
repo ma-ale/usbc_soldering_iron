@@ -31,6 +31,8 @@
 
 #define FRAME_TIME_MS 41 // roughly 24 fps
 
+#define PWM_FREQ_HZ 150000
+
 // constants
 // LUT for converting NTC readings to degrees kelvin
 // Nominal: 1kOhm, Beta: 3380, Step: 64
@@ -279,6 +281,68 @@ static inline bool adc_injection_conversion() {
 	return true;
 }
 
+// mask for the CCxP bits
+// when set PWM outputs are held HIGH by default and pulled LOW
+// when zero PWM outputs are held LOW by default and pulled HIGH
+// #define TIM3_DEFAULT 0xff
+#define TIM3_DEFAULT 0x00
+static inline void setup_pwm(void)
+{
+	// Enable TIM3 clock
+	RCC->APB1PCENR |= RCC_APB1Periph_TIM3;
+
+	// Since TIM3 is enabled with TIM3->SMCFGR.SMS = 0b000 (default value) the
+	// clock source is the internal clock
+	// The internal clock goes through the HBB prescaler RCC->CFGR0.HPRE which
+	// by default is disabled
+
+	// Reset TIM3 to init all regs
+	RCC->APB1PRSTR |= RCC_APB1Periph_TIM3;
+	RCC->APB1PRSTR &= ~RCC_APB1Periph_TIM3;
+
+	// set TIM3 clock prescaler divider
+	TIM3->PSC = 0x0000; // no prescaler
+	// set PWM total cycle width
+	static_assert((FUNCONF_SYSTEM_CORE_CLOCK / PWM_FREQ_HZ - 1) < 0xffff, "PWM_FREQ_HZ too low for TIM3");
+	TIM3->ATRLR = FUNCONF_SYSTEM_CORE_CLOCK / PWM_FREQ_HZ - 1;
+
+	// for channel 1 let CCxS stay 00 (output), set OC1M to 110 (PWM 1)
+	// enabling preload (OC1PE) causes the new pulse width in compare capture
+	// register only to come into effect when UG bit in SWEVGR is set
+	// 	(= initiate update) (auto-clears)
+	TIM3->CHCTLR1 |= TIM_OC1M_2 | TIM_OC1M_1 | TIM_OC1PE;
+
+	// Enable channel 1 output (PA6)
+	TIM3->CCER |= TIM_CC1E | ( TIM_CC1P & TIM3_DEFAULT );
+
+	// CTLR1: default is up, events generated, edge align
+	// enable auto-reload of preload
+	TIM3->CTLR1 |= TIM_ARPE;
+}
+
+
+static inline void pwm_on(void)
+{
+	// initialize counter
+	TIM3->SWEVGR |= TIM_UG;
+	// Enable TIM3
+	TIM3->CTLR1 |= TIM_CEN;
+}
+
+
+static inline void pwm_off(void)
+{
+	// Disable TIM3
+	TIM3->CTLR1 &= ~TIM_CEN;
+	TIM3->CH1CVR = 0;
+}
+
+
+static inline void pwm_set(uint16_t pulse_width)
+{
+	TIM3->CH1CVR = pulse_width;
+}
+
 
 __attribute__((noreturn)) int main(void)
 {
@@ -303,7 +367,7 @@ __attribute__((noreturn)) int main(void)
 
 	funPinMode(PIN_12V, GPIO_CFGLR_OUT_10Mhz_PP);
 	funDigitalWrite(PIN_12V, 0);
-	funPinMode(PIN_HEATER, GPIO_CFGLR_OUT_10Mhz_PP);
+	funPinMode(PIN_HEATER, GPIO_CFGLR_OUT_10Mhz_AF_PP);
 	funDigitalWrite(PIN_HEATER, 0);
 	funPinMode(PIN_DISP_RST, GPIO_CFGLR_OUT_10Mhz_PP);
 	funDigitalWrite(PIN_DISP_RST, 1); // start with display disabled
@@ -313,6 +377,9 @@ __attribute__((noreturn)) int main(void)
 	funPinMode(PIN_ENC_B, GPIO_CFGLR_IN_PUPD); // enable pull-up/down
 	funDigitalWrite(PIN_ENC_B, 1); // specify pull-up
 	funPinMode(PIN_BTN, GPIO_CFGLR_IN_FLOAT);
+
+	setup_pwm();
+	pwm_off();
 
 	setup_i2c();
 
@@ -392,6 +459,11 @@ __attribute__((noreturn)) int main(void)
 		}
 	}
 
+	if (idx_9v >= 0) {
+		USBPD_SelectPDO(idx_9v, 0);
+		Delay_Ms(200);
+	}
+
 	for (;;) {
 		static uint16_t tip_mv, vbus_mv, current_ma;
 		static int16_t temp_k;
@@ -408,6 +480,20 @@ __attribute__((noreturn)) int main(void)
 		    tip_mv = U16_FP_EMA_K4(tip_mv, (u32)(injection_results[0]*VCC_MV)/4096);
 		}
 
+		static bool pwm = false;
+		if (funDigitalRead(PIN_BTN) == 0) {
+			if (!pwm) {
+				funDigitalWrite(PIN_12V, 1);
+				pwm_on();
+				pwm = true;
+				pwm_set(100);
+			}
+		} else {
+			funDigitalWrite(PIN_12V, 0);
+			pwm_off();
+			pwm = false;
+		}
+
 		u8g2_ClearBuffer(u8g2);
 		u8g2_SetBitmapMode(u8g2, 1);
 		u8g2_SetFontMode(u8g2, 1);
@@ -415,32 +501,40 @@ __attribute__((noreturn)) int main(void)
 #define x_off 0
 #define y_off 8
 		static bool mode = true;
-		if (mode) {
+//		if (mode) {
 			u8g2_DrawStr(u8g2, x_off+0, y_off+7, "TIP:");
 			u8g2_DrawStr(u8g2, x_off+20, y_off+7, u8x8_u16toa(tip_mv, 4));
 			u8g2_DrawStr(u8g2, x_off+0, y_off+15, "VBUS:");
 			u8g2_DrawStr(u8g2, x_off+25, y_off+15, u8x8_u16toa(vbus_mv, 4));
 			u8g2_DrawStr(u8g2, x_off+51, y_off+7, "TEMP:");
 			u8g2_DrawStr(u8g2, x_off+75, y_off+7, u8x8_u16toa(temp_k, 2));
-			u8g2_DrawStr(u8g2, x_off+51, y_off+15, "V:");
-			u8g2_DrawStr(u8g2, x_off+60, y_off+15, u8x8_u16toa(max_v, 2));
-		} else {
-			static int16_t ax, ay, az;
-			sc7a20_get_readings(&ax, &ay, &az);
-			u8g2_DrawStr(u8g2, x_off+0, y_off+7, ax > 0 ? "AX:+" : "AX:-");
-			u8g2_DrawStr(u8g2, x_off+20, y_off+7, u8x8_u16toa(ax > 0 ? ax : -ax, 5));
-			u8g2_DrawStr(u8g2, x_off+0, y_off+15, ay > 0 ? "AY:+" : "AY:-");
-			u8g2_DrawStr(u8g2, x_off+20, y_off+15, u8x8_u16toa(ay > 0 ? ay : -ay, 5));
-			u8g2_DrawStr(u8g2, x_off+50, y_off+7, az > 0 ? "AZ:+" : "AZ:-");
-			u8g2_DrawStr(u8g2, x_off+70, y_off+7, u8x8_u16toa(az > 0 ? az : -az, 5));
+			//u8g2_DrawStr(u8g2, x_off+51, y_off+15, "V:");
+			//u8g2_DrawStr(u8g2, x_off+60, y_off+15, u8x8_u16toa(max_v, 2));
+			u8g2_DrawStr(u8g2, x_off+50, y_off+15, "CURR:");
+			u8g2_DrawStr(u8g2, x_off+75, y_off+15, u8x8_u16toa(current_ma, 4));
+//		} else {
+//			static int16_t ax, ay, az;
+//			sc7a20_get_readings(&ax, &ay, &az);
+//			u8g2_DrawStr(u8g2, x_off+0, y_off+7, ax > 0 ? "AX:+" : "AX:-");
+//			u8g2_DrawStr(u8g2, x_off+20, y_off+7, u8x8_u16toa(ax > 0 ? ax : -ax, 5));
+//			u8g2_DrawStr(u8g2, x_off+0, y_off+15, ay > 0 ? "AY:+" : "AY:-");
+//			u8g2_DrawStr(u8g2, x_off+20, y_off+15, u8x8_u16toa(ay > 0 ? ay : -ay, 5));
+//			u8g2_DrawStr(u8g2, x_off+50, y_off+7, az > 0 ? "AZ:+" : "AZ:-");
+//			u8g2_DrawStr(u8g2, x_off+70, y_off+7, u8x8_u16toa(az > 0 ? az : -az, 5));
+//		}
+
+		if (pwm) {
+			u8g2_DrawBox(u8g2, x_off+92, y_off+0, 4, 4);
 		}
 
 		u8g2_SendBuffer(u8g2);
 
+/*
 		if (idx_9v != -1 && funDigitalRead(PIN_BTN) == 0) {
 			USBPD_SelectPDO(idx_9v, 0);
 			Delay_Ms(200);
 		}
+*/
 		if (encoder != 0) {
 			mode = !mode;
 			encoder = 0;
