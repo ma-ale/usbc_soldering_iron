@@ -90,41 +90,8 @@ void print_i2c_device(uint8_t addr)
 // can be empty though
 void handle_usbfs_input(int numbytes, uint8_t *data)
 {
-	// handle single character commands
-	// TODO:
-	//     - 'c' to calibrate the tip temperature
-	//     - 't' to test tip presence
-	if(numbytes == 1) {
-		switch(data[0]) {
-		case 'r': // toggle the 12V regulator
-			if (funDigitalRead(PIN_12V)) {
-				funDigitalWrite(PIN_12V, 0);
-				printf("Disabled 12V Regulator\n");
-			} else {
-				funDigitalWrite(PIN_12V, 1);
-				printf("Enabled 12V Regulator\n");
-			}
-			break;
-		case 'h':
-			printf(
-				"Available commands:\n"
-				"\tr : toggle the 12V regulator\n"
-				"\ts : scan I2C bus\n"
-			);
-			break;
-		case 's':
-			printf("Scanning I2C bus...\n");
-			i2c_scan(I2C_TARGET, print_i2c_device);
-			break;
-		default:
-			printf("Unknown command '%c'\n", data[0]);
-			break;
-		}
-	}
-	else {
-		// echo
-		// _write(0, (const char*)data, numbytes);
-	}
+	(void)numbytes;
+	(void)data;
 }
 
 
