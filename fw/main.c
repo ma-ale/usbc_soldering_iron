@@ -34,7 +34,7 @@
 #define PWM_FREQ_HZ 150000
 
 // constants
-// LUT for converting NTC readings to degrees kelvin
+// LUT for converting NTC readings to degrees celsius
 // Nominal: 1kOhm, Beta: 3380, Step: 64
 const uint8_t ntc_step_size = 64;
 const int16_t ntc_lut[] = {
@@ -51,10 +51,15 @@ int16_t encoder = 0; // rotary encoder counter
 uint32_t last_interrupt = 0; // last time the encoder interrupt was triggered
 #define ENCODER_DEBOUNCE 6000
 
+// TODO: these need to be calibrated
+// Tip mV to deg C conversion factor numerator
+#define TC_CONV_NOM 151
+// Tip mV to deg C conversion factor denumerator
+#define TC_CONV_DEN 1000
 
-// Convert the raw adc reading to a temperature in kelvin with the ntc lut,
+// Convert the raw adc reading to a temperature in celsius with the ntc lut,
 // linearly interpolating between positions
-static inline int16_t get_temp_k(uint16_t adc_reading)
+static inline int16_t get_temp_c(uint16_t adc_reading)
 {
 	if (adc_reading > 4095) return 0;
 	uint8_t index = adc_reading / ntc_step_size;
@@ -465,19 +470,20 @@ __attribute__((noreturn)) int main(void)
 	}
 
 	for (;;) {
-		static uint16_t tip_mv, vbus_mv, current_ma;
-		static int16_t temp_k;
+		static uint16_t vbus_mv, current_ma;
+		static int16_t temp_c, tip_temp_c;
 		u32 start = funSysTick32();
 
 		poll_input(); // usb
 
 		vbus_mv = U16_FP_EMA_K4(vbus_mv, ((u32)adc_buffer[0]*VCC_MV*11)/4096);
 		current_ma = U16_FP_EMA_K4(current_ma, get_current_ma(adc_buffer[1]));
-		temp_k = I16_FP_EMA_K4(temp_k, get_temp_k(adc_buffer[2]));
+		temp_c = I16_FP_EMA_K4(temp_c, get_temp_c(adc_buffer[2]));
 		if (!adc_injection_conversion()) {
 		    printf("injection conversion failed");
 		} else {
-		    tip_mv = U16_FP_EMA_K4(tip_mv, (u32)(injection_results[0]*VCC_MV)/4096);
+			u32 tip_mv = ((u32)injection_results[0]*VCC_MV)/4096;
+		    tip_temp_c = I16_FP_EMA_K2(tip_temp_c, (tip_mv*TC_CONV_NOM)/TC_CONV_DEN) + temp_c;
 		}
 
 		static bool pwm = false;
@@ -503,11 +509,11 @@ __attribute__((noreturn)) int main(void)
 		static bool mode = true;
 //		if (mode) {
 			u8g2_DrawStr(u8g2, x_off+0, y_off+7, "TIP:");
-			u8g2_DrawStr(u8g2, x_off+20, y_off+7, u8x8_u16toa(tip_mv, 4));
+			u8g2_DrawStr(u8g2, x_off+20, y_off+7, u8x8_u16toa(tip_temp_c, 4));
 			u8g2_DrawStr(u8g2, x_off+0, y_off+15, "VBUS:");
 			u8g2_DrawStr(u8g2, x_off+25, y_off+15, u8x8_u16toa(vbus_mv, 4));
 			u8g2_DrawStr(u8g2, x_off+51, y_off+7, "TEMP:");
-			u8g2_DrawStr(u8g2, x_off+75, y_off+7, u8x8_u16toa(temp_k, 2));
+			u8g2_DrawStr(u8g2, x_off+75, y_off+7, u8x8_u16toa(temp_c, 2));
 			//u8g2_DrawStr(u8g2, x_off+51, y_off+15, "V:");
 			//u8g2_DrawStr(u8g2, x_off+60, y_off+15, u8x8_u16toa(max_v, 2));
 			u8g2_DrawStr(u8g2, x_off+50, y_off+15, "CURR:");
