@@ -29,7 +29,7 @@
 #define NTC_ADC_CHANNEL     ANALOG_2 // PA2
 #define TEMP_ADC_CHANNEL    ANALOG_3 // PA3
 
-#define FRAME_TIME_MS 41 // roughly 24 fps
+#define FRAME_TIME_MS 20 // 50Hz
 
 #define PWM_FREQ_HZ 150000
 
@@ -56,6 +56,22 @@ uint32_t last_interrupt = 0; // last time the encoder interrupt was triggered
 #define TC_CONV_NOM 151
 // Tip mV to deg C conversion factor denumerator
 #define TC_CONV_DEN 1000
+
+#define MAX_BOARD_TEMP 50
+#define MAX_TIP_TEMP   500
+#define TURN_OFF_DELAY 2
+#define CYCLES_PER_MEASURE 2
+
+// Current profile
+struct profile_t {
+	uint16_t voltage;     // Vbus Voltage in millivolts
+	uint16_t max_current; // Maximum current in milliamps
+	uint16_t power_avail; // Available power (from supply) in watts
+	uint16_t set_power;   // Maximum power in watts, set by the user
+	uint16_t set_temp;    // Set temperature in celsius, set by the user
+	uint16_t tip_r;       // Tip resistance in milliOhms
+	uint8_t  max_duty;    // Maximum duty cycle (0-100) to stay within the power limit
+} pd_profile;
 
 // Convert the raw adc reading to a temperature in celsius with the ntc lut,
 // linearly interpolating between positions
@@ -316,6 +332,29 @@ static inline void pwm_set(uint16_t pulse_width)
 }
 
 
+// Integer square root (binary search)
+// https://en.wikipedia.org/wiki/Integer_square_root
+static inline uint16_t isqrt(uint32_t x)
+{
+	uint16_t l = 0;     // lower bound of the square root
+	uint16_t r = x + 1; // upper bound of the square root
+
+	while (l != r - 1) {
+		uint32_t m = (l + r) / 2; // midpoint to test
+		if (m * m <= x) {
+			l = m;
+		} else {
+			r = m;
+		}
+	}
+
+	return l;
+}
+
+
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
+
+
 __attribute__((noreturn)) int main(void)
 {
 	SystemInit();
@@ -369,17 +408,17 @@ __attribute__((noreturn)) int main(void)
 	sc7a20_init();
 
 	// Init USBPD
+	bool has_pd = false;
 	USBPD_VCC_e vcc = eUSBPD_VCC_3V3;
 	USBPD_Result_e result = USBPD_Init(vcc);
 	if (result != eUSBPD_OK) {
 		printf("USBPD_Init failed: %d\n", result);
 	}
 
-	bool has_pd = false;
 	USBPD_SPR_CapabilitiesMessage_t *capabilities = NULL;
 	uint32_t cap_count = 0;
-	int max_v = 5;
-	int idx_9v = -1;
+	u16 max_v = 5;
+	u16 max_idx = -1;
 	u32 start = funSysTick32();
 	while (eUSBPD_BUSY == (result = USBPD_SinkNegotiate())) {
 		u32 now = funSysTick32();
@@ -400,6 +439,7 @@ __attribute__((noreturn)) int main(void)
 			USBPD_ResultToStr(result),
 			USBPD_StateToStr(USBPD_GetState())
 		);
+		has_pd = false;;
 	} else {
 		has_pd = true;
 		cap_count = USBPD_GetCapabilities(&capabilities);
@@ -409,117 +449,184 @@ __attribute__((noreturn)) int main(void)
 			case eUSBPD_PDO_FIXED:
 				if (pdo->FixedSupply.VoltageIn50mV/20 > max_v) {
 					max_v = pdo->FixedSupply.VoltageIn50mV/20;
-				}
-				if (pdo->FixedSupply.VoltageIn50mV/20 == 9) {
-					idx_9v = i;
+					max_idx = i;
 				}
 				break;
 			case eUSBPD_PDO_BATTERY:
 				if (pdo->BatterySupply.MaxVoltageIn50mV/20 > max_v) {
 					max_v = pdo->BatterySupply.MaxVoltageIn50mV/20;
+					max_idx = i;
 				}
 				break;
 			case eUSBPD_PDO_VARIABLE:
-				if (pdo->VariableSupply.MaxVoltageIn50mV/20 > max_v) {
-					max_v = pdo->VariableSupply.MaxVoltageIn50mV/20;
-				}
+				// TODO: PPS
+				// if (pdo->VariableSupply.MaxVoltageIn50mV/20 > max_v) {
+				// 	max_v = pdo->VariableSupply.MaxVoltageIn50mV/20;
+				// }
 				break;
 			case eUSBPD_PDO_AUGMENTED:
-				// TODO
+				// TODO: EPR
 				break;
 			}
 		}
 	}
 
-	if (idx_9v >= 0) {
-		USBPD_SelectPDO(idx_9v, 0);
+	if (has_pd && max_idx >= 0) {
+		USBPD_SelectPDO(max_idx, 0);
 		Delay_Ms(200);
+		USBPD_SinkPDO_t *pdo = &capabilities->Sink[max_idx];
+		switch (pdo->Header.PDOType) {
+			case eUSBPD_PDO_FIXED:
+				pd_profile.voltage = pdo->FixedSupply.VoltageIn50mV * 50;
+				pd_profile.max_current = pdo->FixedSupply.CurrentIn10mA * 10;
+				pd_profile.power_avail = ((u32)pd_profile.voltage * pd_profile.max_current) / (u32)1000000;
+				break;
+			case eUSBPD_PDO_BATTERY:
+				pd_profile.voltage = pdo->BatterySupply.MaxVoltageIn50mV * 50;
+				pd_profile.power_avail = pdo->BatterySupply.MaxPowerIn250mW / 4;
+				pd_profile.max_current = pd_profile.power_avail * 1000 / pd_profile.voltage;
+				break;
+			case eUSBPD_PDO_VARIABLE:
+				// TODO: PPS
+				break;
+			case eUSBPD_PDO_AUGMENTED:
+				// TODO: EPR
+				break;
+		}
 	}
 
+	// TODO: let the user decide the power profile
+	pd_profile.set_temp = 360;
+	pd_profile.set_power = 30;
+	pd_profile.tip_r = 2500; // TODO: tip check and resistance calculator
+	pd_profile.max_duty = (100*(u32)isqrt((MIN(pd_profile.set_power, pd_profile.power_avail)*pd_profile.tip_r)/1000) * 1000) / pd_profile.voltage;
+
+	u8g2_ClearBuffer(u8g2);
+	u8g2_SetBitmapMode(u8g2, 1);
+	u8g2_SetFontMode(u8g2, 1);
+	u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
+	static const int8_t x_off = 0;
+	static const int8_t y_off = 8;
+	// Display tip temperature
+	u8g2_DrawStr(u8g2, x_off+0, y_off+7, "A:");
+	u8g2_DrawStr(u8g2, x_off+10, y_off+7, u8g2_u16toa(pd_profile.max_current, 4));
+	// Display bus voltage
+	u8g2_DrawStr(u8g2, x_off+45, y_off+7, "V:");
+	u8g2_DrawStr(u8g2, x_off+55, y_off+7, u8g2_u16toa(pd_profile.voltage, 5));
+	// Display power
+	u8g2_DrawStr(u8g2, x_off+0, y_off+15, "W:");
+	u8g2_DrawStr(u8g2, x_off+10, y_off+15, u8g2_u16toa(pd_profile.power_avail, 3));
+	// Display current
+	u8g2_DrawStr(u8g2, x_off+45, y_off+15, "D:");
+	u8g2_DrawStr(u8g2, x_off+55, y_off+15, u8g2_u16toa(pd_profile.max_duty, 3));
+	u8g2_SendBuffer(u8g2);
+	Delay_Ms(5000);
+
+
 	for (;;) {
-		static uint16_t vbus_mv, current_ma;
-		static int16_t temp_c, tip_temp_c;
 		u32 start = funSysTick32();
-
 		poll_input(); // usb
-
-		vbus_mv = U16_FP_EMA_K4(vbus_mv, ((u32)adc_buffer[0]*VCC_MV*11)/4096);
-		current_ma = U16_FP_EMA_K4(current_ma, get_current_ma(adc_buffer[1]));
-		temp_c = I16_FP_EMA_K4(temp_c, get_temp_c(adc_buffer[2]));
-		if (!adc_injection_conversion()) {
-		    printf("injection conversion failed");
-		} else {
-			u32 tip_mv = ((u32)injection_results[0]*VCC_MV)/4096;
-		    tip_temp_c = I16_FP_EMA_K2(tip_temp_c, (tip_mv*TC_CONV_NOM)/TC_CONV_DEN) + temp_c;
-		}
-
-		static bool pwm = false;
-		if (funDigitalRead(PIN_BTN) == 0) {
-			if (!pwm) {
-				funDigitalWrite(PIN_12V, 1);
-				pwm_on();
-				pwm = true;
-				pwm_set(100);
-			}
-		} else {
-			funDigitalWrite(PIN_12V, 0);
-			pwm_off();
-			pwm = false;
-		}
 
 		u8g2_ClearBuffer(u8g2);
 		u8g2_SetBitmapMode(u8g2, 1);
 		u8g2_SetFontMode(u8g2, 1);
 		u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
-#define x_off 0
-#define y_off 8
-		static bool mode = true;
-//		if (mode) {
-			u8g2_DrawStr(u8g2, x_off+0, y_off+7, "TIP:");
-			u8g2_DrawStr(u8g2, x_off+20, y_off+7, u8x8_u16toa(tip_temp_c, 4));
-			u8g2_DrawStr(u8g2, x_off+0, y_off+15, "VBUS:");
-			u8g2_DrawStr(u8g2, x_off+25, y_off+15, u8x8_u16toa(vbus_mv, 4));
-			u8g2_DrawStr(u8g2, x_off+51, y_off+7, "TEMP:");
-			u8g2_DrawStr(u8g2, x_off+75, y_off+7, u8x8_u16toa(temp_c, 2));
-			//u8g2_DrawStr(u8g2, x_off+51, y_off+15, "V:");
-			//u8g2_DrawStr(u8g2, x_off+60, y_off+15, u8x8_u16toa(max_v, 2));
-			u8g2_DrawStr(u8g2, x_off+50, y_off+15, "CURR:");
-			u8g2_DrawStr(u8g2, x_off+75, y_off+15, u8x8_u16toa(current_ma, 4));
-//		} else {
-//			static int16_t ax, ay, az;
-//			sc7a20_get_readings(&ax, &ay, &az);
-//			u8g2_DrawStr(u8g2, x_off+0, y_off+7, ax > 0 ? "AX:+" : "AX:-");
-//			u8g2_DrawStr(u8g2, x_off+20, y_off+7, u8x8_u16toa(ax > 0 ? ax : -ax, 5));
-//			u8g2_DrawStr(u8g2, x_off+0, y_off+15, ay > 0 ? "AY:+" : "AY:-");
-//			u8g2_DrawStr(u8g2, x_off+20, y_off+15, u8x8_u16toa(ay > 0 ? ay : -ay, 5));
-//			u8g2_DrawStr(u8g2, x_off+50, y_off+7, az > 0 ? "AZ:+" : "AZ:-");
-//			u8g2_DrawStr(u8g2, x_off+70, y_off+7, u8x8_u16toa(az > 0 ? az : -az, 5));
-//		}
+		static const int8_t x_off = 0;
+		static const int8_t y_off = 8;
 
-		if (pwm) {
-			u8g2_DrawBox(u8g2, x_off+92, y_off+0, 4, 4);
+		static bool pwm = false; // PWM status
+		static bool enabled = false; // Power electronics enabled
+		static uint8_t count = 0; // Loop cycles with PWM on
+
+		if (has_pd) {
+			static uint16_t vbus_mv, current_ma;
+			static int16_t temp_c, tip_temp_c;
+			static uint16_t power;
+			vbus_mv = U16_FP_EMA_K4(vbus_mv, ((u32)adc_buffer[0]*VCC_MV*11)/4096);
+			current_ma = U16_FP_EMA_K4(current_ma, get_current_ma(adc_buffer[1]));
+			temp_c = I16_FP_EMA_K4(temp_c, get_temp_c(adc_buffer[2]));
+			power = ((u32)vbus_mv*current_ma)/1000000;
+
+			// Update the tip temperature only when the PWM is not running
+			if (!pwm) {
+				Delay_Ms(TURN_OFF_DELAY);
+				adc_injection_conversion();
+				u32 tip_mv = ((u32)injection_results[0]*VCC_MV)/4096;
+		    	tip_temp_c = I16_FP_EMA_K2(tip_temp_c, (tip_mv*TC_CONV_NOM)/TC_CONV_DEN) + temp_c;
+			}
+
+			// Display tip temperature
+			u8g2_DrawStr(u8g2, x_off+0, y_off+7, "TIP:");
+			u8g2_DrawStr(u8g2, x_off+20, y_off+7, u8g2_u16toa(tip_temp_c, 4));
+			// Display bus voltage
+			u8g2_DrawStr(u8g2, x_off+45, y_off+7, "V:");
+			u8g2_DrawStr(u8g2, x_off+55, y_off+7, u8g2_u16toa(vbus_mv/1000, 2));
+			// Display power
+			u8g2_DrawStr(u8g2, x_off+0, y_off+15, "W:");
+			u8g2_DrawStr(u8g2, x_off+10, y_off+15, u8g2_u16toa(power, 3));
+			// Display current
+			u8g2_DrawStr(u8g2, x_off+45, y_off+15, "A:");
+			u8g2_DrawStr(u8g2, x_off+55, y_off+15, u8g2_u16toa(current_ma, 5));
+
+
+			if (enabled) {
+				funDigitalWrite(PIN_12V, 1);
+
+				if (count > CYCLES_PER_MEASURE) {
+					pwm = false;
+					count = 0;
+				} else {
+					pwm = true;
+					count++;
+				}
+
+				// Safety logic
+				if (current_ma > pd_profile.max_current + pd_profile.max_current/10) {
+					pwm = false;
+				}
+				if (temp_c > MAX_BOARD_TEMP) {
+					enabled = false;
+					pwm = false;
+				}
+				if (tip_temp_c > MAX_TIP_TEMP) {
+					enabled = false;
+					pwm = false;
+				}
+
+				if (pwm) {
+					const uint16_t tim_max = FUNCONF_SYSTEM_CORE_CLOCK / PWM_FREQ_HZ - 1;
+					int16_t delta = pd_profile.set_temp - tip_temp_c;
+					uint16_t duty = MIN((25*pd_profile.max_duty*delta)/(pd_profile.set_temp*10), pd_profile.max_duty);
+					u8g2_DrawBox(u8g2, x_off+92, y_off+12, 4, 4);
+					pwm_set(((u32)duty*tim_max)/100);
+				} else {
+					pwm_set(0);
+				}
+			} else {
+				funDigitalWrite(PIN_12V, 0);
+			}
+
+			// Check button to toggle enable
+			if (funDigitalRead(PIN_BTN) == 0) {
+				enabled = !enabled;
+				if (enabled) {
+					pwm_on();
+				} else {
+					pwm_off();
+				}
+				Delay_Ms(100);
+			}
+
+		} else {
+			// No PD capability, just display a message
+			u8g2_DrawStr(u8g2, x_off+0, y_off+7, "NO PD");
 		}
 
 		u8g2_SendBuffer(u8g2);
 
-/*
-		if (idx_9v != -1 && funDigitalRead(PIN_BTN) == 0) {
-			USBPD_SelectPDO(idx_9v, 0);
-			Delay_Ms(200);
-		}
-*/
-		if (encoder != 0) {
-			mode = !mode;
-			encoder = 0;
-		}
-
-//		printf("VBUS=%d, CURRENT=%d, TEMP=%d, TIP=%d, COUNTER=%d\n", vbus_mv, current_ma, temp_k, tip_mv, encoder);
-
 		u32 elapsed = funSysTick32() - start;
 		if (elapsed < Ticks_from_Ms(FRAME_TIME_MS)) {
 			DelaySysTick(Ticks_from_Ms(FRAME_TIME_MS) - elapsed);
-		} else {
-			printf("Frame took too long: %ld ms\n", elapsed/DELAY_MS_TIME);
 		}
 	}
 }
