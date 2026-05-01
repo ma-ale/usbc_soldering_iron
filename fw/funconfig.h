@@ -8,7 +8,7 @@
 #define I2C_TARGET              I2C1
 #define VCC_MV                  3480
 #define FRAME_TIME_MS           20 // 50Hz
-#define PWM_FREQ_HZ             150000 // TIM3 PWM frequency
+#define PWM_FREQ_HZ             100000 // TIM3 PWM frequency
 
 // Pin definitions
 #define PIN_VBUS     PA0  // vbus voltage feedback

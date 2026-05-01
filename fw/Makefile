@@ -13,6 +13,7 @@ U8G2_SRC:=$(U8G2_DIR)/u8x8_d_$(DISPLAY).c $(filter-out $(U8G2_DIR)/u8x8_d_%.c, \
 
 EXTRA_CFLAGS += -I$(U8G2_DIR)
 ADDITIONAL_C_FILES += lib_i2c.c display.c sc7a20.c pd.c
+HEADER_FILES := $(wildcard *.h)
 
 include ch32fun/ch32fun/ch32fun.mk
 
@@ -29,7 +30,7 @@ $(BUILD_DIR)/%.o : $(U8G2_DIR)/%.c | $(BUILD_DIR)
 
 # build target
 TARGET_OBJS := $(addprefix $(BUILD_DIR)/, $(filter-out ch32fun.o, $(notdir $(FILES_TO_COMPILE:.c=.o))))
-$(BUILD_DIR)/%.o : %.c | $(BUILD_DIR)
+$(BUILD_DIR)/%.o : %.c $(HEADER_FILES) | $(BUILD_DIR)
 	$(PREFIX)-gcc $(CFLAGS) -c $< -o $@
 
 # link target, the rest of the build is specified in ch32fun.mk
