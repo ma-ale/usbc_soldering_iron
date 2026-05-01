@@ -3,14 +3,12 @@
 #include <stdio.h>
 #include <fsusb.h>
 
-#define USBPD_IMPLEMENTATION
-#include "usbpd.h"
-
 #include "funconfig.h"
 #include "lib_i2c.h"
 #include "display.h"
 #include "filter.h"
 #include "sc7a20.h"
+#include "pd.h"
 
 
 // constants
@@ -29,17 +27,9 @@ const int16_t ntc_lut[] = {
 u8g2_t *u8g2;
 int16_t encoder = 0; // rotary encoder counter
 uint32_t last_interrupt = 0; // last time the encoder interrupt was triggered
-
-// Current profile
-struct profile_t {
-	uint16_t voltage;     // Vbus Voltage in millivolts
-	uint16_t max_current; // Maximum current in milliamps
-	uint16_t power_avail; // Available power (from supply) in watts
-	uint16_t set_power;   // Maximum power in watts, set by the user
-	uint16_t set_temp;    // Set temperature in celsius, set by the user
-	uint16_t tip_r;       // Tip resistance in milliOhms
-	uint8_t  max_duty;    // Maximum duty cycle (0-100) to stay within the power limit
-} pd_profile;
+struct pd_profile_t pd_profile;
+static const int8_t x_off = 0;
+static const int8_t y_off = 8;
 
 // Convert the raw adc reading to a temperature in celsius with the ntc lut,
 // linearly interpolating between positions
@@ -375,120 +365,55 @@ __attribute__((noreturn)) int main(void)
 	u8g2 = display_init();
 	sc7a20_init();
 
-	// Init USBPD
-	bool has_pd = false;
-	USBPD_VCC_e vcc = eUSBPD_VCC_3V3;
-	USBPD_Result_e result = USBPD_Init(vcc);
-	if (result != eUSBPD_OK) {
-		printf("USBPD_Init failed: %d\n", result);
-	}
+	u8g2_ClearBuffer(u8g2);
+	u8g2_SetBitmapMode(u8g2, 1);
+	u8g2_SetFontMode(u8g2, 1);
+	u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
+	u8g2_DrawStr(u8g2, 0, 18, "negotiating...");
+	u8g2_SendBuffer(u8g2);
 
-	USBPD_SPR_CapabilitiesMessage_t *capabilities = NULL;
-	uint32_t cap_count = 0;
-	u16 max_v = 5;
-	u16 max_idx = -1;
-	u32 start = funSysTick32();
-	while (eUSBPD_BUSY == (result = USBPD_SinkNegotiate())) {
-		u32 now = funSysTick32();
-		if (now - start > Ticks_from_Ms(5000)) {
-			printf("USBPD_SinkNegotiate timed out\n");
-			break;
-		}
+	// Init USBPD
+	bool has_pd = pd_negotiate(eUSBPD_VCC_3V3);
+	if (has_pd == false) {
+		u8g2_ClearBuffer(u8g2);
+		u8g2_SetBitmapMode(u8g2, 1);
+		u8g2_SetFontMode(u8g2, 1);
+		u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
+		u8g2_DrawStr(u8g2, x_off+0, y_off+7, "Negotiation FAILED");
+		u8g2_DrawStr(u8g2, x_off+0, y_off+14, USBPD_ResultToStr(pd_get_result()));
+		u8g2_SendBuffer(u8g2);
+		Delay_Ms(5000);
+	} else {
+		pd_get_profile(&pd_profile, 100);
+
+		// TODO: let the user decide the power profile
+		pd_profile.set_temp = 360;
+		pd_profile.set_power = 95; // Slightly below max power to avoid overloading
+		pd_profile.tip_r = 2500; // TODO: tip check and resistance calculator
+		pd_profile.max_duty = MIN(
+			(100*(u32)isqrt((
+				MIN(pd_profile.set_power, pd_profile.power_avail)*pd_profile.tip_r)/1000) * 1000) / pd_profile.voltage
+			, 100);
 
 		u8g2_ClearBuffer(u8g2);
 		u8g2_SetBitmapMode(u8g2, 1);
 		u8g2_SetFontMode(u8g2, 1);
 		u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
-		u8g2_DrawStr(u8g2, 0, 18, "waiting...");
+		// Display tip temperature
+		u8g2_DrawStr(u8g2, x_off+0, y_off+7, "A:");
+		u8g2_DrawStr(u8g2, x_off+10, y_off+7, u8g2_u16toa(pd_profile.max_current, 4));
+		// Display bus voltage
+		u8g2_DrawStr(u8g2, x_off+45, y_off+7, "V:");
+		u8g2_DrawStr(u8g2, x_off+55, y_off+7, u8g2_u16toa(pd_profile.voltage, 5));
+		// Display power
+		u8g2_DrawStr(u8g2, x_off+0, y_off+15, "W:");
+		u8g2_DrawStr(u8g2, x_off+10, y_off+15, u8g2_u16toa(pd_profile.power_avail, 3));
+		// Display current
+		u8g2_DrawStr(u8g2, x_off+45, y_off+15, "D:");
+		u8g2_DrawStr(u8g2, x_off+55, y_off+15, u8g2_u16toa(pd_profile.max_duty, 3));
 		u8g2_SendBuffer(u8g2);
+		Delay_Ms(5000);
 	}
-	if (result != eUSBPD_OK) {
-		printf("USBPD_SinkNegotiate failed: %s, state: %s\n",
-			USBPD_ResultToStr(result),
-			USBPD_StateToStr(USBPD_GetState())
-		);
-		has_pd = false;;
-	} else {
-		has_pd = true;
-		cap_count = USBPD_GetCapabilities(&capabilities);
-		for (u32 i = 0; i < cap_count; i++) {
-			USBPD_SinkPDO_t *pdo = &capabilities->Sink[i];
-			switch (pdo->Header.PDOType) {
-			case eUSBPD_PDO_FIXED:
-				if (pdo->FixedSupply.VoltageIn50mV/20 > max_v) {
-					max_v = pdo->FixedSupply.VoltageIn50mV/20;
-					max_idx = i;
-				}
-				break;
-			case eUSBPD_PDO_BATTERY:
-				if (pdo->BatterySupply.MaxVoltageIn50mV/20 > max_v) {
-					max_v = pdo->BatterySupply.MaxVoltageIn50mV/20;
-					max_idx = i;
-				}
-				break;
-			case eUSBPD_PDO_VARIABLE:
-				// TODO: PPS
-				// if (pdo->VariableSupply.MaxVoltageIn50mV/20 > max_v) {
-				// 	max_v = pdo->VariableSupply.MaxVoltageIn50mV/20;
-				// }
-				break;
-			case eUSBPD_PDO_AUGMENTED:
-				// TODO: EPR
-				break;
-			}
-		}
-	}
-
-	if (has_pd && max_idx >= 0) {
-		USBPD_SelectPDO(max_idx, 0);
-		Delay_Ms(200);
-		USBPD_SinkPDO_t *pdo = &capabilities->Sink[max_idx];
-		switch (pdo->Header.PDOType) {
-			case eUSBPD_PDO_FIXED:
-				pd_profile.voltage = pdo->FixedSupply.VoltageIn50mV * 50;
-				pd_profile.max_current = pdo->FixedSupply.CurrentIn10mA * 10;
-				pd_profile.power_avail = ((u32)pd_profile.voltage * pd_profile.max_current) / (u32)1000000;
-				break;
-			case eUSBPD_PDO_BATTERY:
-				pd_profile.voltage = pdo->BatterySupply.MaxVoltageIn50mV * 50;
-				pd_profile.power_avail = pdo->BatterySupply.MaxPowerIn250mW / 4;
-				pd_profile.max_current = pd_profile.power_avail * 1000 / pd_profile.voltage;
-				break;
-			case eUSBPD_PDO_VARIABLE:
-				// TODO: PPS
-				break;
-			case eUSBPD_PDO_AUGMENTED:
-				// TODO: EPR
-				break;
-		}
-	}
-
-	// TODO: let the user decide the power profile
-	pd_profile.set_temp = 360;
-	pd_profile.set_power = 30;
-	pd_profile.tip_r = 2500; // TODO: tip check and resistance calculator
-	pd_profile.max_duty = (100*(u32)isqrt((MIN(pd_profile.set_power, pd_profile.power_avail)*pd_profile.tip_r)/1000) * 1000) / pd_profile.voltage;
-
-	u8g2_ClearBuffer(u8g2);
-	u8g2_SetBitmapMode(u8g2, 1);
-	u8g2_SetFontMode(u8g2, 1);
-	u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
-	static const int8_t x_off = 0;
-	static const int8_t y_off = 8;
-	// Display tip temperature
-	u8g2_DrawStr(u8g2, x_off+0, y_off+7, "A:");
-	u8g2_DrawStr(u8g2, x_off+10, y_off+7, u8g2_u16toa(pd_profile.max_current, 4));
-	// Display bus voltage
-	u8g2_DrawStr(u8g2, x_off+45, y_off+7, "V:");
-	u8g2_DrawStr(u8g2, x_off+55, y_off+7, u8g2_u16toa(pd_profile.voltage, 5));
-	// Display power
-	u8g2_DrawStr(u8g2, x_off+0, y_off+15, "W:");
-	u8g2_DrawStr(u8g2, x_off+10, y_off+15, u8g2_u16toa(pd_profile.power_avail, 3));
-	// Display current
-	u8g2_DrawStr(u8g2, x_off+45, y_off+15, "D:");
-	u8g2_DrawStr(u8g2, x_off+55, y_off+15, u8g2_u16toa(pd_profile.max_duty, 3));
-	u8g2_SendBuffer(u8g2);
-	Delay_Ms(5000);
 
 
 	for (;;) {
@@ -499,8 +424,6 @@ __attribute__((noreturn)) int main(void)
 		u8g2_SetBitmapMode(u8g2, 1);
 		u8g2_SetFontMode(u8g2, 1);
 		u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
-		static const int8_t x_off = 0;
-		static const int8_t y_off = 8;
 
 		static bool pwm = false; // PWM status
 		static bool enabled = false; // Power electronics enabled

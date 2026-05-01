@@ -12,7 +12,7 @@ U8G2_SRC:=$(U8G2_DIR)/u8x8_d_$(DISPLAY).c $(filter-out $(U8G2_DIR)/u8x8_d_%.c, \
 	$(filter-out $(U8G2_DIR)/mui%.c, $(wildcard $(U8G2_DIR)/*.c)))
 
 EXTRA_CFLAGS += -I$(U8G2_DIR)
-ADDITIONAL_C_FILES += lib_i2c.c display.c sc7a20.c
+ADDITIONAL_C_FILES += lib_i2c.c display.c sc7a20.c pd.c
 
 include ch32fun/ch32fun/ch32fun.mk
 
