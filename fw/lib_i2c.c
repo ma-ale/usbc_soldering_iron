@@ -4,7 +4,6 @@
 
 #include "lib_i2c.h"
 
-#define I2C_DEFAULT_TIMEOUT 100000
 
 //! ####################################
 //! I2C INIT FUNCTIONS

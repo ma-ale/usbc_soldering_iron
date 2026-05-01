@@ -8,7 +8,7 @@
 #include <ch32fun.h>
 
 
-#define I2C_DEFAULT_TIMEOUT 100000
+#define I2C_DEFAULT_TIMEOUT 50000
 
 //! ####################################
 //! I2C INIT FUNCTIONS
