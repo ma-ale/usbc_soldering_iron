@@ -387,7 +387,7 @@ __attribute__((noreturn)) int main(void)
 		pd_get_profile(&pd_profile, 100);
 
 		// TODO: let the user decide the power profile
-		pd_profile.set_temp = 360;
+		pd_profile.set_temp = 200;
 		pd_profile.set_power = 95; // Slightly below max power to avoid overloading
 		pd_profile.tip_r = 2500; // TODO: tip check and resistance calculator
 		pd_profile.max_duty = MIN(
@@ -439,7 +439,7 @@ __attribute__((noreturn)) int main(void)
 			power = ((u32)vbus_mv*current_ma)/1000000;
 
 			// Update the tip temperature only when the PWM is not running
-			if (!pwm) {
+			if (!pwm || !enabled) {
 				Delay_Ms(TURN_OFF_DELAY);
 				adc_injection_conversion();
 				u32 tip_mv = ((u32)injection_results[0]*VCC_MV)/4096;
@@ -488,8 +488,8 @@ __attribute__((noreturn)) int main(void)
 					const uint16_t tim_max = FUNCONF_SYSTEM_CORE_CLOCK / PWM_FREQ_HZ - 1;
 					int16_t delta = pd_profile.set_temp - tip_temp_c;
 					uint16_t duty = MIN((25*pd_profile.max_duty*delta)/(pd_profile.set_temp*10), pd_profile.max_duty);
-					u8g2_DrawBox(u8g2, x_off+92, y_off+12, 4, 4);
 					pwm_set(((u32)duty*tim_max)/100);
+					u8g2_DrawBox(u8g2, x_off+92, y_off+12, 4, 4);
 				} else {
 					pwm_set(0);
 				}
@@ -498,15 +498,17 @@ __attribute__((noreturn)) int main(void)
 			}
 
 			// Check button to toggle enable
-			if (funDigitalRead(PIN_BTN) == 0) {
+			static bool prev_btn = true;
+			bool btn = funDigitalRead(PIN_BTN);
+			if (btn == 0 && prev_btn == 1) {
 				enabled = !enabled;
 				if (enabled) {
 					pwm_on();
 				} else {
 					pwm_off();
 				}
-				Delay_Ms(100);
 			}
+			prev_btn = btn;
 
 		} else {
 			// No PD capability, just display a message
@@ -515,8 +517,8 @@ __attribute__((noreturn)) int main(void)
 
 		u8g2_SendBuffer(u8g2);
 
-		u32 elapsed = funSysTick32() - start;
-		if (elapsed < Ticks_from_Ms(FRAME_TIME_MS)) {
+		s32 elapsed = funSysTick32() - start;
+		if (elapsed > 0 && elapsed < Ticks_from_Ms(FRAME_TIME_MS)) {
 			DelaySysTick(Ticks_from_Ms(FRAME_TIME_MS) - elapsed);
 		}
 	}
