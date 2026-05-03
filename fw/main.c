@@ -69,20 +69,64 @@ void handle_usbfs_input(int numbytes, uint8_t *data)
 }
 
 
-// triggered on the falling edge of the rotary encoder PIN_A
+/*
+ *    __      ____      ____
+ * A:   |____|    |____|    |____
+ *         ____      ____      __
+ * B: ____|    |____|    |____|
+ *      ^ ^  ^ ^  ^ ^  ^ ^  ^ ^
+ *      f r  r f  f r  r f  f r
+ */
+void update_encoder(void)
+{
+	// 0 = 00, 1 = 01, 2 = 10, 3 = 11
+	static uint8_t last_state = 0;
+	// Lookup table: state_table[last_state][current_state]
+	//  0 = invalid move or bounce (ignore)
+	//  1 = valid forward step
+	// -1 = valid backward step
+	static const int8_t state_table[4][4] = {
+		{ 0,  1, -1,  0}, // from 00
+		{-1,  0,  0,  1}, // from 01
+		{ 1,  0,  0, -1}, // from 10
+		{ 0, -1,  1,  0}  // from 11
+	};
+
+	// FIXME: even with interrupts disabled and debounce, a single detent triggers
+	// multiple interrupts, leading to multiple encoder updates in a short time.
+	bool a = funDigitalRead(PIN_ENC_A);
+	bool b = funDigitalRead(PIN_ENC_B);
+	Delay_Us(100);
+	if (a != funDigitalRead(PIN_ENC_A) || b != funDigitalRead(PIN_ENC_B))
+		return; // debounce
+
+	uint8_t current_state = (a << 1) | b;
+
+	// Find the movement direction based on transition
+	encoder += state_table[last_state][current_state];
+
+	// Save current state for the next interrupt
+	last_state = current_state;
+}
+
+// Attached to PIN_ENC_A rising and falling edges
+void EXTI7_0_IRQHandler(void) __attribute__((interrupt));
+void EXTI7_0_IRQHandler(void)
+{
+	__disable_irq();
+	update_encoder();
+	EXTI->INTFR = EXTI_Line3;
+	__enable_irq();
+}
+
+// Attached to PIN_ENC_B rising and falling edges
 void EXTI15_8_IRQHandler(void) __attribute__((interrupt));
 void EXTI15_8_IRQHandler(void)
 {
-	uint32_t now = funSysTick32();
-	if (now - last_interrupt > ENCODER_DEBOUNCE) {
-		last_interrupt = now;
-		if (funDigitalRead(PIN_ENC_A)) {
-			encoder++;
-		} else {
-			encoder--;
-		}
-	}
+	__disable_irq();
+	update_encoder();
 	EXTI->INTFR = EXTI_Line11;
+	__enable_irq();
 }
 
 
@@ -354,11 +398,20 @@ __attribute__((noreturn)) int main(void)
 
 	// Configure the IO as an interrupt.
 	// PIN_ENC_B is on port B, channel 11
-	AFIO->EXTICR1 = AFIO_EXTICR1_EXTI11_PB; // Port B channel (pin) 11
-	EXTI->INTENR = EXTI_INTENR_MR11; // Enable EXT11
-	EXTI->FTENR = EXTI_FTENR_TR11;  // Falling edge trigger
+	AFIO->EXTICR1 |= AFIO_EXTICR1_EXTI11_PB; // Port B channel (pin) 11
+	EXTI->INTENR |= EXTI_INTENR_MR11; // Enable EXT11
+	EXTI->FTENR |= EXTI_FTENR_TR11;  // Falling edge trigger
+	EXTI->RTENR |= EXTI_RTENR_TR11;  // Rising edge trigger
 	// enable interrupt
 	NVIC_EnableIRQ(EXTI15_8_IRQn);
+
+	// PIN_ENC_A is on port B, channel 3
+	AFIO->EXTICR1 |= AFIO_EXTICR1_EXTI3_PB; // Port B channel (pin) 3
+	EXTI->INTENR |= EXTI_INTENR_MR3; // Enable EXT3
+	EXTI->FTENR |= EXTI_FTENR_TR3;  // Falling edge trigger
+	EXTI->RTENR |= EXTI_RTENR_TR3;  // Rising edge trigger
+	// enable interrupt
+	NVIC_EnableIRQ(EXTI7_0_IRQn);
 
 	Delay_Ms(500);
 
@@ -388,7 +441,7 @@ __attribute__((noreturn)) int main(void)
 
 		// TODO: let the user decide the power profile
 		pd_profile.set_temp = 200;
-		pd_profile.set_power = 95; // Slightly below max power to avoid overloading
+		pd_profile.set_power = 60; // Slightly below max power to avoid overloading
 		pd_profile.tip_r = 2500; // TODO: tip check and resistance calculator
 		pd_profile.max_duty = MIN(
 			(100*(u32)isqrt((
@@ -416,6 +469,10 @@ __attribute__((noreturn)) int main(void)
 	}
 
 
+	enum {
+		STATE_MENU,
+		STATE_HEATING,
+	} state = STATE_MENU;
 	for (;;) {
 		u32 start = funSysTick32();
 		poll_input(); // usb
@@ -428,6 +485,9 @@ __attribute__((noreturn)) int main(void)
 		static bool pwm = false; // PWM status
 		static bool enabled = false; // Power electronics enabled
 		static uint8_t count = 0; // Loop cycles with PWM on
+		static s32 elapsed = 0;
+		static bool prev_btn = true;
+		bool btn = funDigitalRead(PIN_BTN);
 
 		if (has_pd) {
 			static uint16_t vbus_mv, current_ma;
@@ -446,70 +506,95 @@ __attribute__((noreturn)) int main(void)
 		    	tip_temp_c = I16_FP_EMA_K2(tip_temp_c, (tip_mv*TC_CONV_NOM)/TC_CONV_DEN) + temp_c;
 			}
 
-			// Display tip temperature
-			u8g2_DrawStr(u8g2, x_off+0, y_off+7, "TIP:");
-			u8g2_DrawStr(u8g2, x_off+20, y_off+7, u8g2_u16toa(tip_temp_c, 4));
-			// Display bus voltage
-			u8g2_DrawStr(u8g2, x_off+45, y_off+7, "V:");
-			u8g2_DrawStr(u8g2, x_off+55, y_off+7, u8g2_u16toa(vbus_mv/1000, 2));
-			// Display power
-			u8g2_DrawStr(u8g2, x_off+0, y_off+15, "W:");
-			u8g2_DrawStr(u8g2, x_off+10, y_off+15, u8g2_u16toa(power, 3));
-			// Display current
-			u8g2_DrawStr(u8g2, x_off+45, y_off+15, "A:");
-			u8g2_DrawStr(u8g2, x_off+55, y_off+15, u8g2_u16toa(current_ma, 5));
+			switch (state) {
+			case STATE_MENU:
+				u8g2_DrawStr(u8g2, x_off+0, y_off+7, "TEMP:");
+				u8g2_DrawStr(u8g2, x_off+25, y_off+7, u8g2_u16toa(pd_profile.set_temp, 4));
 
-
-			if (enabled) {
-				funDigitalWrite(PIN_12V, 1);
-
-				if (count > CYCLES_PER_MEASURE) {
-					pwm = false;
-					count = 0;
-				} else {
-					pwm = true;
-					count++;
+				if (encoder != 0) {
+					pd_profile.set_temp += encoder;
+					encoder = 0;
+					#define MIN_TEMP 100
+					#define MAX_TEMP 360
+					if (pd_profile.set_temp < MIN_TEMP) pd_profile.set_temp = MIN_TEMP;
+					if (pd_profile.set_temp > MAX_TEMP) pd_profile.set_temp = MAX_TEMP;
 				}
 
-				// Safety logic
-				if (current_ma > pd_profile.max_current + pd_profile.max_current/10) {
-					pwm = false;
-				}
-				if (temp_c > MAX_BOARD_TEMP) {
+				if (btn == 0 && prev_btn == 1) {
+					state = STATE_HEATING;
 					enabled = false;
-					pwm = false;
 				}
-				if (tip_temp_c > MAX_TIP_TEMP) {
-					enabled = false;
-					pwm = false;
+				break;
+			case STATE_HEATING:
+				// Display tip temperature
+				u8g2_DrawStr(u8g2, x_off+0, y_off+7, "TIP:");
+				u8g2_DrawStr(u8g2, x_off+20, y_off+7, u8g2_u16toa(tip_temp_c, 4));
+				// Display bus voltage
+				u8g2_DrawStr(u8g2, x_off+45, y_off+7, "V:");
+				u8g2_DrawStr(u8g2, x_off+55, y_off+7, u8g2_u16toa(vbus_mv/1000, 2));
+				// Display power
+				u8g2_DrawStr(u8g2, x_off+0, y_off+15, "W:");
+				u8g2_DrawStr(u8g2, x_off+10, y_off+15, u8g2_u16toa(power, 3));
+				// Display current
+				u8g2_DrawStr(u8g2, x_off+45, y_off+15, "A:");
+				u8g2_DrawStr(u8g2, x_off+55, y_off+15, u8g2_u16toa(current_ma, 5));
+
+
+				if (enabled) {
+					funDigitalWrite(PIN_12V, 1);
+
+					if (count > CYCLES_PER_MEASURE) {
+						pwm = false;
+						count = 0;
+					} else {
+						pwm = true;
+						count++;
+					}
+
+					// Safety logic
+					if (current_ma > pd_profile.max_current + pd_profile.max_current/10) {
+						pwm = false;
+					}
+					if (temp_c > MAX_BOARD_TEMP) {
+						enabled = false;
+						pwm = false;
+					}
+					if (tip_temp_c > MAX_TIP_TEMP) {
+						enabled = false;
+						pwm = false;
+					}
+
+					if (pwm) {
+						const uint16_t tim_max = FUNCONF_SYSTEM_CORE_CLOCK / PWM_FREQ_HZ - 1;
+						int16_t delta = pd_profile.set_temp - tip_temp_c;
+						uint16_t duty = MIN((25*pd_profile.max_duty*delta)/(pd_profile.set_temp*10), pd_profile.max_duty);
+						pwm_set(((u32)duty*tim_max)/100);
+						u8g2_DrawBox(u8g2, x_off+92, y_off+12, 4, 4);
+					} else {
+						pwm_set(0);
+					}
+				} else {
+					funDigitalWrite(PIN_12V, 0);
 				}
 
-				if (pwm) {
-					const uint16_t tim_max = FUNCONF_SYSTEM_CORE_CLOCK / PWM_FREQ_HZ - 1;
-					int16_t delta = pd_profile.set_temp - tip_temp_c;
-					uint16_t duty = MIN((25*pd_profile.max_duty*delta)/(pd_profile.set_temp*10), pd_profile.max_duty);
-					pwm_set(((u32)duty*tim_max)/100);
-					u8g2_DrawBox(u8g2, x_off+92, y_off+12, 4, 4);
-				} else {
+				// move to menu mode when encoder is turned
+				if (encoder != 0) {
+					state = STATE_MENU;
+					funDigitalWrite(PIN_12V, 0);
 					pwm_set(0);
 				}
-			} else {
-				funDigitalWrite(PIN_12V, 0);
-			}
 
-			// Check button to toggle enable
-			static bool prev_btn = true;
-			bool btn = funDigitalRead(PIN_BTN);
-			if (btn == 0 && prev_btn == 1) {
-				enabled = !enabled;
-				if (enabled) {
-					pwm_on();
-				} else {
-					pwm_off();
+				// Check button to toggle enable
+				if (btn == 0 && prev_btn == 1) {
+					enabled = !enabled;
+					if (enabled) {
+						pwm_on();
+					} else {
+						pwm_off();
+					}
 				}
+				break;
 			}
-			prev_btn = btn;
-
 		} else {
 			// No PD capability, just display a message
 			u8g2_DrawStr(u8g2, x_off+0, y_off+7, "NO PD");
@@ -517,7 +602,9 @@ __attribute__((noreturn)) int main(void)
 
 		u8g2_SendBuffer(u8g2);
 
-		s32 elapsed = funSysTick32() - start;
+		prev_btn = btn;
+
+		elapsed = funSysTick32() - start;
 		if (elapsed > 0 && elapsed < Ticks_from_Ms(FRAME_TIME_MS)) {
 			DelaySysTick(Ticks_from_Ms(FRAME_TIME_MS) - elapsed);
 		}
