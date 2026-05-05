@@ -3,8 +3,13 @@
 #define USBPD_IMPLEMENTATION
 #include "usbpd.h"
 
+#include "funconfig.h"
+#include "display.h"
+
 #include "pd.h"
 
+
+extern u8g2_t *u8g2;
 
 static size_t cap_count = 0;
 static USBPD_SPR_CapabilitiesMessage_t *capabilities = NULL;
@@ -35,7 +40,15 @@ bool pd_negotiate(USBPD_VCC_e vcc)
 		if (now - start > Ticks_from_Ms(5000)) {
 			break;
 		}
-		Delay_Ms(100);
+
+		u8g2_ClearBuffer(u8g2);
+		u8g2_SetBitmapMode(u8g2, 1);
+		u8g2_SetFontMode(u8g2, 1);
+		u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
+		u8g2_DrawStr(u8g2, 0, 8+7, USBPD_StateToStr(USBPD_GetState()));
+		u8g2_SendBuffer(u8g2);
+
+		Delay_Ms(1);
 	}
 	if (result != eUSBPD_OK) {
 		return false;
@@ -78,12 +91,28 @@ bool pd_get_profile(struct pd_profile_t *profile, uint16_t min_power)
 			// }
 			break;
 		case eUSBPD_PDO_AUGMENTED:
-			// TODO: EPR
+			switch (pdo->Header.AugmentedType) {
+				case eUSBPD_APDO_SPR_PPS:
+					// TODO: SPR_PPS
+					break;
+				case eUSBPD_APDO_SPR_AVS:
+					// TODO: SPR AVS
+					break;
+				case eUSBPD_APDO_EPR_AVS:
+				/* TODO: EPR AVS
+					voltage = pdo->EPR_AVS.MaxVoltageIn100mV * 100;
+					current = pdo->EPR_AVS.PeakCurrent * 1000;
+					power = pdo->EPR_AVS.PDPIn1W;
+				*/
+					break;
+				default:
+					break;
+			}
 			break;
 		}
 
 		// Selects the first PDO that meets the minimum power requirement
-		if (power >= min_power) {
+		if (power >= min_power && voltage <= BOARD_MAX_VOLTAGE) {
 			if (USBPD_SelectPDO(i, 0) != eUSBPD_OK) {
 				return false;
 			}

@@ -39,6 +39,7 @@
 #define MAX_TIP_TEMP   500
 #define TURN_OFF_DELAY 2
 #define CYCLES_PER_MEASURE 2
+#define BOARD_MAX_VOLTAGE 28000
 
 
 #endif // _FUNCONFIG_H

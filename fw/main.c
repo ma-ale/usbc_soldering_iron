@@ -422,7 +422,7 @@ __attribute__((noreturn)) int main(void)
 	u8g2_SetBitmapMode(u8g2, 1);
 	u8g2_SetFontMode(u8g2, 1);
 	u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
-	u8g2_DrawStr(u8g2, 0, 18, "negotiating...");
+	u8g2_DrawStr(u8g2, x_off+0, y_off+7, "Negotiating...");
 	u8g2_SendBuffer(u8g2);
 
 	// Init USBPD
@@ -437,7 +437,7 @@ __attribute__((noreturn)) int main(void)
 		u8g2_SendBuffer(u8g2);
 		Delay_Ms(5000);
 	} else {
-		pd_get_profile(&pd_profile, 100);
+		pd_get_profile(&pd_profile, 60);
 
 		// TODO: let the user decide the power profile
 		pd_profile.set_temp = 200;
