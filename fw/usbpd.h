@@ -101,6 +101,29 @@ typedef enum PACKED
 	eUSBPD_DATA_MSG_VENDOR_DEFINED = 0x0Fu
 } USBPD_DataMessage_e;
 
+typedef enum PACKED
+{
+	eUSBPD_EXTENDED_MSG_SOURCE_CAP_EXT           = 0b00001,
+	eUSBPD_EXTENDED_MSG_STATUS                   = 0b00010,
+	eUSBPD_EXTENDED_MSG_GET_BATTERY_CAP          = 0b00011,
+	eUSBPD_EXTENDED_MSG_GET_BATTERY_STATUS       = 0b00100,
+	eUSBPD_EXTENDED_MSG_BATTERY_CAP              = 0b00101,
+	eUSBPD_EXTENDED_MSG_GET_MANUFACTURER_INFO    = 0b00110,
+	eUSBPD_EXTENDED_MSG_MANUFACTURER_INFO        = 0b00111,
+	eUSBPD_EXTENDED_MSG_SECURITY_REQUEST         = 0b01000,
+	eUSBPD_EXTENDED_MSG_SECURITY_RESPONSE        = 0b01001,
+	eUSBPD_EXTENDED_MSG_FIRMWARE_UPDATE_REQUEST  = 0b01010,
+	eUSBPD_EXTENDED_MSG_FIRMWARE_UPDATE_RESPONSE = 0b01011,
+	eUSBPD_EXTENDED_MSG_PPS_STATUS               = 0b01100,
+	eUSBPD_EXTENDED_MSG_COUNTRY_INFO             = 0b01101,
+	eUSBPD_EXTENDED_MSG_COUNTRY_CODES            = 0b01110,
+	eUSBPD_EXTENDED_MSG_SINK_CAP_EXTENDED        = 0b01111,
+	eUSBPD_EXTENDED_MSG_EXTENDED_CONTROL         = 0b10000,
+	eUSBPD_EXTENDED_MSG_EPR_SOURCE_CAP           = 0b10001,
+	eUSBPD_EXTENDED_MSG_EPR_SINK_CAP             = 0b10010,
+	eUSBPD_EXTENDED_MSG_VENDOR_DEFINED_EXTENDED  = 0b11110
+} USBPD_ExtendedMessage_e;
+
 typedef union
 {
 	uint16_t data;
@@ -118,6 +141,21 @@ typedef union
 
 typedef USBPD_MessageHeader_t USBPD_ControlMessage_t;
 static_assert( sizeof( USBPD_MessageHeader_t ) == sizeof( uint16_t ), "USBPD_MessageHeader_t size mismatch" );
+
+typedef union
+{
+	uint16_t data;
+	struct
+	{
+		uint16_t DataSize : 9u;
+		uint16_t Reserved : 1u;
+		uint16_t RequestChunk : 1u;
+		uint16_t ChunkNumber : 4u;
+		uint16_t Chunked : 1u;
+	};
+} USBPD_ExtendedHeader_t;
+
+static_assert( sizeof( USBPD_ExtendedHeader_t ) == sizeof( uint16_t ), "USBPD_ExtendedHeader_t size mismatch" );
 
 typedef enum PACKED
 {
@@ -350,6 +388,8 @@ typedef union
 static_assert( sizeof( USBPD_SourcePDO_t ) == sizeof( uint32_t ), "USBPD_SourcePDO_t size mismatch" );
 static_assert( sizeof( USBPD_SinkPDO_t ) == sizeof( uint32_t ), "USBPD_SinkPDO_t size mismatch" );
 
+// TODO: as per 6.15.8 EPR Source Capabilities Message, when the extended bit is
+// set a extended header is present and the capabilities become from 7 to 11 PDOs
 typedef union
 {
 	USBPD_SourcePDO_t Source[7];
@@ -891,6 +931,8 @@ static void ParsePacket( void )
 		}
 	}
 
+	// TODO: this ignores the extended part of the protocol, so we never parse
+	// the extended capabilities region
 	if ( message.Extended || sendGoodCRC )
 	{
 		Delay_Us( 30 );
