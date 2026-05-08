@@ -94,6 +94,7 @@ void update_encoder(void)
 
 	// FIXME: even with interrupts disabled and debounce, a single detent triggers
 	// multiple interrupts, leading to multiple encoder updates in a short time.
+	if (funDigitalRead(PIN_BTN) == 0) return;
 	bool a = funDigitalRead(PIN_ENC_A);
 	bool b = funDigitalRead(PIN_ENC_B);
 	Delay_Us(100);
@@ -354,9 +355,6 @@ static inline uint16_t isqrt(uint32_t x)
 }
 
 
-#define MIN(a, b) ((a) < (b) ? (a) : (b))
-
-
 __attribute__((noreturn)) int main(void)
 {
 	SystemInit();
@@ -419,8 +417,6 @@ __attribute__((noreturn)) int main(void)
 	sc7a20_init();
 
 	u8g2_ClearBuffer(u8g2);
-	u8g2_SetBitmapMode(u8g2, 1);
-	u8g2_SetFontMode(u8g2, 1);
 	u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
 	u8g2_DrawStr(u8g2, x_off+0, y_off+7, "Negotiating...");
 	u8g2_SendBuffer(u8g2);
@@ -429,8 +425,6 @@ __attribute__((noreturn)) int main(void)
 	bool has_pd = pd_negotiate(eUSBPD_VCC_3V3);
 	if (has_pd == false) {
 		u8g2_ClearBuffer(u8g2);
-		u8g2_SetBitmapMode(u8g2, 1);
-		u8g2_SetFontMode(u8g2, 1);
 		u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
 		u8g2_DrawStr(u8g2, x_off+0, y_off+7, "Negotiation FAILED");
 		u8g2_DrawStr(u8g2, x_off+0, y_off+14, USBPD_ResultToStr(pd_get_result()));
@@ -449,8 +443,6 @@ __attribute__((noreturn)) int main(void)
 			, 100);
 
 		u8g2_ClearBuffer(u8g2);
-		u8g2_SetBitmapMode(u8g2, 1);
-		u8g2_SetFontMode(u8g2, 1);
 		u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
 		// Display tip temperature
 		u8g2_DrawStr(u8g2, x_off+0, y_off+7, "A:");
@@ -478,8 +470,6 @@ __attribute__((noreturn)) int main(void)
 		poll_input(); // usb
 
 		u8g2_ClearBuffer(u8g2);
-		u8g2_SetBitmapMode(u8g2, 1);
-		u8g2_SetFontMode(u8g2, 1);
 		u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
 
 		static bool pwm = false; // PWM status
@@ -493,6 +483,7 @@ __attribute__((noreturn)) int main(void)
 			static uint16_t vbus_mv, current_ma;
 			static int16_t temp_c, tip_temp_c;
 			static uint16_t power;
+			static fp24_8_t e;
 			vbus_mv = U16_FP_EMA_K4(vbus_mv, ((u32)adc_buffer[0]*VCC_MV*11)/4096);
 			current_ma = U16_FP_EMA_K4(current_ma, get_current_ma(adc_buffer[1]));
 			temp_c = I16_FP_EMA_K4(temp_c, get_temp_c(adc_buffer[2]));
@@ -528,16 +519,17 @@ __attribute__((noreturn)) int main(void)
 			case STATE_HEATING:
 				// Display tip temperature
 				u8g2_DrawStr(u8g2, x_off+0, y_off+7, "TIP:");
-				u8g2_DrawStr(u8g2, x_off+20, y_off+7, u8g2_u16toa(tip_temp_c, 4));
+				u8g2_DrawStr(u8g2, x_off+20, y_off+7, u16toa(tip_temp_c));
 				// Display bus voltage
 				u8g2_DrawStr(u8g2, x_off+45, y_off+7, "V:");
-				u8g2_DrawStr(u8g2, x_off+55, y_off+7, u8g2_u16toa(vbus_mv/1000, 2));
+				u8g2_DrawStr(u8g2, x_off+55, y_off+7, u16toa(vbus_mv/1000));
 				// Display power
-				u8g2_DrawStr(u8g2, x_off+0, y_off+15, "W:");
-				u8g2_DrawStr(u8g2, x_off+10, y_off+15, u8g2_u16toa(power, 3));
+				//u8g2_DrawStr(u8g2, x_off+0, y_off+15, "W:");
+				//u8g2_DrawStr(u8g2, x_off+10, y_off+15, u8g2_u16toa(power, 3));
+				u8g2_DrawStr(u8g2, x_off+0, y_off+15, i16toa(pd_profile.set_temp - tip_temp_c));
 				// Display current
 				u8g2_DrawStr(u8g2, x_off+45, y_off+15, "A:");
-				u8g2_DrawStr(u8g2, x_off+55, y_off+15, u8g2_u16toa(current_ma, 5));
+				u8g2_DrawStr(u8g2, x_off+55, y_off+15, u16toa(current_ma));
 
 
 				if (enabled) {
@@ -566,8 +558,23 @@ __attribute__((noreturn)) int main(void)
 
 					if (pwm) {
 						const uint16_t tim_max = FUNCONF_SYSTEM_CORE_CLOCK / PWM_FREQ_HZ - 1;
+						static int16_t err_p, err_i, err_d, prev_delta;
+
 						int16_t delta = pd_profile.set_temp - tip_temp_c;
-						uint16_t duty = MIN((25*pd_profile.max_duty*delta)/(pd_profile.set_temp*10), pd_profile.max_duty);
+						err_p = delta;
+						err_i += delta;
+						err_i = MAX(-1000, MIN(1000, err_i));
+						err_d = delta - prev_delta;
+						prev_delta = delta;
+
+						const fp24_8_t kp = f32_to_fp24_8(0.8f);
+						const fp24_8_t ki = f32_to_fp24_8(0.15f);
+						const fp24_8_t kd = f32_to_fp24_8(0.0f);
+						e = fp24_8_mul(i16_to_fp24_8(err_p), kp) +
+							fp24_8_mul(i16_to_fp24_8(err_i), ki) +
+							fp24_8_mul(i16_to_fp24_8(err_d), kd);
+						uint16_t duty = MAX(0, MIN(I(e), pd_profile.max_duty));
+
 						pwm_set(((u32)duty*tim_max)/100);
 						u8g2_DrawBox(u8g2, x_off+92, y_off+12, 4, 4);
 					} else {

@@ -6,15 +6,17 @@
 #include "lib_i2c.h"
 
 
-/*
- * GPIO and delay callback for u8g2/u8x8 display driver
- */
-
-
 static u8g2_t u8g2;
+static const char digits_lut[] =
+    "0001020304050607080910111213141516171819"
+    "2021222324252627282930313233343536373839"
+    "4041424344454647484950515253545556575859"
+    "6061626364656667686970717273747576777879"
+    "8081828384858687888990919293949596979899";
 
 
-uint8_t u8x8_gpio_and_delay(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)
+// GPIO and delay callback for u8g2/u8x8 display driver
+static uint8_t u8x8_gpio_and_delay(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)
 {
 	switch(msg) {
 	case U8X8_MSG_GPIO_AND_DELAY_INIT:
@@ -129,7 +131,7 @@ uint8_t u8x8_gpio_and_delay(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *ar
 }
 
 
-uint8_t u8x8_byte_i2c(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)
+static uint8_t u8x8_byte_i2c(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)
 {
 	static uint8_t buffer[32];
 	static uint8_t buffer_idx;
@@ -173,5 +175,77 @@ u8g2_t* display_init(void)
 	u8g2_InitDisplay(&u8g2);
 	u8g2_SetPowerSave(&u8g2, 0);
 	u8g2_SetContrast(&u8g2, 255);
+
+	u8g2_SetBitmapMode(&u8g2, 1);
+	u8g2_SetFontMode(&u8g2, 1);
+
 	return &u8g2;
+}
+
+
+const char* u16toa(uint16_t value)
+{
+	// Max uint16_t is 65535 (5 digits) + null terminator
+	static char buf[6];
+	char *p = &buf[5];
+	*p = '\0';
+
+	// Process two digits at a time using the LUT
+	while (value >= 100) {
+		const unsigned int idx = (value % 100) * 2;
+		value /= 100;
+		*--p = digits_lut[idx + 1];
+		*--p = digits_lut[idx];
+	}
+
+	// Handle the remaining value (< 100)
+	if (value < 10) {
+		*--p = (char)('0' + value);
+	} else {
+		const unsigned int idx = value * 2;
+		*--p = digits_lut[idx + 1];
+		*--p = digits_lut[idx];
+	}
+
+	return p;
+}
+
+
+const char* i16toa(int16_t value)
+{
+	static char buf[7];
+	uint16_t uval;
+	bool negative = false;
+
+	if (value < 0) {
+		negative = true;
+		uval = (uint16_t)-value;
+	} else {
+		uval = (uint16_t)value;
+	}
+
+	char *p = &buf[6];
+	*p = '\0';
+
+	// Same LUT logic as unsigned
+	while (uval >= 100) {
+		const unsigned int idx = (uval % 100) * 2;
+		uval /= 100;
+		*--p = digits_lut[idx + 1];
+		*--p = digits_lut[idx];
+	}
+
+	if (uval < 10) {
+		*--p = (char)('0' + uval);
+	} else {
+		const unsigned int idx = uval * 2;
+		*--p = digits_lut[idx + 1];
+		*--p = digits_lut[idx];
+	}
+
+	if (negative) {
+		*--p = '-';
+	}
+
+	return p;
 }
