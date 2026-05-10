@@ -249,3 +249,8 @@ const char* i16toa(int16_t value)
 
 	return p;
 }
+
+static char str_buf[32];
+uint8_t str_len;
+int buf_putc(char c) { str_buf[str_len++] = c; return 0; }
+const char* buf_get(void) { str_buf[str_len] = '\0'; str_len = 0; return str_buf; }

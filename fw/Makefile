@@ -44,7 +44,7 @@ $(BUILD_DIR)/%.o : %.c $(HEADER_FILES) | $(BUILD_DIR)
 
 # link target, the rest of the build is specified in ch32fun.mk
 $(TARGET).elf : $(FILES_TO_COMPILE) $(LINKER_SCRIPT) $(EXTRA_ELF_DEPENDENCIES) $(U8G2_OBJS) $(FRMATH_OBJS) $(TARGET_OBJS) ch32fun.o
-	$(PREFIX)-gcc -o $@ $(U8G2_OBJS) $(TARGET_OBJS) ch32fun.o $(CFLAGS) $(LDFLAGS)
+	$(PREFIX)-gcc -o $@ $(U8G2_OBJS) $(TARGET_OBJS) $(FRMATH_OBJS) ch32fun.o $(CFLAGS) $(LDFLAGS)
 
 
 flash : cv_flash

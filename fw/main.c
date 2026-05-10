@@ -1,3 +1,4 @@
+#include "fr_math/FR_math.h"
 #include <ch32fun.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -533,7 +534,8 @@ __attribute__((noreturn)) int main(void)
 				// Display power
 				//u8g2_DrawStr(u8g2, x_off+0, y_off+15, "W:");
 				//u8g2_DrawStr(u8g2, x_off+10, y_off+15, u8g2_u16toa(power, 3));
-				u8g2_DrawStr(u8g2, x_off+0, y_off+15, i16toa(delta));
+				FR_printNumF(buf_putc, e, R, 0, 3);
+				u8g2_DrawStr(u8g2, x_off+0, y_off+15, buf_get());
 				// Display current
 				u8g2_DrawStr(u8g2, x_off+45, y_off+15, "A:");
 				u8g2_DrawStr(u8g2, x_off+55, y_off+15, u16toa(current_ma));
@@ -565,23 +567,30 @@ __attribute__((noreturn)) int main(void)
 
 					if (pwm) {
 						const uint16_t tim_max = FUNCONF_SYSTEM_CORE_CLOCK / PWM_FREQ_HZ - 1;
-						static int16_t err_p, err_i, err_d, prev_delta;
+						static s32 err_p, err_i, err_d, prev_err;
+						uint16_t duty;
+						// absolute temperature error
+						s32 err = I2FR(delta, R);
 
-						err_p = delta;
-						err_i = MAX(-1000, MIN(1000, err_i+delta));
-						err_d = delta - prev_delta;
-						prev_delta = delta;
+						err_p = err;
+						err_i = FR_CLAMP(FR_FixAddSat(err_i, err), I2FR(-1000, R), I2FR(1000, R));
+						err_d = FR_SUB(err, R, prev_err, R);
+						prev_err = err;
 
-						const s32 kp = FR_NUM(0, 8,  1, R);
-						const s32 ki = FR_NUM(0, 15, 2, R);
-						const s32 kd = FR_NUM(0, 0,  1, R);
-						e = FR_FIxAddSat(e, FR_FixMulSat(I2FR(err_p, R), kp));
-						e = FR_FIxAddSat(e, FR_FixMulSat(I2FR(err_i, R), ki));
-						e = FR_FIxAddSat(e, FR_FixMulSat(I2FR(err_f, R), kd));
-						uint16_t duty = MAX(0, MIN(FR2I(e, R), pd_profile.max_duty));
+						const s32 kp = FR_numstr("0.00700", R);
+						const s32 ki = FR_numstr("0.00001", R);
+						const s32 kd = FR_numstr("0.00000", R);
+						e = FR_FixAddSat(e, FR_FixMulSat(err_p, kp));
+						e = FR_FixAddSat(e, FR_FixMulSat(err_i, ki));
+						e = FR_FixAddSat(e, FR_FixMulSat(err_d, kd));
 
-						pwm_set(((u32)duty*tim_max)/100);
-						u8g2_DrawBox(u8g2, x_off+92, y_off+12, 4, 4);
+						e = FR_CLAMP(e, I2FR(0, R), I2FR(100, R));
+						duty = FR2I(FR_FixMulSat(FR_DIV(e, R, I2FR(100, R), R), I2FR(pd_profile.max_duty, R)), R);
+
+						if (duty <= 100) {
+						    pwm_set(((u32)duty*tim_max)/100);
+							u8g2_DrawBox(u8g2, x_off+92, y_off+12, 4, 4);
+						}
 					} else {
 						pwm_set(0);
 					}
@@ -602,6 +611,7 @@ __attribute__((noreturn)) int main(void)
 					if (enabled) {
 						pwm_on();
 					} else {
+					    e = 0;
 						pwm_off();
 					}
 				}

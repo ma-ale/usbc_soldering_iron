@@ -10,6 +10,8 @@
 u8g2_t* display_init(void);
 const char* i16toa(int16_t value);
 const char* u16toa(uint16_t value);
+int buf_putc(char c);
+const char* buf_get(void);
 
 
 #endif // _DISPLAY_H
