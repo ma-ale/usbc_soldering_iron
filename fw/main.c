@@ -3,6 +3,10 @@
 #include <stdio.h>
 #include <fsusb.h>
 
+#define FR_LEAN
+// #define FR_CORE_ONLY
+#include <FR_math.h>
+
 #include "funconfig.h"
 #include "lib_i2c.h"
 #include "display.h"
@@ -10,6 +14,8 @@
 #include "sc7a20.h"
 #include "pd.h"
 
+// Radix for fixed point operations
+#define R 16
 
 // constants
 // LUT for converting NTC readings to degrees celsius
@@ -483,7 +489,7 @@ __attribute__((noreturn)) int main(void)
 			static uint16_t vbus_mv, current_ma;
 			static int16_t temp_c, tip_temp_c;
 			static uint16_t power;
-			static fp24_8_t e;
+			static s32 e;
 			vbus_mv = U16_FP_EMA_K4(vbus_mv, ((u32)adc_buffer[0]*VCC_MV*11)/4096);
 			current_ma = U16_FP_EMA_K4(current_ma, get_current_ma(adc_buffer[1]));
 			temp_c = I16_FP_EMA_K4(temp_c, get_temp_c(adc_buffer[2]));
@@ -567,13 +573,13 @@ __attribute__((noreturn)) int main(void)
 						err_d = delta - prev_delta;
 						prev_delta = delta;
 
-						const fp24_8_t kp = f32_to_fp24_8(0.8f);
-						const fp24_8_t ki = f32_to_fp24_8(0.15f);
-						const fp24_8_t kd = f32_to_fp24_8(0.0f);
-						e = fp24_8_mul(i16_to_fp24_8(err_p), kp) +
-							fp24_8_mul(i16_to_fp24_8(err_i), ki) +
-							fp24_8_mul(i16_to_fp24_8(err_d), kd);
-						uint16_t duty = MAX(0, MIN(I(e), pd_profile.max_duty));
+						const s32 kp = FR_NUM(0, 8,  1, R);
+						const s32 ki = FR_NUM(0, 15, 2, R);
+						const s32 kd = FR_NUM(0, 0,  1, R);
+						e = FR_FIxAddSat(e, FR_FixMulSat(I2FR(err_p, R), kp));
+						e = FR_FIxAddSat(e, FR_FixMulSat(I2FR(err_i, R), ki));
+						e = FR_FIxAddSat(e, FR_FixMulSat(I2FR(err_f, R), kd));
+						uint16_t duty = MAX(0, MIN(FR2I(e, R), pd_profile.max_duty));
 
 						pwm_set(((u32)duty*tim_max)/100);
 						u8g2_DrawBox(u8g2, x_off+92, y_off+12, 4, 4);
