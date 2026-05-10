@@ -502,6 +502,7 @@ __attribute__((noreturn)) int main(void)
 				u32 tip_mv = ((u32)injection_results[0]*VCC_MV)/4096;
 		    	tip_temp_c = I16_FP_EMA_K2(tip_temp_c, (tip_mv*TC_CONV_NOM)/TC_CONV_DEN) + temp_c;
 			}
+			int16_t delta = (int16_t)pd_profile.set_temp - tip_temp_c;
 
 			switch (state) {
 			case STATE_MENU:
@@ -532,7 +533,7 @@ __attribute__((noreturn)) int main(void)
 				// Display power
 				//u8g2_DrawStr(u8g2, x_off+0, y_off+15, "W:");
 				//u8g2_DrawStr(u8g2, x_off+10, y_off+15, u8g2_u16toa(power, 3));
-				u8g2_DrawStr(u8g2, x_off+0, y_off+15, i16toa(pd_profile.set_temp - tip_temp_c));
+				u8g2_DrawStr(u8g2, x_off+0, y_off+15, i16toa(delta));
 				// Display current
 				u8g2_DrawStr(u8g2, x_off+45, y_off+15, "A:");
 				u8g2_DrawStr(u8g2, x_off+55, y_off+15, u16toa(current_ma));
@@ -566,10 +567,8 @@ __attribute__((noreturn)) int main(void)
 						const uint16_t tim_max = FUNCONF_SYSTEM_CORE_CLOCK / PWM_FREQ_HZ - 1;
 						static int16_t err_p, err_i, err_d, prev_delta;
 
-						int16_t delta = pd_profile.set_temp - tip_temp_c;
 						err_p = delta;
-						err_i += delta;
-						err_i = MAX(-1000, MIN(1000, err_i));
+						err_i = MAX(-1000, MIN(1000, err_i+delta));
 						err_d = delta - prev_delta;
 						prev_delta = delta;
 
