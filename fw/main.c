@@ -1,4 +1,3 @@
-#include "fr_math/FR_math.h"
 #include <ch32fun.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -88,6 +87,7 @@ void update_encoder(void)
 {
 	// 0 = 00, 1 = 01, 2 = 10, 3 = 11
 	static uint8_t last_state = 0;
+	static int8_t count;
 	// Lookup table: state_table[last_state][current_state]
 	//  0 = invalid move or bounce (ignore)
 	//  1 = valid forward step
@@ -111,7 +111,9 @@ void update_encoder(void)
 	uint8_t current_state = (a << 1) | b;
 
 	// Find the movement direction based on transition
-	encoder += state_table[last_state][current_state];
+	count += state_table[last_state][current_state];
+	if (count == 4) encoder++, count = 0;
+	if (count == -4) encoder--, count = 0;
 
 	// Save current state for the next interrupt
 	last_state = current_state;
