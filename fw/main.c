@@ -364,6 +364,40 @@ static inline uint16_t isqrt(uint32_t x)
 }
 
 
+// Input: temperature difference
+// Output: duty-cycle 0-max_duty
+uint16_t pid(int16_t delta, int16_t max_duty)
+{
+	static s32 err_p, err_i, err_d, dt, prev_err;
+	static u32 t, prev_t;
+
+	t = funSysTick32();
+	dt = FR_DIV(I2FR((t-prev_t)/DELAY_MS_TIME, R), R, I2FR(1000, R), R);
+
+	s32 err = I2FR(delta, R); // temperature delta as fixed point number
+
+	err_p = err;
+	if (delta > 40 && delta < -40) err_i = FR_CLAMP(FR_FixAddSat(err_i, FR_FixMulSat(err, dt)), I2FR(-1000, R), I2FR(1000, R));
+	else err_i = 0;
+	err_d = FR_DIV(FR_FixAddSat(prev_err, -err), R, dt, R);
+
+	prev_err = err;
+	prev_t = t;
+
+	// PID coefficients
+	const s32 kp = FR_numstr("1.1700", R);
+	const s32 ki = FR_numstr("0.05000", R);
+	const s32 kd = FR_numstr("0.07000", R);
+	s32 e = 0;
+	e = FR_FixAddSat(e, FR_FixMulSat(err_p, kp));
+	e = FR_FixAddSat(e, FR_FixMulSat(err_i, ki));
+	e = FR_FixAddSat(e, FR_FixMulSat(err_d, kd));
+	e = FR_CLAMP(e, I2FR(0, R), I2FR(100, R));
+
+	return FR2I(FR_FixMulSat(FR_DIV(e, R, I2FR(100, R), R), I2FR(max_duty, R)), R);
+}
+
+
 __attribute__((noreturn)) int main(void)
 {
 	SystemInit();
@@ -492,7 +526,7 @@ __attribute__((noreturn)) int main(void)
 			static uint16_t vbus_mv, current_ma;
 			static volatile int16_t temp_c, tip_temp_c;
 			static uint16_t power;
-			static s32 e;
+			static uint16_t duty;
 			vbus_mv = U16_FP_EMA_K4(vbus_mv, ((u32)adc_buffer[0]*VCC_MV*11)/4096);
 			current_ma = U16_FP_EMA_K4(current_ma, get_current_ma(adc_buffer[1]));
 			temp_c = I16_FP_EMA_K4(temp_c, get_temp_c(adc_buffer[2]));
@@ -503,9 +537,17 @@ __attribute__((noreturn)) int main(void)
 				Delay_Ms(TURN_OFF_DELAY);
 				adc_injection_conversion();
 				u32 tip_mv = ((u32)injection_results[0]*VCC_MV)/4096;
-		    	tip_temp_c = I16_FP_EMA_K2(tip_temp_c, (tip_mv*TC_CONV_NOM)/TC_CONV_DEN) + temp_c;
+				// Tip calibration factors
+				const s32 tip_k = FR_numstr("0.144728", R);
+				const s32 tip_off = FR_numstr("0", R);
+				int16_t tt_now = FR2I(FR_FixAddSat(FR_FixMulSat(I2FR(tip_mv, R), tip_k), tip_off), R);
+		    	tip_temp_c = I16_FP_EMA_K4(tip_temp_c, tt_now + temp_c);
+				if (enabled) {
+					duty = pid((int16_t)pd_profile.set_temp - tip_temp_c, pd_profile.max_duty);
+				} else {
+				    duty = 0;
+				}
 			}
-			int16_t delta = (int16_t)pd_profile.set_temp - tip_temp_c;
 
 			switch (state) {
 			case STATE_MENU:
@@ -529,15 +571,14 @@ __attribute__((noreturn)) int main(void)
 			case STATE_HEATING:
 				// Display tip temperature
 				u8g2_DrawStr(u8g2, x_off+0, y_off+7, "TIP:");
-				u8g2_DrawStr(u8g2, x_off+20, y_off+7, u16toa(tip_temp_c));
+				u8g2_DrawStr(u8g2, x_off+20, y_off+7, i16toa(tip_temp_c));
 				// Display bus voltage
 				u8g2_DrawStr(u8g2, x_off+45, y_off+7, "V:");
 				u8g2_DrawStr(u8g2, x_off+55, y_off+7, u16toa(vbus_mv/1000));
 				// Display power
 				//u8g2_DrawStr(u8g2, x_off+0, y_off+15, "W:");
 				//u8g2_DrawStr(u8g2, x_off+10, y_off+15, u8g2_u16toa(power, 3));
-				FR_printNumF(buf_putc, e, R, 0, 3);
-				u8g2_DrawStr(u8g2, x_off+0, y_off+15, buf_get());
+				u8g2_DrawStr(u8g2, x_off+0, y_off+15, u16toa(duty));
 				// Display current
 				// u8g2_DrawStr(u8g2, x_off+45, y_off+15, "A:");
 				// u8g2_DrawStr(u8g2, x_off+55, y_off+15, u16toa(current_ma));
@@ -571,37 +612,8 @@ __attribute__((noreturn)) int main(void)
 
 					if (pwm) {
 						const uint16_t tim_max = FUNCONF_SYSTEM_CORE_CLOCK / PWM_FREQ_HZ - 1;
-						static s32 err_p, err_i, err_d, dt, fpt, prev_fpt;
-						static u32 t, prev_t;
-						uint16_t duty;
-						// absolute temperature error
-						s32 err = I2FR(delta, R);
-						fpt = I2FR(tip_temp_c, R);
-						t = funSysTick32();
-
-						dt = FR_DIV(I2FR((t-prev_t)/DELAY_MS_TIME, R), R, I2FR(1000, R), R);
-						err_p = err;
-						// Conditional integration
-						if (delta > 40 && delta < -40) err_i = FR_CLAMP(FR_FixAddSat(err_i, FR_FixMulSat(err, dt)), I2FR(-1000, R), I2FR(1000, R));
-						err_d = FR_DIV(FR_FixAddSat(prev_fpt, -fpt), R, dt, R);
-						prev_t = t;
-						prev_fpt = fpt;
-
-						const s32 kp = FR_numstr("1.2000", R);
-						const s32 ki = FR_numstr("0.05000", R);
-						const s32 kd = FR_numstr("0.00000", R);
-						e = 0;
-						e = FR_FixAddSat(e, FR_FixMulSat(err_p, kp));
-						e = FR_FixAddSat(e, FR_FixMulSat(err_i, ki));
-						e = FR_FixAddSat(e, FR_FixMulSat(err_d, kd));
-
-						e = FR_CLAMP(e, I2FR(0, R), I2FR(100, R));
-						duty = FR2I(FR_FixMulSat(FR_DIV(e, R, I2FR(100, R), R), I2FR(pd_profile.max_duty, R)), R);
-
-						if (duty <= 100) {
-						    pwm_set(((u32)duty*tim_max)/100);
-							u8g2_DrawBox(u8g2, x_off+92, y_off+12, 4, 4);
-						}
+						pwm_set(((u32)duty*tim_max)/100);
+						u8g2_DrawBox(u8g2, x_off+92, y_off+12, 4, 4);
 					} else {
 						pwm_set(0);
 					}
@@ -622,7 +634,6 @@ __attribute__((noreturn)) int main(void)
 					if (enabled) {
 						pwm_on();
 					} else {
-					    e = 0;
 						pwm_off();
 					}
 				}

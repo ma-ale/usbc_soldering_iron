@@ -29,15 +29,9 @@
 
 #define ENCODER_DEBOUNCE 6000
 
-// TODO: these need to be calibrated
-// Tip mV to deg C conversion factor numerator
-#define TC_CONV_NOM 151
-// Tip mV to deg C conversion factor denumerator
-#define TC_CONV_DEN 1000
-
 #define MAX_BOARD_TEMP 50
 #define MAX_TIP_TEMP   500
-#define TURN_OFF_DELAY 2
+#define TURN_OFF_DELAY 3
 #define CYCLES_PER_MEASURE 2
 #define BOARD_MAX_VOLTAGE 28000
 
