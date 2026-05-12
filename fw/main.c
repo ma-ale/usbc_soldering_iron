@@ -385,9 +385,9 @@ uint16_t pid(int16_t delta, int16_t max_duty)
 	prev_t = t;
 
 	// PID coefficients
-	const s32 kp = FR_numstr("1.1700", R);
-	const s32 ki = FR_numstr("0.05000", R);
-	const s32 kd = FR_numstr("0.07000", R);
+	const s32 kp = FR_NUM(1, 170, 3, R);
+	const s32 ki = FR_NUM(0, 050, 3, R);
+	const s32 kd = FR_NUM(0, 070, 3, R);
 	s32 e = 0;
 	e = FR_FixAddSat(e, FR_FixMulSat(err_p, kp));
 	e = FR_FixAddSat(e, FR_FixMulSat(err_i, ki));
@@ -524,7 +524,7 @@ __attribute__((noreturn)) int main(void)
 
 		if (has_pd) {
 			static uint16_t vbus_mv, current_ma;
-			static volatile int16_t temp_c, tip_temp_c;
+			static int16_t temp_c, tip_temp_c;
 			static uint16_t power;
 			static uint16_t duty;
 			vbus_mv = U16_FP_EMA_K4(vbus_mv, ((u32)adc_buffer[0]*VCC_MV*11)/4096);
@@ -538,8 +538,8 @@ __attribute__((noreturn)) int main(void)
 				adc_injection_conversion();
 				u32 tip_mv = ((u32)injection_results[0]*VCC_MV)/4096;
 				// Tip calibration factors
-				const s32 tip_k = FR_numstr("0.144728", R);
-				const s32 tip_off = FR_numstr("0", R);
+				const s32 tip_k = FR_NUM(0, 14473, 5, R);
+				const s32 tip_off = FR_NUM(0, 0, 0, R);
 				int16_t tt_now = FR2I(FR_FixAddSat(FR_FixMulSat(I2FR(tip_mv, R), tip_k), tip_off), R);
 		    	tip_temp_c = I16_FP_EMA_K4(tip_temp_c, tt_now + temp_c);
 				if (enabled) {
