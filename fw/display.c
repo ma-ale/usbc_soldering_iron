@@ -254,3 +254,98 @@ static char str_buf[32];
 uint8_t str_len;
 int buf_putc(char c) { str_buf[str_len++] = c; return 0; }
 const char* buf_get(void) { str_buf[str_len] = '\0'; str_len = 0; return str_buf; }
+
+
+// 7 segment display segments
+static const uint8_t seg_left_xbm[]   = {0x01,0x03,0x03,0x03,0x03,0x01};
+static const uint8_t seg_right_xbm[]  = {0x02,0x03,0x03,0x03,0x03,0x02};
+static const uint8_t seg_top_xbm[]    = {0x3f,0x1e};
+static const uint8_t seg_bot_xbm[]    = {0x1e,0x3f};
+static const uint8_t seg_center_xbm[] = {0x1e,0x3f,0x1e};
+
+static void draw_7seg(u8g2_t *u8g2, uint8_t x, uint8_t y, uint8_t n)
+{
+	switch (n) {
+	case 0:
+		u8g2_DrawXBM(u8g2, x+1, y+0, 6, 2, seg_top_xbm);
+		u8g2_DrawXBM(u8g2, x+6, y+1, 2, 6, seg_right_xbm);
+		u8g2_DrawXBM(u8g2, x+6, y+8, 2, 6, seg_right_xbm);
+		u8g2_DrawXBM(u8g2, x+1, y+13, 6, 2, seg_bot_xbm);
+		u8g2_DrawXBM(u8g2, x+0, y+1, 2, 6, seg_left_xbm);
+		u8g2_DrawXBM(u8g2, x+0, y+8, 2, 6, seg_left_xbm);
+		break;
+	case 1:
+		u8g2_DrawXBM(u8g2, x+6, y+1, 2, 6, seg_right_xbm);
+		u8g2_DrawXBM(u8g2, x+6, y+8, 2, 6, seg_right_xbm);
+		break;
+	case 2:
+		u8g2_DrawXBM(u8g2, x+1, y+0, 6, 2, seg_top_xbm);
+		u8g2_DrawXBM(u8g2, x+6, y+1, 2, 6, seg_right_xbm);
+		u8g2_DrawXBM(u8g2, x+1, y+13, 6, 2, seg_bot_xbm);
+		u8g2_DrawXBM(u8g2, x+0, y+8, 2, 6, seg_left_xbm);
+		u8g2_DrawXBM(u8g2, x+1, y+6, 6, 3, seg_center_xbm);
+		break;
+	case 3:
+		u8g2_DrawXBM(u8g2, x+1, y+0, 6, 2, seg_top_xbm);
+		u8g2_DrawXBM(u8g2, x+6, y+1, 2, 6, seg_right_xbm);
+		u8g2_DrawXBM(u8g2, x+6, y+8, 2, 6, seg_right_xbm);
+		u8g2_DrawXBM(u8g2, x+1, y+13, 6, 2, seg_bot_xbm);
+		u8g2_DrawXBM(u8g2, x+1, y+6, 6, 3, seg_center_xbm);
+		break;
+	case 4:
+		u8g2_DrawXBM(u8g2, x+6, y+1, 2, 6, seg_right_xbm);
+		u8g2_DrawXBM(u8g2, x+6, y+8, 2, 6, seg_right_xbm);
+		u8g2_DrawXBM(u8g2, x+0, y+1, 2, 6, seg_left_xbm);
+		u8g2_DrawXBM(u8g2, x+1, y+6, 6, 3, seg_center_xbm);
+		break;
+	case 5:
+		u8g2_DrawXBM(u8g2, x+1, y+0, 6, 2, seg_top_xbm);
+		u8g2_DrawXBM(u8g2, x+6, y+8, 2, 6, seg_right_xbm);
+		u8g2_DrawXBM(u8g2, x+1, y+13, 6, 2, seg_bot_xbm);
+		u8g2_DrawXBM(u8g2, x+0, y+1, 2, 6, seg_left_xbm);
+		u8g2_DrawXBM(u8g2, x+1, y+6, 6, 3, seg_center_xbm);
+		break;
+	case 6:
+		u8g2_DrawXBM(u8g2, x+1, y+0, 6, 2, seg_top_xbm);
+		u8g2_DrawXBM(u8g2, x+6, y+8, 2, 6, seg_right_xbm);
+		u8g2_DrawXBM(u8g2, x+1, y+13, 6, 2, seg_bot_xbm);
+		u8g2_DrawXBM(u8g2, x+0, y+1, 2, 6, seg_left_xbm);
+		u8g2_DrawXBM(u8g2, x+0, y+8, 2, 6, seg_left_xbm);
+		u8g2_DrawXBM(u8g2, x+1, y+6, 6, 3, seg_center_xbm);
+		break;
+	case 7:
+		u8g2_DrawXBM(u8g2, x+1, y+0, 6, 2, seg_top_xbm);
+		u8g2_DrawXBM(u8g2, x+6, y+1, 2, 6, seg_right_xbm);
+		u8g2_DrawXBM(u8g2, x+6, y+8, 2, 6, seg_right_xbm);
+		break;
+	case 8:
+		u8g2_DrawXBM(u8g2, x+1, y+0, 6, 2, seg_top_xbm);
+		u8g2_DrawXBM(u8g2, x+6, y+1, 2, 6, seg_right_xbm);
+		u8g2_DrawXBM(u8g2, x+6, y+8, 2, 6, seg_right_xbm);
+		u8g2_DrawXBM(u8g2, x+1, y+13, 6, 2, seg_bot_xbm);
+		u8g2_DrawXBM(u8g2, x+0, y+1, 2, 6, seg_left_xbm);
+		u8g2_DrawXBM(u8g2, x+0, y+8, 2, 6, seg_left_xbm);
+		u8g2_DrawXBM(u8g2, x+1, y+6, 6, 3, seg_center_xbm);
+		break;
+	case 9:
+		u8g2_DrawXBM(u8g2, x+1, y+0, 6, 2, seg_top_xbm);
+		u8g2_DrawXBM(u8g2, x+6, y+1, 2, 6, seg_right_xbm);
+		u8g2_DrawXBM(u8g2, x+6, y+8, 2, 6, seg_right_xbm);
+		u8g2_DrawXBM(u8g2, x+1, y+13, 6, 2, seg_bot_xbm);
+		u8g2_DrawXBM(u8g2, x+0, y+1, 2, 6, seg_left_xbm);
+		u8g2_DrawXBM(u8g2, x+1, y+6, 6, 3, seg_center_xbm);
+		break;
+	default:
+		break;
+	}
+}
+
+
+void draw_temp(u8g2_t *u8g2, uint8_t x, uint8_t y, int16_t temp)
+{
+	if (temp > 999 || temp < 0) temp = 0;
+	const char *s = u8x8_u16toa(temp, 3);
+	draw_7seg(u8g2, x+0, y+0, s[0]-'0');
+	draw_7seg(u8g2, x+9, y+0, s[1]-'0');
+	draw_7seg(u8g2, x+18, y+0, s[2]-'0');
+}

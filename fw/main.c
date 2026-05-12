@@ -569,6 +569,7 @@ __attribute__((noreturn)) int main(void)
 				}
 				break;
 			case STATE_HEATING:
+#if 0
 				// Display tip temperature
 				u8g2_DrawStr(u8g2, x_off+0, y_off+7, "TIP:");
 				u8g2_DrawStr(u8g2, x_off+20, y_off+7, i16toa(tip_temp_c));
@@ -584,7 +585,16 @@ __attribute__((noreturn)) int main(void)
 				// u8g2_DrawStr(u8g2, x_off+55, y_off+15, u16toa(current_ma));
 				u8g2_DrawStr(u8g2, x_off+45, y_off+15, "W:");
 				u8g2_DrawStr(u8g2, x_off+55, y_off+15, u16toa(power));
-
+#else
+				draw_temp(u8g2, x_off+0, y_off+0, tip_temp_c);
+				u8g2_DrawStr(u8g2, x_off+32, y_off+6, "W:");
+				u8g2_DrawStr(u8g2, x_off+42, y_off+6, u16toa(power));
+				u8g2_DrawStr(u8g2, x_off+60, y_off+6, "V:");
+				u8g2_DrawStr(u8g2, x_off+70, y_off+6, u16toa((vbus_mv+500)/1000));
+				uint8_t p = (power*100)/pd_profile.set_power;
+				uint8_t w = (uint16_t)(p*64)/100;
+				u8g2_DrawBox(u8g2, x_off+32, y_off+14, w, 5);
+#endif
 
 				if (enabled) {
 					funDigitalWrite(PIN_12V, 1);
@@ -613,7 +623,7 @@ __attribute__((noreturn)) int main(void)
 					if (pwm) {
 						const uint16_t tim_max = FUNCONF_SYSTEM_CORE_CLOCK / PWM_FREQ_HZ - 1;
 						pwm_set(((u32)duty*tim_max)/100);
-						u8g2_DrawBox(u8g2, x_off+92, y_off+12, 4, 4);
+						u8g2_DrawBox(u8g2, x_off+92, y_off+0, 4, 4);
 					} else {
 						pwm_set(0);
 					}
