@@ -368,7 +368,12 @@ static inline uint16_t isqrt(uint32_t x)
 // Output: duty-cycle 0-max_duty
 uint16_t pid(int16_t delta, int16_t max_duty)
 {
-	static s32 err_p, err_i, err_d, dt, prev_err;
+	// PID coefficients
+	const s32 Kp = FR_NUM( 1, 1700, 4, R);
+	const s32 Ti = FR_NUM( 5, 0000, 4, R);
+	const s32 Td = FR_NUM( 0,  450, 4, R);
+
+	static s32 err_p, err_i, intgrt, err_d, dt, prev_err;
 	static u32 t, prev_t;
 
 	t = funSysTick32();
@@ -377,21 +382,23 @@ uint16_t pid(int16_t delta, int16_t max_duty)
 	s32 err = I2FR(delta, R); // temperature delta as fixed point number
 
 	err_p = err;
-	if (delta > 40 && delta < -40) err_i = FR_CLAMP(FR_FixAddSat(err_i, FR_FixMulSat(err, dt)), I2FR(-1000, R), I2FR(1000, R));
-	else err_i = 0;
-	err_d = FR_DIV(FR_FixAddSat(prev_err, -err), R, dt, R);
+	err_i = FR_FixMulSat(FR_DIV(err, R, Ti, R), dt);
+	err_d = FR_FixMulSat(FR_DIV(FR_FixAddSat(err, -prev_err), R, dt, R), Td);
 
 	prev_err = err;
 	prev_t = t;
 
-	// PID coefficients
-	const s32 kp = FR_NUM(1, 170, 3, R);
-	const s32 ki = FR_NUM(0, 050, 3, R);
-	const s32 kd = FR_NUM(0, 070, 3, R);
 	s32 e = 0;
-	e = FR_FixAddSat(e, FR_FixMulSat(err_p, kp));
-	e = FR_FixAddSat(e, FR_FixMulSat(err_i, ki));
-	e = FR_FixAddSat(e, FR_FixMulSat(err_d, kd));
+	e = FR_FixAddSat(e, err_p);
+	e = FR_FixAddSat(FR_FixAddSat(e, err_i), intgrt);
+	e = FR_FixAddSat(e, err_d);
+	e = FR_FixMulSat(e, Kp);
+
+	// only integrate if the output is less then max
+	if (e < I2FR(100, R)) {
+        FR_FixAddSat(intgrt, err_i);
+	}
+
 	e = FR_CLAMP(e, I2FR(0, R), I2FR(100, R));
 
 	return FR2I(FR_FixMulSat(FR_DIV(e, R, I2FR(100, R), R), I2FR(max_duty, R)), R);
