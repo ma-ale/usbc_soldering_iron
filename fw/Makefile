@@ -32,19 +32,14 @@ U8G2_OBJS := $(addprefix $(BUILD_DIR)/, $(notdir $(U8G2_SRC:.c=.o)))
 $(BUILD_DIR)/%.o : $(U8G2_DIR)/%.c | $(BUILD_DIR)
 	$(PREFIX)-gcc $(CFLAGS) -c $< -o $@
 
-# build fr_math
-FRMATH_OBJS := $(addprefix $(BUILD_DIR)/, $(notdir $(FRMATH_SRC:.c=.o)))
-$(BUILD_DIR)/%.o : $(FRMATH_DIR)/%.c | $(BUILD_DIR)
-	$(PREFIX)-gcc $(CFLAGS) -c $< -o $@
-
 # build target
 TARGET_OBJS := $(addprefix $(BUILD_DIR)/, $(filter-out ch32fun.o, $(notdir $(FILES_TO_COMPILE:.c=.o))))
 $(BUILD_DIR)/%.o : %.c $(HEADER_FILES) | $(BUILD_DIR)
 	$(PREFIX)-gcc $(CFLAGS) -c $< -o $@
 
 # link target, the rest of the build is specified in ch32fun.mk
-$(TARGET).elf : $(FILES_TO_COMPILE) $(LINKER_SCRIPT) $(EXTRA_ELF_DEPENDENCIES) $(U8G2_OBJS) $(FRMATH_OBJS) $(TARGET_OBJS) ch32fun.o
-	$(PREFIX)-gcc -o $@ $(U8G2_OBJS) $(TARGET_OBJS) $(FRMATH_OBJS) ch32fun.o $(CFLAGS) $(LDFLAGS)
+$(TARGET).elf : $(FILES_TO_COMPILE) $(LINKER_SCRIPT) $(EXTRA_ELF_DEPENDENCIES) $(U8G2_OBJS) $(TARGET_OBJS) ch32fun.o
+	$(PREFIX)-gcc -o $@ $(U8G2_OBJS) $(TARGET_OBJS) ch32fun.o $(CFLAGS) $(LDFLAGS)
 
 
 flash : cv_flash

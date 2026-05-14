@@ -3,19 +3,14 @@
 #include <stdio.h>
 #include <fsusb.h>
 
-#define FR_LEAN
-// #define FR_CORE_ONLY
-#include <FR_math.h>
-
 #include "funconfig.h"
 #include "lib_i2c.h"
 #include "display.h"
 #include "filter.h"
 #include "sc7a20.h"
 #include "pd.h"
+#include "fpmath.h"
 
-// Radix for fixed point operations
-#define R 16
 
 // constants
 // LUT for converting NTC readings to degrees celsius
@@ -45,8 +40,8 @@ static inline int16_t get_temp_c(uint16_t adc_reading)
 	uint8_t index = adc_reading / ntc_step_size;
 	uint8_t remainder = adc_reading % ntc_step_size;
 	int16_t temp_base = index < 64 ? ntc_lut[index] : 0;
-    int16_t temp_next = ntc_lut[index + 1];
-    return temp_base + ((temp_next - temp_base) * remainder)/ntc_step_size;
+	int16_t temp_next = ntc_lut[index + 1];
+	return temp_base + ((temp_next - temp_base) * remainder)/ntc_step_size;
 }
 
 
@@ -369,39 +364,41 @@ static inline uint16_t isqrt(uint32_t x)
 uint16_t pid(int16_t delta, int16_t max_duty)
 {
 	// PID coefficients
-	const s32 Kp = FR_NUM( 1, 1700, 4, R);
-	const s32 Ti = FR_NUM( 5, 0000, 4, R);
-	const s32 Td = FR_NUM( 0,  450, 4, R);
+	const fp16_t Kp = num2fp( 1, 1700, 4);
+	const fp16_t Ti = num2fp(10, 0000, 4);
+	const fp16_t Td = num2fp( 0,  700, 4);
 
-	static s32 err_p, err_i, intgrt, err_d, dt, prev_err;
+	static fp16_t err_p, err_i, intgrt, err_d, dt, prev_err;
 	static u32 t, prev_t;
 
 	t = funSysTick32();
-	dt = FR_DIV(I2FR((t-prev_t)/DELAY_MS_TIME, R), R, I2FR(1000, R), R);
+	dt = fp_div(i2fp((t-prev_t)/DELAY_MS_TIME), i2fp(1000));
 
-	s32 err = I2FR(delta, R); // temperature delta as fixed point number
+	fp16_t err = i2fp(delta); // temperature delta as fixed point number
 
 	err_p = err;
-	err_i = FR_FixMulSat(FR_DIV(err, R, Ti, R), dt);
-	err_d = FR_FixMulSat(FR_DIV(FR_FixAddSat(err, -prev_err), R, dt, R), Td);
+	err_i = fp_mul(fp_div(err, Ti), dt);
+	err_d = fp_mul(fp_div(fp_sub(err, prev_err), dt), Td);
 
 	prev_err = err;
 	prev_t = t;
 
-	s32 e = 0;
-	e = FR_FixAddSat(e, err_p);
-	e = FR_FixAddSat(FR_FixAddSat(e, err_i), intgrt);
-	e = FR_FixAddSat(e, err_d);
-	e = FR_FixMulSat(e, Kp);
+	fp16_t e = 0;
+	e = fp_add(e, err_p);
+	e = fp_add(fp_add(e, err_i), intgrt);
+	e = fp_add(e, err_d);
+	e = fp_mul(e, Kp);
 
+	// TODO: use a back calculation anti windup strategy
 	// only integrate if the output is less then max
-	if (e < I2FR(100, R)) {
-        FR_FixAddSat(intgrt, err_i);
+	if (e < i2fp(100)) {
+		intgrt = fp_add(intgrt, err_i);
 	}
 
-	e = FR_CLAMP(e, I2FR(0, R), I2FR(100, R));
+	e = fp_clamp(e, i2fp(0), i2fp(100));
 
-	return FR2I(FR_FixMulSat(FR_DIV(e, R, I2FR(100, R), R), I2FR(max_duty, R)), R);
+	// TODO: implement minimum duty cycle
+	return fp2i(fp_map(e, 0, i2fp(100), 0, i2fp(max_duty)));
 }
 
 
@@ -543,16 +540,16 @@ __attribute__((noreturn)) int main(void)
 			if (!pwm || !enabled) {
 				Delay_Ms(TURN_OFF_DELAY);
 				adc_injection_conversion();
-				u32 tip_mv = ((u32)injection_results[0]*VCC_MV)/4096;
+				u16 tip_mv = ((u32)injection_results[0]*VCC_MV)/4096;
 				// Tip calibration factors
-				const s32 tip_k = FR_NUM(0, 14473, 5, R);
-				const s32 tip_off = FR_NUM(0, 0, 0, R);
-				int16_t tt_now = FR2I(FR_FixAddSat(FR_FixMulSat(I2FR(tip_mv, R), tip_k), tip_off), R);
-		    	tip_temp_c = I16_FP_EMA_K4(tip_temp_c, tt_now + temp_c);
+				const fp16_t tip_k = num2fp(0, 14473, 5);
+				const fp16_t tip_off = num2fp(0, 0, 0);
+				int16_t tt_now = fp2i(fp_add(fp_mul(i2fp(tip_mv), tip_k), tip_off));
+				tip_temp_c = I16_FP_EMA_K4(tip_temp_c, tt_now + temp_c);
 				if (enabled) {
 					duty = pid((int16_t)pd_profile.set_temp - tip_temp_c, pd_profile.max_duty);
 				} else {
-				    duty = 0;
+					duty = 0;
 				}
 			}
 
