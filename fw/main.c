@@ -345,26 +345,6 @@ static inline void pwm_set(uint16_t pulse_width)
 }
 
 
-// Integer square root (binary search)
-// https://en.wikipedia.org/wiki/Integer_square_root
-static inline uint16_t isqrt(uint32_t x)
-{
-	uint16_t l = 0;     // lower bound of the square root
-	uint16_t r = x + 1; // upper bound of the square root
-
-	while (l != r - 1) {
-		uint32_t m = (l + r) / 2; // midpoint to test
-		if (m * m <= x) {
-			l = m;
-		} else {
-			r = m;
-		}
-	}
-
-	return l;
-}
-
-
 // Input: temperature difference
 // Output: duty-cycle 0-max_duty
 uint16_t pid(int16_t delta, int16_t max_duty)
