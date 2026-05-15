@@ -391,7 +391,7 @@ uint16_t pid(int16_t delta, int16_t max_duty)
 
 	// TODO: use a back calculation anti windup strategy
 	// only integrate if the output is less then max
-	if (e < i2fp(100)) {
+	if (e < i2fp(100) && e > 0) {
 		intgrt = fp_add(intgrt, err_i);
 	}
 
