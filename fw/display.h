@@ -12,7 +12,7 @@ const char* i16toa(int16_t value);
 const char* u16toa(uint16_t value);
 int buf_putc(char c);
 const char* buf_get(void);
-void draw_temp(u8g2_t *u8g2, uint8_t x, uint8_t y, int16_t temp);
+void draw_temp(u8g2_t *u8g2, uint8_t x, uint8_t y, int16_t temp, bool degc);
 
 
 #endif // _DISPLAY_H

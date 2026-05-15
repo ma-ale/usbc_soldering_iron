@@ -262,6 +262,8 @@ static const uint8_t seg_right_xbm[]  = {0x02,0x03,0x03,0x03,0x03,0x02};
 static const uint8_t seg_top_xbm[]    = {0x3f,0x1e};
 static const uint8_t seg_bot_xbm[]    = {0x1e,0x3f};
 static const uint8_t seg_center_xbm[] = {0x1e,0x3f,0x1e};
+static const uint8_t image_degc_xbm[] = {0x02,0x05,0x1a,0x24,0x04,0x04,0x24,0x18};
+static const uint8_t image_degf_xbm[] = {0x02,0x05,0x3a,0x08,0x18,0x08,0x08,0x08};
 
 static void draw_7seg(u8g2_t *u8g2, uint8_t x, uint8_t y, uint8_t n)
 {
@@ -341,11 +343,12 @@ static void draw_7seg(u8g2_t *u8g2, uint8_t x, uint8_t y, uint8_t n)
 }
 
 
-void draw_temp(u8g2_t *u8g2, uint8_t x, uint8_t y, int16_t temp)
+void draw_temp(u8g2_t *u8g2, uint8_t x, uint8_t y, int16_t temp, bool degc)
 {
 	if (temp > 999 || temp < 0) temp = 0;
 	const char *s = u8x8_u16toa(temp, 3);
 	draw_7seg(u8g2, x+0, y+0, s[0]-'0');
 	draw_7seg(u8g2, x+9, y+0, s[1]-'0');
 	draw_7seg(u8g2, x+18, y+0, s[2]-'0');
+	u8g2_DrawXBM(u8g2, x+27, y+8, 6, 8, degc ? image_degc_xbm : image_degf_xbm);
 }
