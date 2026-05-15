@@ -107,8 +107,14 @@ void update_encoder(void)
 
 	// Find the movement direction based on transition
 	count += state_table[last_state][current_state];
+
+#if ENCODER_INV
+	if (count == 4) encoder--, count = 0;
+	if (count == -4) encoder++, count = 0;
+#else
 	if (count == 4) encoder++, count = 0;
 	if (count == -4) encoder--, count = 0;
+#endif
 
 	// Save current state for the next interrupt
 	last_state = current_state;
@@ -489,6 +495,7 @@ __attribute__((noreturn)) int main(void)
 				MIN(pd_profile.set_power, pd_profile.power_avail)*pd_profile.tip_r)/1000) * 1000) / pd_profile.voltage
 			, 100);
 
+#if 0
 		u8g2_ClearBuffer(u8g2);
 		u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
 		// Display tip temperature
@@ -504,7 +511,8 @@ __attribute__((noreturn)) int main(void)
 		u8g2_DrawStr(u8g2, x_off+45, y_off+15, "D:");
 		u8g2_DrawStr(u8g2, x_off+55, y_off+15, u8g2_u16toa(pd_profile.max_duty, 3));
 		u8g2_SendBuffer(u8g2);
-		// Delay_Ms(5000);
+		Delay_Ms(5000);
+#endif
 	}
 
 
@@ -559,12 +567,10 @@ __attribute__((noreturn)) int main(void)
 				u8g2_DrawStr(u8g2, x_off+25, y_off+7, u8g2_u16toa(pd_profile.set_temp, 4));
 
 				if (encoder != 0) {
-					pd_profile.set_temp += encoder;
+					pd_profile.set_temp += encoder >= ENCODER_FAST ? 20 : encoder;
 					encoder = 0;
-					#define MIN_TEMP 100
-					#define MAX_TEMP 360
-					if (pd_profile.set_temp < MIN_TEMP) pd_profile.set_temp = MIN_TEMP;
-					if (pd_profile.set_temp > MAX_TEMP) pd_profile.set_temp = MAX_TEMP;
+					if (pd_profile.set_temp < MIN_TIP_SET_TEMP) pd_profile.set_temp = MIN_TIP_SET_TEMP;
+					if (pd_profile.set_temp > MAX_TIP_SET_TEMP) pd_profile.set_temp = MAX_TIP_SET_TEMP;
 				}
 
 				if (btn == 0 && prev_btn == 1) {
