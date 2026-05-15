@@ -457,12 +457,17 @@ __attribute__((noreturn)) int main(void)
 	// Init USBPD
 	bool has_pd = pd_negotiate(eUSBPD_VCC_3V3);
 	if (has_pd == false) {
-		u8g2_ClearBuffer(u8g2);
-		u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
-		u8g2_DrawStr(u8g2, x_off+0, y_off+7, "Negotiation FAILED");
-		u8g2_DrawStr(u8g2, x_off+0, y_off+14, USBPD_ResultToStr(pd_get_result()));
-		u8g2_SendBuffer(u8g2);
-		Delay_Ms(5000);
+		while (true) {
+			// No Power Delivery, maybe we are attached to a computer, so poll the input
+			poll_input();
+
+			u8g2_ClearBuffer(u8g2);
+			u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
+			u8g2_DrawStr(u8g2, x_off+0, y_off+7, "Negotiation FAILED");
+			u8g2_DrawStr(u8g2, x_off+0, y_off+14, USBPD_ResultToStr(pd_get_result()));
+			u8g2_SendBuffer(u8g2);
+			Delay_Ms(100);
+		}
 	} else {
 		pd_get_profile(&pd_profile, 60);
 
@@ -474,25 +479,6 @@ __attribute__((noreturn)) int main(void)
 			(100*(u32)isqrt((
 				MIN(pd_profile.set_power, pd_profile.power_avail)*pd_profile.tip_r)/1000) * 1000) / pd_profile.voltage
 			, 100);
-
-#if 0
-		u8g2_ClearBuffer(u8g2);
-		u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
-		// Display tip temperature
-		u8g2_DrawStr(u8g2, x_off+0, y_off+7, "A:");
-		u8g2_DrawStr(u8g2, x_off+10, y_off+7, u8g2_u16toa(pd_profile.max_current, 4));
-		// Display bus voltage
-		u8g2_DrawStr(u8g2, x_off+45, y_off+7, "V:");
-		u8g2_DrawStr(u8g2, x_off+55, y_off+7, u8g2_u16toa(pd_profile.voltage, 5));
-		// Display power
-		u8g2_DrawStr(u8g2, x_off+0, y_off+15, "W:");
-		u8g2_DrawStr(u8g2, x_off+10, y_off+15, u8g2_u16toa(pd_profile.power_avail, 3));
-		// Display current
-		u8g2_DrawStr(u8g2, x_off+45, y_off+15, "D:");
-		u8g2_DrawStr(u8g2, x_off+55, y_off+15, u8g2_u16toa(pd_profile.max_duty, 3));
-		u8g2_SendBuffer(u8g2);
-		Delay_Ms(5000);
-#endif
 	}
 
 
@@ -502,7 +488,6 @@ __attribute__((noreturn)) int main(void)
 	} state = STATE_MENU;
 	for (;;) {
 		u32 start = funSysTick32();
-		poll_input(); // usb
 
 		u8g2_ClearBuffer(u8g2);
 		u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
@@ -559,32 +544,15 @@ __attribute__((noreturn)) int main(void)
 				}
 				break;
 			case STATE_HEATING:
-#if 0
-				// Display tip temperature
-				u8g2_DrawStr(u8g2, x_off+0, y_off+7, "TIP:");
-				u8g2_DrawStr(u8g2, x_off+20, y_off+7, i16toa(tip_temp_c));
-				// Display bus voltage
-				u8g2_DrawStr(u8g2, x_off+45, y_off+7, "V:");
-				u8g2_DrawStr(u8g2, x_off+55, y_off+7, u16toa(vbus_mv/1000));
-				// Display power
-				//u8g2_DrawStr(u8g2, x_off+0, y_off+15, "W:");
-				//u8g2_DrawStr(u8g2, x_off+10, y_off+15, u8g2_u16toa(power, 3));
-				u8g2_DrawStr(u8g2, x_off+0, y_off+15, u16toa(duty));
-				// Display current
-				// u8g2_DrawStr(u8g2, x_off+45, y_off+15, "A:");
-				// u8g2_DrawStr(u8g2, x_off+55, y_off+15, u16toa(current_ma));
-				u8g2_DrawStr(u8g2, x_off+45, y_off+15, "W:");
-				u8g2_DrawStr(u8g2, x_off+55, y_off+15, u16toa(power));
-#else
+				// Draw UI
 				draw_temp(u8g2, x_off+0, y_off+0, tip_temp_c, true);
-				u8g2_DrawStr(u8g2, x_off+32, y_off+6, "W:");
-				u8g2_DrawStr(u8g2, x_off+42, y_off+6, u16toa(power));
+				u8g2_DrawStr(u8g2, x_off+32, y_off+6, "A:");
+				u8g2_DrawStr(u8g2, x_off+42, y_off+6, u16toa((current_ma+500)/1000));
 				u8g2_DrawStr(u8g2, x_off+60, y_off+6, "V:");
 				u8g2_DrawStr(u8g2, x_off+70, y_off+6, u16toa((vbus_mv+500)/1000));
 				uint8_t p = (power*100)/pd_profile.set_power;
 				uint8_t w = (uint16_t)(p*54)/100;
 				u8g2_DrawBox(u8g2, x_off+42, y_off+14, w, 5);
-#endif
 
 				if (enabled) {
 					funDigitalWrite(PIN_12V, 1);
