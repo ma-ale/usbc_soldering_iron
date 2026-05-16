@@ -389,17 +389,21 @@ uint16_t pid(int16_t delta, int16_t max_duty)
 }
 
 
-__attribute__((noreturn)) int main(void)
+// Board Setup
+static inline void setup(void)
 {
+	// Generic system setup
 	SystemInit();
 	funGpioInitAll();
 	USBFSSetup();
 
+	// Analog pin configuration
 	funPinMode(PIN_VBUS, GPIO_CFGLR_IN_ANALOG);
 	funPinMode(PIN_CURRENT, GPIO_CFGLR_IN_ANALOG);
 	funPinMode(PIN_NTC, GPIO_CFGLR_IN_ANALOG);
 	funPinMode(PIN_TEMP, GPIO_CFGLR_IN_ANALOG);
 
+	// Analog inputs setup (dma and injection conversion)
 	uint8_t adc_channels[3] = {
 		VBUS_ADC_CHANNEL,
 		CURRENT_ADC_CHANNEL,
@@ -410,6 +414,7 @@ __attribute__((noreturn)) int main(void)
 	};
 	setup_adc_and_dma(adc_channels, 3, adc_injected, 1);
 
+	// Digital pin configuration
 	funPinMode(PIN_12V, GPIO_CFGLR_OUT_10Mhz_PP);
 	funDigitalWrite(PIN_12V, 0);
 	funPinMode(PIN_HEATER, GPIO_CFGLR_OUT_10Mhz_AF_PP);
@@ -423,9 +428,11 @@ __attribute__((noreturn)) int main(void)
 	funDigitalWrite(PIN_ENC_B, 1); // specify pull-up
 	funPinMode(PIN_BTN, GPIO_CFGLR_IN_FLOAT);
 
+	// Setup PWM timer
 	setup_pwm();
 	pwm_off();
 
+	// Setup i2c line, includes setting the pin alternate mode
 	setup_i2c();
 
 	// Configure the IO as an interrupt.
@@ -445,11 +452,14 @@ __attribute__((noreturn)) int main(void)
 	// enable interrupt
 	NVIC_EnableIRQ(EXTI7_0_IRQn);
 
-	Delay_Ms(500);
-
+	// Start i2c peripherals
 	u8g2 = display_init();
 	sc7a20_init();
+}
 
+
+__attribute__((noreturn)) int main(void)
+{
 	u8g2_ClearBuffer(u8g2);
 	u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
 	u8g2_DrawStr(u8g2, x_off+0, y_off+7, "Negotiating...");
