@@ -460,6 +460,8 @@ static inline void setup(void)
 
 __attribute__((noreturn)) int main(void)
 {
+	setup();
+
 	u8g2_ClearBuffer(u8g2);
 	u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
 	u8g2_DrawStr(u8g2, x_off+0, y_off+7, "Negotiating...");
