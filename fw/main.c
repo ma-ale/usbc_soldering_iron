@@ -77,6 +77,7 @@ void handle_usbfs_input(int numbytes, uint8_t *data)
  * B: ____|    |____|    |____|
  *      ^ ^  ^ ^  ^ ^  ^ ^  ^ ^
  *      f r  r f  f r  r f  f r
+ *      |<---->| single detent
  */
 void update_encoder(void)
 {
