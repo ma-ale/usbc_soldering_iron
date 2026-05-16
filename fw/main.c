@@ -485,11 +485,11 @@ __attribute__((noreturn)) int main(void)
 			Delay_Ms(100);
 		}
 	} else {
-		pd_get_profile(&pd_profile, 60);
+		pd_get_profile(&pd_profile, 100);
 
 		// TODO: let the user decide the power profile
 		pd_profile.set_temp = 200;
-		pd_profile.set_power = 60; // Slightly below max power to avoid overloading
+		pd_profile.set_power = 95; // Slightly below max power to avoid overloading
 		pd_profile.tip_r = 2500; // TODO: tip check and resistance calculator
 		pd_profile.max_duty = MIN(
 			(100*(u32)isqrt((
