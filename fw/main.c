@@ -353,13 +353,16 @@ uint16_t pid(int16_t delta, int16_t max_duty)
 	// PID coefficients
 	const fp16_t Kp = num2fp( 1, 1700, 4);
 	const fp16_t Ti = num2fp(10, 0000, 4);
-	const fp16_t Td = num2fp( 0,  700, 4);
+	const fp16_t Td = num2fp( 0, 1500, 4);
 
 	static fp16_t err_p, err_i, intgrt, err_d, dt, prev_err;
 	static u32 t, prev_t;
 
 	t = funSysTick32();
 	dt = fp_div(i2fp((t-prev_t)/DELAY_MS_TIME), i2fp(1000));
+
+	// if pid was paused, reset the integrator
+	if (dt > num2fp(0, 2, 1)) intgrt = 0;
 
 	fp16_t err = i2fp(delta); // temperature delta as fixed point number
 
