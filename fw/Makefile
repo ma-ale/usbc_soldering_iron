@@ -15,9 +15,12 @@ U8G2_SRC:=$(U8G2_DIR)/u8x8_d_$(DISPLAY).c $(filter-out $(U8G2_DIR)/u8x8_d_%.c, \
 FRMATH_DIR:=fr_math
 FRMATH_SRC:=$(wildcard $(FRMATH_DIR)/*.c)
 
-EXTRA_CFLAGS += -I$(U8G2_DIR) -I$(FRMATH_DIR)
+# include protothreads
+PT_DIR:=pt
+
+EXTRA_CFLAGS += -I$(U8G2_DIR) -I$(FRMATH_DIR) -I$(PT_DIR)
 ADDITIONAL_C_FILES += lib_i2c.c display.c sc7a20.c pd.c
-HEADER_FILES := $(wildcard *.h)
+HEADER_FILES := $(wildcard *.h) $(wildcard $(PT_DIR)/*.h)
 
 include ch32fun/ch32fun/ch32fun.mk
 
