@@ -1,8 +1,9 @@
 /*
- * SC7A20_defines.h
- *
- *  Created on: 18 Sep. 2020
- *      Author: Ralim
+ * Defines for the SC7A20 accellerometer
+ * Original Author:
+ *     Ralim
+ *     Created on: 18 Sep. 2020
+ *     https://github.com/Ralim/IronOS.git
  */
 
 #ifndef _SC7A20_H_

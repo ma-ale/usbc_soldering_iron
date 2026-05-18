@@ -4,6 +4,10 @@
 #include <stdint.h>
 #include <assert.h>
 
+/*
+ * Minimal Fixed-Point math library implementation
+ */
+
 // This library depends on sign extension
 static_assert(-4 >> 1 == -2, ">> doesn't do sign extension");
 

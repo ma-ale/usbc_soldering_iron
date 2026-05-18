@@ -77,6 +77,7 @@ void handle_usbfs_input(int numbytes, uint8_t *data)
  * B: ____|    |____|    |____|
  *      ^ ^  ^ ^  ^ ^  ^ ^  ^ ^
  *      f r  r f  f r  r f  f r
+ *      |<---->| single detent
  */
 void update_encoder(void)
 {
@@ -345,26 +346,6 @@ static inline void pwm_set(uint16_t pulse_width)
 }
 
 
-// Integer square root (binary search)
-// https://en.wikipedia.org/wiki/Integer_square_root
-static inline uint16_t isqrt(uint32_t x)
-{
-	uint16_t l = 0;     // lower bound of the square root
-	uint16_t r = x + 1; // upper bound of the square root
-
-	while (l != r - 1) {
-		uint32_t m = (l + r) / 2; // midpoint to test
-		if (m * m <= x) {
-			l = m;
-		} else {
-			r = m;
-		}
-	}
-
-	return l;
-}
-
-
 // Input: temperature difference
 // Output: duty-cycle 0-max_duty
 uint16_t pid(int16_t delta, int16_t max_duty)
@@ -372,13 +353,16 @@ uint16_t pid(int16_t delta, int16_t max_duty)
 	// PID coefficients
 	const fp16_t Kp = num2fp( 1, 1700, 4);
 	const fp16_t Ti = num2fp(10, 0000, 4);
-	const fp16_t Td = num2fp( 0,  700, 4);
+	const fp16_t Td = num2fp( 0, 1500, 4);
 
 	static fp16_t err_p, err_i, intgrt, err_d, dt, prev_err;
 	static u32 t, prev_t;
 
 	t = funSysTick32();
 	dt = fp_div(i2fp((t-prev_t)/DELAY_MS_TIME), i2fp(1000));
+
+	// if pid was paused, reset the integrator
+	if (dt > num2fp(0, 2, 1)) intgrt = 0;
 
 	fp16_t err = i2fp(delta); // temperature delta as fixed point number
 
@@ -408,17 +392,21 @@ uint16_t pid(int16_t delta, int16_t max_duty)
 }
 
 
-__attribute__((noreturn)) int main(void)
+// Board Setup
+static inline void setup(void)
 {
+	// Generic system setup
 	SystemInit();
 	funGpioInitAll();
 	USBFSSetup();
 
+	// Analog pin configuration
 	funPinMode(PIN_VBUS, GPIO_CFGLR_IN_ANALOG);
 	funPinMode(PIN_CURRENT, GPIO_CFGLR_IN_ANALOG);
 	funPinMode(PIN_NTC, GPIO_CFGLR_IN_ANALOG);
 	funPinMode(PIN_TEMP, GPIO_CFGLR_IN_ANALOG);
 
+	// Analog inputs setup (dma and injection conversion)
 	uint8_t adc_channels[3] = {
 		VBUS_ADC_CHANNEL,
 		CURRENT_ADC_CHANNEL,
@@ -429,6 +417,7 @@ __attribute__((noreturn)) int main(void)
 	};
 	setup_adc_and_dma(adc_channels, 3, adc_injected, 1);
 
+	// Digital pin configuration
 	funPinMode(PIN_12V, GPIO_CFGLR_OUT_10Mhz_PP);
 	funDigitalWrite(PIN_12V, 0);
 	funPinMode(PIN_HEATER, GPIO_CFGLR_OUT_10Mhz_AF_PP);
@@ -442,9 +431,11 @@ __attribute__((noreturn)) int main(void)
 	funDigitalWrite(PIN_ENC_B, 1); // specify pull-up
 	funPinMode(PIN_BTN, GPIO_CFGLR_IN_FLOAT);
 
+	// Setup PWM timer
 	setup_pwm();
 	pwm_off();
 
+	// Setup i2c line, includes setting the pin alternate mode
 	setup_i2c();
 
 	// Configure the IO as an interrupt.
@@ -464,10 +455,15 @@ __attribute__((noreturn)) int main(void)
 	// enable interrupt
 	NVIC_EnableIRQ(EXTI7_0_IRQn);
 
-	Delay_Ms(500);
-
+	// Start i2c peripherals
 	u8g2 = display_init();
 	sc7a20_init();
+}
+
+
+__attribute__((noreturn)) int main(void)
+{
+	setup();
 
 	u8g2_ClearBuffer(u8g2);
 	u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
@@ -477,42 +473,28 @@ __attribute__((noreturn)) int main(void)
 	// Init USBPD
 	bool has_pd = pd_negotiate(eUSBPD_VCC_3V3);
 	if (has_pd == false) {
-		u8g2_ClearBuffer(u8g2);
-		u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
-		u8g2_DrawStr(u8g2, x_off+0, y_off+7, "Negotiation FAILED");
-		u8g2_DrawStr(u8g2, x_off+0, y_off+14, USBPD_ResultToStr(pd_get_result()));
-		u8g2_SendBuffer(u8g2);
-		Delay_Ms(5000);
+		while (true) {
+			// No Power Delivery, maybe we are attached to a computer, so poll the input
+			poll_input();
+
+			u8g2_ClearBuffer(u8g2);
+			u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
+			u8g2_DrawStr(u8g2, x_off+0, y_off+7, "Negotiation FAILED");
+			u8g2_DrawStr(u8g2, x_off+0, y_off+14, USBPD_ResultToStr(pd_get_result()));
+			u8g2_SendBuffer(u8g2);
+			Delay_Ms(100);
+		}
 	} else {
-		pd_get_profile(&pd_profile, 60);
+		pd_get_profile(&pd_profile, 100);
 
 		// TODO: let the user decide the power profile
 		pd_profile.set_temp = 200;
-		pd_profile.set_power = 60; // Slightly below max power to avoid overloading
+		pd_profile.set_power = 95; // Slightly below max power to avoid overloading
 		pd_profile.tip_r = 2500; // TODO: tip check and resistance calculator
 		pd_profile.max_duty = MIN(
 			(100*(u32)isqrt((
 				MIN(pd_profile.set_power, pd_profile.power_avail)*pd_profile.tip_r)/1000) * 1000) / pd_profile.voltage
 			, 100);
-
-#if 0
-		u8g2_ClearBuffer(u8g2);
-		u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
-		// Display tip temperature
-		u8g2_DrawStr(u8g2, x_off+0, y_off+7, "A:");
-		u8g2_DrawStr(u8g2, x_off+10, y_off+7, u8g2_u16toa(pd_profile.max_current, 4));
-		// Display bus voltage
-		u8g2_DrawStr(u8g2, x_off+45, y_off+7, "V:");
-		u8g2_DrawStr(u8g2, x_off+55, y_off+7, u8g2_u16toa(pd_profile.voltage, 5));
-		// Display power
-		u8g2_DrawStr(u8g2, x_off+0, y_off+15, "W:");
-		u8g2_DrawStr(u8g2, x_off+10, y_off+15, u8g2_u16toa(pd_profile.power_avail, 3));
-		// Display current
-		u8g2_DrawStr(u8g2, x_off+45, y_off+15, "D:");
-		u8g2_DrawStr(u8g2, x_off+55, y_off+15, u8g2_u16toa(pd_profile.max_duty, 3));
-		u8g2_SendBuffer(u8g2);
-		Delay_Ms(5000);
-#endif
 	}
 
 
@@ -522,7 +504,6 @@ __attribute__((noreturn)) int main(void)
 	} state = STATE_MENU;
 	for (;;) {
 		u32 start = funSysTick32();
-		poll_input(); // usb
 
 		u8g2_ClearBuffer(u8g2);
 		u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
@@ -579,32 +560,15 @@ __attribute__((noreturn)) int main(void)
 				}
 				break;
 			case STATE_HEATING:
-#if 0
-				// Display tip temperature
-				u8g2_DrawStr(u8g2, x_off+0, y_off+7, "TIP:");
-				u8g2_DrawStr(u8g2, x_off+20, y_off+7, i16toa(tip_temp_c));
-				// Display bus voltage
-				u8g2_DrawStr(u8g2, x_off+45, y_off+7, "V:");
-				u8g2_DrawStr(u8g2, x_off+55, y_off+7, u16toa(vbus_mv/1000));
-				// Display power
-				//u8g2_DrawStr(u8g2, x_off+0, y_off+15, "W:");
-				//u8g2_DrawStr(u8g2, x_off+10, y_off+15, u8g2_u16toa(power, 3));
-				u8g2_DrawStr(u8g2, x_off+0, y_off+15, u16toa(duty));
-				// Display current
-				// u8g2_DrawStr(u8g2, x_off+45, y_off+15, "A:");
-				// u8g2_DrawStr(u8g2, x_off+55, y_off+15, u16toa(current_ma));
-				u8g2_DrawStr(u8g2, x_off+45, y_off+15, "W:");
-				u8g2_DrawStr(u8g2, x_off+55, y_off+15, u16toa(power));
-#else
+				// Draw UI
 				draw_temp(u8g2, x_off+0, y_off+0, tip_temp_c, true);
-				u8g2_DrawStr(u8g2, x_off+32, y_off+6, "W:");
-				u8g2_DrawStr(u8g2, x_off+42, y_off+6, u16toa(power));
+				u8g2_DrawStr(u8g2, x_off+32, y_off+6, "A:");
+				u8g2_DrawStr(u8g2, x_off+42, y_off+6, u16toa((current_ma+500)/1000));
 				u8g2_DrawStr(u8g2, x_off+60, y_off+6, "V:");
 				u8g2_DrawStr(u8g2, x_off+70, y_off+6, u16toa((vbus_mv+500)/1000));
 				uint8_t p = (power*100)/pd_profile.set_power;
 				uint8_t w = (uint16_t)(p*54)/100;
 				u8g2_DrawBox(u8g2, x_off+42, y_off+14, w, 5);
-#endif
 
 				if (enabled) {
 					funDigitalWrite(PIN_12V, 1);

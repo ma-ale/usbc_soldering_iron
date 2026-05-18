@@ -1,9 +1,9 @@
-#ifndef _LIB_I2C_H
-#define _LIB_I2C_H
-
 // MIT License
 // Copyright (c) 2025 UniTheCat
 // Tested with Ch32X03x and CH32V30x
+
+#ifndef _LIB_I2C_H
+#define _LIB_I2C_H
 
 #include <ch32fun.h>
 
