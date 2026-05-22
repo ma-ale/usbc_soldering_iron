@@ -29,8 +29,6 @@ u8g2_t *u8g2;
 int16_t encoder = 0; // rotary encoder counter
 uint32_t last_interrupt = 0; // last time the encoder interrupt was triggered
 struct pd_profile_t pd_profile;
-static const int8_t x_off = 0;
-static const int8_t y_off = 8;
 
 // Convert the raw adc reading to a temperature in celsius with the ntc lut,
 // linearly interpolating between positions
