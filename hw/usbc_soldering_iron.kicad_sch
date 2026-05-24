@@ -8778,10 +8778,6 @@
 		(uuid "8d801d13-32fe-4e34-8cc5-b8a86a497023")
 	)
 	(no_connect
-		(at 166.37 127)
-		(uuid "a42c7cee-9406-453b-a4ce-baa18e06586f")
-	)
-	(no_connect
 		(at 45.72 81.28)
 		(uuid "c9b41e3a-80a4-4410-be4c-91975e86700a")
 	)
@@ -9131,6 +9127,16 @@
 			(type default)
 		)
 		(uuid "1427c6b1-5293-499b-9663-f54121cc8ca4")
+	)
+	(wire
+		(pts
+			(xy 166.37 127) (xy 165.1 127)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "150863e4-e8de-4548-83ca-f9702bdee7b5")
 	)
 	(wire
 		(pts
@@ -9611,6 +9617,16 @@
 	)
 	(wire
 		(pts
+			(xy 157.48 129.54) (xy 166.37 129.54)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3502e818-338b-4cc7-9a2a-4c07b91801f6")
+	)
+	(wire
+		(pts
 			(xy 38.1 203.2) (xy 38.1 217.17)
 		)
 		(stroke
@@ -9839,6 +9855,16 @@
 			(type default)
 		)
 		(uuid "4565d69f-09cb-47a5-b4c9-ecffd44c036a")
+	)
+	(wire
+		(pts
+			(xy 165.1 127) (xy 165.1 138.43)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "45eb1e1d-7ec8-4d81-9d3f-70b4fdb06d65")
 	)
 	(wire
 		(pts
@@ -11334,16 +11360,6 @@
 			(type default)
 		)
 		(uuid "b722c9ed-3920-4db0-b448-de99a3e1e756")
-	)
-	(wire
-		(pts
-			(xy 166.37 129.54) (xy 157.48 129.54)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b8b07b37-a18e-4dff-82fd-3e86d3d5df84")
 	)
 	(wire
 		(pts
@@ -23473,6 +23489,84 @@
 			(project "usbc_soldering_iron"
 				(path "/7095b018-eac3-4b01-b374-28e3216c4fd8"
 					(reference "#PWR012")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 165.1 138.43 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "e5024d50-3cdf-4c45-97f7-3843d680ad40")
+		(property "Reference" "#PWR060"
+			(at 165.1 144.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 165.1 143.51 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 165.1 138.43 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 165.1 138.43 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 165.1 138.43 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "7ace9f06-3bc2-4107-ac59-107b86a89908")
+		)
+		(instances
+			(project "usbc_soldering_iron"
+				(path "/7095b018-eac3-4b01-b374-28e3216c4fd8"
+					(reference "#PWR060")
 					(unit 1)
 				)
 			)
