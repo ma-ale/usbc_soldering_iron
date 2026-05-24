@@ -16530,7 +16530,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Inductor_SMD:L_Changjiang_FTC252012S"
+		(property "Footprint" "Inductor_SMD:L_Wuerth_MAPI-2010"
 			(at 130.81 27.94 0)
 			(hide yes)
 			(show_name no)
