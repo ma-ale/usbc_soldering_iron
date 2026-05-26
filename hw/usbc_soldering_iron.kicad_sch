@@ -10136,7 +10136,7 @@
 	)
 	(wire
 		(pts
-			(xy 90.17 134.62) (xy 90.17 135.89)
+			(xy 90.17 130.81) (xy 90.17 135.89)
 		)
 		(stroke
 			(width 0)
@@ -12041,16 +12041,6 @@
 			(type default)
 		)
 		(uuid "db590c06-fcc6-48fe-bae6-4cd3f57f0f0b")
-	)
-	(wire
-		(pts
-			(xy 90.17 129.54) (xy 90.17 128.27)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "dd05f605-f778-409a-8ba5-841a20aba1a8")
 	)
 	(wire
 		(pts
@@ -21882,7 +21872,7 @@
 	)
 	(symbol
 		(lib_id "power:+3.3V")
-		(at 90.17 128.27 0)
+		(at 90.17 130.81 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -21892,7 +21882,7 @@
 		(dnp no)
 		(uuid "c2b0d7a8-fa9c-41b4-8335-7507ed526a75")
 		(property "Reference" "#PWR021"
-			(at 90.17 132.08 0)
+			(at 90.17 134.62 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -21903,7 +21893,7 @@
 			)
 		)
 		(property "Value" "+3.3V"
-			(at 90.17 123.19 0)
+			(at 90.17 125.73 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -21913,7 +21903,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 90.17 128.27 0)
+			(at 90.17 130.81 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -21924,7 +21914,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 90.17 128.27 0)
+			(at 90.17 130.81 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -21935,7 +21925,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"+3.3V\""
-			(at 90.17 128.27 0)
+			(at 90.17 130.81 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -23602,88 +23592,6 @@
 			(project "usbc_soldering_iron"
 				(path "/7095b018-eac3-4b01-b374-28e3216c4fd8"
 					(reference "C25")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:D_Schottky_Small")
-		(at 90.17 132.08 270)
-		(mirror x)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "e1e13b52-1b3c-4f11-a449-789b76d7fa9b")
-		(property "Reference" "D1"
-			(at 87.63 131.0639 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Value" "RB521S30T1G"
-			(at 87.63 133.6039 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Footprint" "Diode_SMD:D_SOD-523"
-			(at 90.17 132.08 90)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 90.17 132.08 90)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Schottky diode, small symbol"
-			(at 90.17 132.08 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "3b801226-30ad-43b5-800a-94ecc793f429")
-		)
-		(pin "2"
-			(uuid "b84c2e4e-c164-41f8-8c11-8413c3dd5745")
-		)
-		(instances
-			(project "usbc_soldering_iron"
-				(path "/7095b018-eac3-4b01-b374-28e3216c4fd8"
-					(reference "D1")
 					(unit 1)
 				)
 			)
