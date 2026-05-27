@@ -23813,7 +23813,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Inductor_SMD:L_Changjiang_FNR4030S"
+		(property "Footprint" "Custom:L_Changjiang_FNR4030S_Handsolder"
 			(at 223.52 114.3 0)
 			(hide yes)
 			(show_name no)
