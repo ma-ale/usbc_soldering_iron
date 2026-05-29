@@ -531,7 +531,7 @@ __attribute__((noreturn)) int main(void)
 				Delay_Ms(TURN_OFF_DELAY);
 				adc_injection_conversion();
 				// Calibrate VCC with the internal reference value
-				vcc_mv = ((uint32_t)1200 * 4096)/injection_results[1];
+				vcc_mv = I16_FP_EMA_K4(vcc_mv, ((uint32_t)1200 * 4096)/injection_results[1]);
 				u16 tip_mv = ((u32)injection_results[0]*vcc_mv)/4096;
 				// Tip calibration factors
 				const fp16_t tip_k = num2fp(0, 14473, 5);
