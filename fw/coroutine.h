@@ -113,6 +113,18 @@
  */
 
 
+#if defined(__GNUC__) && !defined(__STRICT_ANSI__)
+	// GCC: the extension is always present unless strict ANSI mode is forced.
+	// (Even with -pedantic it still works, just warns.)
+	#define HAVE_LABELS_AS_VALUES 1
+#elif __has_extension(c_labels_as_values)
+	#define HAVE_LABELS_AS_VALUES 1
+#else
+	#define HAVE_LABELS_AS_VALUES 0
+#endif
+
+_Static_assert(HAVE_LABELS_AS_VALUES, "This library requires the GNU C 'labels as values' extension");
+
 // Useful macros
 #define CORO_CONCAT2(s1, s2) s1##s2
 #define CORO_CONCAT(s1, s2) CORO_CONCAT2(s1, s2)

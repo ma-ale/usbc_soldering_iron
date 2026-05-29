@@ -10,6 +10,7 @@
 #include "sc7a20.h"
 #include "pd.h"
 #include "fpmath.h"
+#include "coroutine.h"
 
 
 // constants
