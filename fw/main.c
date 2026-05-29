@@ -478,12 +478,30 @@ __attribute__((noreturn)) int main(void)
 			// No Power Delivery, maybe we are attached to a computer, so poll the input
 			poll_input();
 
+			static uint16_t vcc_mv = 3300;
+			static u16 tip_mv, tip_temp_c;
+			static s16 temp_c;
+
+			adc_injection_conversion();
+
+			temp_c = I16_FP_EMA_K4(temp_c, get_temp_c(adc_buffer[2]));
+			// Calibrate VCC with the internal reference value
+			vcc_mv = I16_FP_EMA_K4(vcc_mv, ((uint32_t)1200 * 4096)/injection_results[1]);
+			tip_mv = ((u32)injection_results[0]*vcc_mv)/4096;
+			// Tip calibration factors
+			const fp16_t tip_k = num2fp(0, 14473, 5);
+			const fp16_t tip_off = num2fp(0, 0, 0);
+			int16_t tt_now = fp2i(fp_add(fp_mul(i2fp(tip_mv), tip_k), tip_off));
+			tip_temp_c = I16_FP_EMA_K4(tip_temp_c, tt_now + temp_c);
+
 			u8g2_ClearBuffer(u8g2);
 			u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
 			u8g2_DrawStr(u8g2, x_off+0, y_off+7, "Negotiation FAILED");
 			u8g2_DrawStr(u8g2, x_off+0, y_off+14, USBPD_ResultToStr(pd_get_result()));
+			u8g2_DrawStr(u8g2, x_off+0, y_off+21, u16toa(vcc_mv));
+			u8g2_DrawStr(u8g2, x_off+0, y_off+28, u16toa(temp_c));
+			u8g2_DrawStr(u8g2, x_off+30, y_off+28, u16toa(tip_temp_c));
 			u8g2_SendBuffer(u8g2);
-			Delay_Ms(100);
 		}
 	} else {
 		pd_get_profile(&pd_profile, 100);
