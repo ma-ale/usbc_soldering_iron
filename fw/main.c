@@ -15,7 +15,8 @@
 
 // constants
 // LUT for converting NTC readings to degrees celsius
-// Nominal: 1kOhm, Beta: 3380, Step: 64
+// Nominal: 10kOhm, Beta: 3380, Step: 64
+// TODO: Add a fixed offset to account for toollerances
 const uint8_t ntc_step_size = 64;
 const int16_t ntc_lut[] = {
 	1316, 197, 155, 133, 119, 108, 100, 93, 87, 82, 77, 73, 69, 66, 63, 60,
