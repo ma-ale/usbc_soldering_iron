@@ -6,7 +6,6 @@
 #define FUNCONF_DEBUG_HARDFAULT 0
 #define CH32X035                1
 #define I2C_TARGET              I2C1
-#define VCC_MV                  3480
 #define FRAME_TIME_MS           20 // 50Hz
 #define PWM_FREQ_HZ             100000 // TIM3 PWM frequency
 
@@ -26,6 +25,7 @@
 #define CURRENT_ADC_CHANNEL ANALOG_1 // PA1
 #define NTC_ADC_CHANNEL     ANALOG_2 // PA2
 #define TEMP_ADC_CHANNEL    ANALOG_3 // PA3
+#define VREF_INT_CHANNEL    15       // Internal channel set to 1.2V reference
 
 #define ENCODER_INV true
 #define ENCODER_FAST 3

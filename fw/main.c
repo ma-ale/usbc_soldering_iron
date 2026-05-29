@@ -29,6 +29,7 @@ u8g2_t *u8g2;
 int16_t encoder = 0; // rotary encoder counter
 uint32_t last_interrupt = 0; // last time the encoder interrupt was triggered
 struct pd_profile_t pd_profile;
+uint16_t vcc_mv = 3300;
 
 // Convert the raw adc reading to a temperature in celsius with the ntc lut,
 // linearly interpolating between positions
@@ -48,7 +49,7 @@ static inline int16_t get_current_ma(uint16_t adc_reading)
 {
 	// Rshunt = 4 milliOhm
 	// Gain = 100
-	u32 mv = ((u32)adc_reading * VCC_MV) / 4096;
+	u32 mv = ((u32)adc_reading * vcc_mv) / 4096;
 	return (mv * 10) / 4;
 }
 
@@ -405,15 +406,16 @@ static inline void setup(void)
 	funPinMode(PIN_TEMP, GPIO_CFGLR_IN_ANALOG);
 
 	// Analog inputs setup (dma and injection conversion)
-	uint8_t adc_channels[3] = {
+	uint8_t adc_channels[] = {
 		VBUS_ADC_CHANNEL,
 		CURRENT_ADC_CHANNEL,
 		NTC_ADC_CHANNEL
 	};
-	uint8_t adc_injected[1] = {
-		TEMP_ADC_CHANNEL
+	uint8_t adc_injected[] = {
+		TEMP_ADC_CHANNEL,
+		VREF_INT_CHANNEL
 	};
-	setup_adc_and_dma(adc_channels, 3, adc_injected, 1);
+	setup_adc_and_dma(adc_channels, sizeof(adc_channels), adc_injected, sizeof(adc_injected));
 
 	// Digital pin configuration
 	funPinMode(PIN_12V, GPIO_CFGLR_OUT_10Mhz_PP);
@@ -518,7 +520,7 @@ __attribute__((noreturn)) int main(void)
 			static int16_t temp_c, tip_temp_c;
 			static uint16_t power;
 			static uint16_t duty;
-			vbus_mv = U16_FP_EMA_K4(vbus_mv, ((u32)adc_buffer[0]*VCC_MV*11)/4096);
+			vbus_mv = U16_FP_EMA_K4(vbus_mv, ((u32)adc_buffer[0]*vcc_mv*11)/4096);
 			current_ma = U16_FP_EMA_K4(current_ma, get_current_ma(adc_buffer[1]));
 			temp_c = I16_FP_EMA_K4(temp_c, get_temp_c(adc_buffer[2]));
 			power = ((u32)vbus_mv*current_ma)/1000000;
@@ -527,7 +529,9 @@ __attribute__((noreturn)) int main(void)
 			if (!pwm || !enabled) {
 				Delay_Ms(TURN_OFF_DELAY);
 				adc_injection_conversion();
-				u16 tip_mv = ((u32)injection_results[0]*VCC_MV)/4096;
+				// Calibrate VCC with the internal reference value
+				vcc_mv = ((uint32_t)1200 * 4096)/injection_results[1];
+				u16 tip_mv = ((u32)injection_results[0]*vcc_mv)/4096;
 				// Tip calibration factors
 				const fp16_t tip_k = num2fp(0, 14473, 5);
 				const fp16_t tip_off = num2fp(0, 0, 0);
