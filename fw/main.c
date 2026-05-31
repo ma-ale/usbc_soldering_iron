@@ -14,12 +14,20 @@
 #include "coroutine.h"
 
 
-// constants
-u8g2_t *u8g2;
-int16_t encoder = 0; // rotary encoder counter
-uint32_t last_interrupt = 0; // last time the encoder interrupt was triggered
-struct pd_profile_t pd_profile;
-uint16_t vcc_mv = 3300;
+/* ------------------------------ Global State ------------------------------ */
+u8g2_t *u8g2;                   // Display state
+int16_t encoder;                // Rotary encoder counter
+struct pd_profile_t pd_profile; // USB Power Delivery profile
+uint16_t vcc_mv = 3300;         // Logic (and analog) voltage
+uint16_t tip_mv;                // Tip amplifier reading in mV
+uint16_t tip_temp_c;            // Converted tip temperature in degrees C
+int16_t temp_c;                 // Board temperature in degrees C
+uint16_t vbus_mv;               // USB bus voltage in mV
+uint16_t current_ma;            // USB bus current to the heater in mA
+uint16_t power;                 // Current power provided to the heater
+uint16_t duty;                  // Current mosfet driver duty cycle (0-100%)
+bool pwm = false;               // PWM status (on-off)
+bool enabled = false;           // Power electronics enabled
 
 
 // convert the raw TPA191 adc reading to a current in milliamps
@@ -449,10 +457,6 @@ __attribute__((noreturn)) int main(void)
 			// No Power Delivery, maybe we are attached to a computer, so poll the input
 			poll_input();
 
-			static uint16_t vcc_mv = 3300;
-			static u16 tip_mv, tip_temp_c;
-			static s16 temp_c;
-
 			adc_injection_conversion();
 
 			temp_c = I16_FP_EMA_K4(temp_c, get_temp_c(adc_buffer[2]));
@@ -498,18 +502,12 @@ __attribute__((noreturn)) int main(void)
 		u8g2_ClearBuffer(u8g2);
 		u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
 
-		static bool pwm = false; // PWM status
-		static bool enabled = false; // Power electronics enabled
 		static uint8_t count = 0; // Loop cycles with PWM on
 		static s32 elapsed = 0;
 		static bool prev_btn = true;
 		bool btn = funDigitalRead(PIN_BTN);
 
 		if (has_pd) {
-			static uint16_t vbus_mv, current_ma;
-			static int16_t temp_c, tip_temp_c;
-			static uint16_t power;
-			static uint16_t duty;
 			vbus_mv = U16_FP_EMA_K4(vbus_mv, ((u32)adc_buffer[0]*vcc_mv*11)/4096);
 			current_ma = U16_FP_EMA_K4(current_ma, get_current_ma(adc_buffer[1]));
 			temp_c = I16_FP_EMA_K4(temp_c, get_temp_c(adc_buffer[2]));
