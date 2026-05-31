@@ -10,6 +10,16 @@
 
 #define I2C_DEFAULT_TIMEOUT 50000
 
+
+#if defined(FUNCONF_USE_DEBUGPRINTF) || defined(FUNCONF_USE_USBPRINTF) || defined(FUNCONF_USE_UARTPRINTF)
+#include <stdio.h>
+static inline void print_i2c_device(uint8_t addr)
+{
+	printf("Device found at 0x%02X\n", addr);
+}
+#endif
+
+
 //! ####################################
 //! I2C INIT FUNCTIONS
 //! ####################################
