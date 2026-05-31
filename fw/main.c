@@ -138,7 +138,6 @@ static inline void setup_i2c(void)
 }
 
 
-// FIXME: this holds the max number of ADC channels, ideally this would be lower
 volatile uint16_t adc_buffer[16];
 // Set-up the adc to perform continous conversion of enabled channels, enable
 // channel injection and setup DMA to automatically transfer conversion results
@@ -282,7 +281,7 @@ static inline void setup_pwm(void)
 	// for channel 1 let CCxS stay 00 (output), set OC1M to 110 (PWM 1)
 	// enabling preload (OC1PE) causes the new pulse width in compare capture
 	// register only to come into effect when UG bit in SWEVGR is set
-	// 	(= initiate update) (auto-clears)
+	// (= initiate update) (auto-clears)
 	TIM3->CHCTLR1 |= TIM_OC1M_2 | TIM_OC1M_1 | TIM_OC1PE;
 
 	// Enable channel 1 output (PA6)
@@ -363,7 +362,7 @@ uint16_t pid(int16_t delta, int16_t max_duty)
 }
 
 
-// Board Setup
+/* ------------------------------ Board Setup ------------------------------- */
 static inline void setup(void)
 {
 	// Generic system setup
@@ -371,7 +370,7 @@ static inline void setup(void)
 	funGpioInitAll();
 	USBFSSetup();
 
-	// Analog pin configuration
+	// ====================== Analog pin configuration ====================== //
 	funPinMode(PIN_VBUS, GPIO_CFGLR_IN_ANALOG);
 	funPinMode(PIN_CURRENT, GPIO_CFGLR_IN_ANALOG);
 	funPinMode(PIN_NTC, GPIO_CFGLR_IN_ANALOG);
@@ -389,44 +388,45 @@ static inline void setup(void)
 	};
 	setup_adc_and_dma(adc_channels, sizeof(adc_channels), adc_injected, sizeof(adc_injected));
 
-	// Digital pin configuration
+	// ====================== Digital pin configuration ===================== //
 	funPinMode(PIN_12V, GPIO_CFGLR_OUT_10Mhz_PP);
 	funDigitalWrite(PIN_12V, 0);
 	funPinMode(PIN_HEATER, GPIO_CFGLR_OUT_10Mhz_AF_PP);
 	funDigitalWrite(PIN_HEATER, 0);
 	funPinMode(PIN_DISP_RST, GPIO_CFGLR_OUT_10Mhz_PP);
-	funDigitalWrite(PIN_DISP_RST, 1); // start with display disabled
+	funDigitalWrite(PIN_DISP_RST, 1);
 
 	funPinMode(PIN_ENC_A, GPIO_CFGLR_IN_PUPD); // enable pull-up/down
-	funDigitalWrite(PIN_ENC_A, 1); // specify pull-up
+	funDigitalWrite(PIN_ENC_A, 1);             // specify pull-up
 	funPinMode(PIN_ENC_B, GPIO_CFGLR_IN_PUPD); // enable pull-up/down
-	funDigitalWrite(PIN_ENC_B, 1); // specify pull-up
+	funDigitalWrite(PIN_ENC_B, 1);             // specify pull-up
 	funPinMode(PIN_BTN, GPIO_CFGLR_IN_FLOAT);
 
-	// Setup PWM timer
+	// Setup PWM timer, includes pin setup
 	setup_pwm();
 	pwm_off();
 
-	// Setup i2c line, includes setting the pin alternate mode
-	setup_i2c();
-
+	// =========================== Encoder Setup ============================ //
 	// Configure the IO as an interrupt.
 	// PIN_ENC_B is on port B, channel 11
 	AFIO->EXTICR1 |= AFIO_EXTICR1_EXTI11_PB; // Port B channel (pin) 11
-	EXTI->INTENR |= EXTI_INTENR_MR11; // Enable EXT11
-	EXTI->FTENR |= EXTI_FTENR_TR11;  // Falling edge trigger
-	EXTI->RTENR |= EXTI_RTENR_TR11;  // Rising edge trigger
+	EXTI->INTENR |= EXTI_INTENR_MR11;        // Enable EXT11
+	EXTI->FTENR |= EXTI_FTENR_TR11;          // Falling edge trigger
+	EXTI->RTENR |= EXTI_RTENR_TR11;          // Rising edge trigger
 	// enable interrupt
 	NVIC_EnableIRQ(EXTI15_8_IRQn);
 
 	// PIN_ENC_A is on port B, channel 3
 	AFIO->EXTICR1 |= AFIO_EXTICR1_EXTI3_PB; // Port B channel (pin) 3
-	EXTI->INTENR |= EXTI_INTENR_MR3; // Enable EXT3
-	EXTI->FTENR |= EXTI_FTENR_TR3;  // Falling edge trigger
-	EXTI->RTENR |= EXTI_RTENR_TR3;  // Rising edge trigger
+	EXTI->INTENR |= EXTI_INTENR_MR3;        // Enable EXT3
+	EXTI->FTENR |= EXTI_FTENR_TR3;          // Falling edge trigger
+	EXTI->RTENR |= EXTI_RTENR_TR3;          // Rising edge trigger
 	// enable interrupt
 	NVIC_EnableIRQ(EXTI7_0_IRQn);
 
+	// ============================= I2C Setup ============================== //
+	// Setup i2c line, includes setting the pin alternate mode
+	setup_i2c();
 	// Start i2c peripherals
 	u8g2 = display_init();
 	sc7a20_init();
