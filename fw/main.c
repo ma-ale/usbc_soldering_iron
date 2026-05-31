@@ -14,6 +14,25 @@
 #include "coroutine.h"
 
 
+// Task timers
+struct timer {
+	uint32_t start, set;
+};
+
+// Set a timer, call timer_expired repeatedly to update it
+static inline void timer_set(struct timer *t, uint32_t ms)
+{
+	t->start = funSysTick32();
+	t->set = Ticks_from_Ms(ms);
+}
+
+// Check if enough time has passed from timer_set call
+static inline bool timer_expired(struct timer *t)
+{
+	return funSysTick32() > (t->start + t->set);
+}
+
+
 /* ------------------------------ Global State ------------------------------ */
 u8g2_t *u8g2;                   // Display state
 int16_t encoder;                // Rotary encoder counter
@@ -441,6 +460,39 @@ static inline void setup(void)
 }
 
 
+// Update the global istantaneous voltage, current, power and board temperature
+// this requires the automatic conversion (ADC+DMA) to be running
+static inline void update_power_and_temperature(void)
+{
+	// Voltage current and power
+	vbus_mv    = U16_FP_EMA_K4(vbus_mv, ((u32)adc_buffer[0]*vcc_mv*11)/4096);
+	current_ma = U16_FP_EMA_K4(current_ma, get_current_ma(adc_buffer[1]));
+	power      = ((u32)vbus_mv*current_ma)/1000000;
+	// Board temperature
+	temp_c     = I16_FP_EMA_K4(temp_c, get_temp_c(adc_buffer[2]));
+}
+
+
+// Update VCC and the tip temperature, both are sampled with injection conversion
+// so it is triggered in this function
+static inline void update_tip_and_vcc(void)
+{
+	// Tip calibration factors
+	const fp16_t tip_k = num2fp(0, 14473, 5);
+	const fp16_t tip_off = num2fp(0, 0, 0);
+
+	adc_injection_conversion();
+	// Calibrate VCC with the internal reference value
+	vcc_mv = I16_FP_EMA_K4(vcc_mv, ((uint32_t)1200 * 4096)/injection_results[1]);
+
+	uint16_t tip_mv = ((u32)injection_results[0]*vcc_mv)/4096;
+	int16_t tt_now  = fp2i(fp_add(fp_mul(i2fp(tip_mv), tip_k), tip_off));
+	// Tip temp with cold-junction compensation, assume the board temperature is
+	// the same as the cold junction, on an external handle this is not always true
+	tip_temp_c = I16_FP_EMA_K4(tip_temp_c, tt_now + temp_c);
+}
+
+
 __attribute__((noreturn)) int main(void)
 {
 	setup();
@@ -457,17 +509,8 @@ __attribute__((noreturn)) int main(void)
 			// No Power Delivery, maybe we are attached to a computer, so poll the input
 			poll_input();
 
-			adc_injection_conversion();
-
-			temp_c = I16_FP_EMA_K4(temp_c, get_temp_c(adc_buffer[2]));
-			// Calibrate VCC with the internal reference value
-			vcc_mv = I16_FP_EMA_K4(vcc_mv, ((uint32_t)1200 * 4096)/injection_results[1]);
-			tip_mv = ((u32)injection_results[0]*vcc_mv)/4096;
-			// Tip calibration factors
-			const fp16_t tip_k = num2fp(0, 14473, 5);
-			const fp16_t tip_off = num2fp(0, 0, 0);
-			int16_t tt_now = fp2i(fp_add(fp_mul(i2fp(tip_mv), tip_k), tip_off));
-			tip_temp_c = I16_FP_EMA_K4(tip_temp_c, tt_now + temp_c);
+			update_power_and_temperature();
+			update_tip_and_vcc();
 
 			u8g2_ClearBuffer(u8g2);
 			u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
@@ -508,23 +551,12 @@ __attribute__((noreturn)) int main(void)
 		bool btn = funDigitalRead(PIN_BTN);
 
 		if (has_pd) {
-			vbus_mv = U16_FP_EMA_K4(vbus_mv, ((u32)adc_buffer[0]*vcc_mv*11)/4096);
-			current_ma = U16_FP_EMA_K4(current_ma, get_current_ma(adc_buffer[1]));
-			temp_c = I16_FP_EMA_K4(temp_c, get_temp_c(adc_buffer[2]));
-			power = ((u32)vbus_mv*current_ma)/1000000;
+			update_power_and_temperature();
 
 			// Update the tip temperature only when the PWM is not running
 			if (!pwm || !enabled) {
 				Delay_Ms(TURN_OFF_DELAY);
-				adc_injection_conversion();
-				// Calibrate VCC with the internal reference value
-				vcc_mv = I16_FP_EMA_K4(vcc_mv, ((uint32_t)1200 * 4096)/injection_results[1]);
-				u16 tip_mv = ((u32)injection_results[0]*vcc_mv)/4096;
-				// Tip calibration factors
-				const fp16_t tip_k = num2fp(0, 14473, 5);
-				const fp16_t tip_off = num2fp(0, 0, 0);
-				int16_t tt_now = fp2i(fp_add(fp_mul(i2fp(tip_mv), tip_k), tip_off));
-				tip_temp_c = I16_FP_EMA_K4(tip_temp_c, tt_now + temp_c);
+				update_tip_and_vcc();
 				if (enabled) {
 					duty = pid((int16_t)pd_profile.set_temp - tip_temp_c, pd_profile.max_duty);
 				} else {
