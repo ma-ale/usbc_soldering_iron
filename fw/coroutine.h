@@ -157,7 +157,8 @@ typedef void* coro_state_t;
 	unsigned char __yield = 0;                                                 \
 	do { if(*s != NULL) goto *(*s); } while (0)
 
-#define coro_end()
+// Just to suppress the unused variable warning when no yield is used
+#define coro_end() (void)__yield
 
 // Set a jump with a gcc label as value feature, this is a GNU C extension
 #define CORO_SET_JUMP(s) CORO_CHECK_TYPE(s, coro_state_t*)                     \
