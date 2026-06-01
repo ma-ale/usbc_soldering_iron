@@ -33,6 +33,26 @@ static inline bool timer_expired(struct timer *t)
 }
 
 
+// Button
+struct button {
+	bool now, prev;
+};
+
+static inline void button_init(struct button *btn, bool pullup)
+{
+	btn->now = btn->prev = pullup;
+}
+
+static inline void button_update(struct button *btn, bool state)
+{
+	btn->prev = btn->now;
+	btn->now = state;
+}
+
+#define button_rising(btn) ((btn).now == true && (btn).prev == false)
+#define button_falling(btn) ((btn).now == false && (btn).prev == true)
+
+
 /* ------------------------------ Global State ------------------------------ */
 u8g2_t *u8g2;                   // Display state
 int16_t encoder;                // Rotary encoder counter
@@ -45,7 +65,6 @@ uint16_t vbus_mv;               // USB bus voltage in mV
 uint16_t current_ma;            // USB bus current to the heater in mA
 uint16_t power;                 // Current power provided to the heater
 uint16_t duty;                  // Current mosfet driver duty cycle (0-100%)
-bool pwm = false;               // PWM status (on-off)
 bool enabled = false;           // Power electronics enabled
 
 
@@ -493,9 +512,68 @@ static inline void update_tip_and_vcc(void)
 }
 
 
+// coroutine to draw the "main" ui which draws the current tip temperature, power
+// pwm state, etc.
+coro_state_t cs_ui;
+coroutine c_draw_main_ui(coro_state_t *state)
+{
+	static struct timer t;
+	coro_begin(state);
+
+	for(;;) {
+		// Wait for the next frame, roughly 30 fps
+		timer_set(&t, 33);
+		coro_wait_until(state, timer_expired(&t));
+
+		// Draw UI
+		u8g2_ClearBuffer(u8g2);
+		u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
+		draw_temp(u8g2, x_off+0, y_off+0, tip_temp_c, true);
+		u8g2_DrawStr(u8g2, x_off+32, y_off+6, "A:");
+		u8g2_DrawStr(u8g2, x_off+42, y_off+6, u16toa((current_ma+500)/1000));
+		u8g2_DrawStr(u8g2, x_off+60, y_off+6, "V:");
+		u8g2_DrawStr(u8g2, x_off+70, y_off+6, u16toa((vbus_mv+500)/1000));
+		uint8_t p = (power*100)/pd_profile.set_power;
+		uint8_t w = (uint16_t)(p*54)/100;
+		u8g2_DrawBox(u8g2, x_off+42, y_off+14, w, 5);
+	}
+
+	coro_end();
+}
+
+
+// coroutine to update the tip temperature, vcc and compute the new pid value
+// this has to be called periodically but only with pwm disabled
+coro_state_t cs_duty;
+coroutine c_update_duty(coro_state_t *state)
+{
+	static struct timer t;
+	coro_begin(state);
+
+	for(;;) {
+		timer_set(&t, 50);
+		coro_wait_until(state, timer_expired(&t));
+
+		pwm_set(0);
+		Delay_Ms(TURN_OFF_DELAY);
+		update_tip_and_vcc();
+		if (enabled) {
+			duty = pid((int16_t)pd_profile.set_temp - tip_temp_c, pd_profile.max_duty);
+		} else {
+			duty = 0;
+		}
+	}
+
+	coro_end();
+}
+
+
 __attribute__((noreturn)) int main(void)
 {
 	setup();
+
+	coro_init(&cs_ui);
+	coro_init(&cs_duty);
 
 	u8g2_ClearBuffer(u8g2);
 	u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
@@ -539,124 +617,78 @@ __attribute__((noreturn)) int main(void)
 		STATE_MENU,
 		STATE_HEATING,
 	} state = STATE_MENU;
+
+	/* ============================== Main Loop =============================== */
+	struct button btn;
+	button_init(&btn, true);
 	for (;;) {
-		u32 start = funSysTick32();
+		button_update(&btn, funDigitalRead(PIN_BTN));
 
-		u8g2_ClearBuffer(u8g2);
-		u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
+		update_power_and_temperature();
 
-		static uint8_t count = 0; // Loop cycles with PWM on
-		static s32 elapsed = 0;
-		static bool prev_btn = true;
-		bool btn = funDigitalRead(PIN_BTN);
+		c_update_duty(&cs_duty);
 
-		if (has_pd) {
-			update_power_and_temperature();
+		switch (state) {
+		case STATE_MENU:
+			u8g2_ClearBuffer(u8g2);
+			u8g2_SetFont(u8g2, u8g2_font_5x8_tr);
+			u8g2_DrawStr(u8g2, x_off+0, y_off+7, "TEMP:");
+			u8g2_DrawStr(u8g2, x_off+25, y_off+7, u8g2_u16toa(pd_profile.set_temp, 4));
 
-			// Update the tip temperature only when the PWM is not running
-			if (!pwm || !enabled) {
-				Delay_Ms(TURN_OFF_DELAY);
-				update_tip_and_vcc();
-				if (enabled) {
-					duty = pid((int16_t)pd_profile.set_temp - tip_temp_c, pd_profile.max_duty);
-				} else {
-					duty = 0;
-				}
+			if (encoder != 0) {
+				pd_profile.set_temp += encoder >= ENCODER_FAST ? 20 : encoder;
+				encoder = 0;
+				if (pd_profile.set_temp < MIN_TIP_SET_TEMP) pd_profile.set_temp = MIN_TIP_SET_TEMP;
+				if (pd_profile.set_temp > MAX_TIP_SET_TEMP) pd_profile.set_temp = MAX_TIP_SET_TEMP;
 			}
 
-			switch (state) {
-			case STATE_MENU:
-				u8g2_DrawStr(u8g2, x_off+0, y_off+7, "TEMP:");
-				u8g2_DrawStr(u8g2, x_off+25, y_off+7, u8g2_u16toa(pd_profile.set_temp, 4));
+			if (button_falling(btn)) {
+				state = STATE_HEATING;
+				enabled = false;
+			}
+			break;
+		case STATE_HEATING:
+			c_draw_main_ui(&cs_ui);
 
-				if (encoder != 0) {
-					pd_profile.set_temp += encoder >= ENCODER_FAST ? 20 : encoder;
-					encoder = 0;
-					if (pd_profile.set_temp < MIN_TIP_SET_TEMP) pd_profile.set_temp = MIN_TIP_SET_TEMP;
-					if (pd_profile.set_temp > MAX_TIP_SET_TEMP) pd_profile.set_temp = MAX_TIP_SET_TEMP;
-				}
+			if (enabled) {
+				funDigitalWrite(PIN_12V, 1);
 
-				if (btn == 0 && prev_btn == 1) {
-					state = STATE_HEATING;
+				// Safety logic
+				if (current_ma > pd_profile.max_current + pd_profile.max_current/10) {
 					enabled = false;
 				}
-				break;
-			case STATE_HEATING:
-				// Draw UI
-				draw_temp(u8g2, x_off+0, y_off+0, tip_temp_c, true);
-				u8g2_DrawStr(u8g2, x_off+32, y_off+6, "A:");
-				u8g2_DrawStr(u8g2, x_off+42, y_off+6, u16toa((current_ma+500)/1000));
-				u8g2_DrawStr(u8g2, x_off+60, y_off+6, "V:");
-				u8g2_DrawStr(u8g2, x_off+70, y_off+6, u16toa((vbus_mv+500)/1000));
-				uint8_t p = (power*100)/pd_profile.set_power;
-				uint8_t w = (uint16_t)(p*54)/100;
-				u8g2_DrawBox(u8g2, x_off+42, y_off+14, w, 5);
-
-				if (enabled) {
-					funDigitalWrite(PIN_12V, 1);
-
-					if (count > CYCLES_PER_MEASURE) {
-						pwm = false;
-						count = 0;
-					} else {
-						pwm = true;
-						count++;
-					}
-
-					// Safety logic
-					if (current_ma > pd_profile.max_current + pd_profile.max_current/10) {
-						pwm = false;
-					}
-					if (temp_c > MAX_BOARD_TEMP) {
-						enabled = false;
-						pwm = false;
-					}
-					if (tip_temp_c > MAX_TIP_TEMP) {
-						enabled = false;
-						pwm = false;
-					}
-
-					if (pwm) {
-						const uint16_t tim_max = FUNCONF_SYSTEM_CORE_CLOCK / PWM_FREQ_HZ - 1;
-						pwm_set(((u32)duty*tim_max)/100);
-						u8g2_DrawBox(u8g2, x_off+92, y_off+0, 4, 4);
-					} else {
-						pwm_set(0);
-					}
-				} else {
-					funDigitalWrite(PIN_12V, 0);
+				if (temp_c > MAX_BOARD_TEMP) {
+					enabled = false;
+				}
+				if (tip_temp_c > MAX_TIP_TEMP) {
+					enabled = false;
 				}
 
-				// move to menu mode when encoder is turned
-				if (encoder != 0) {
-					state = STATE_MENU;
-					funDigitalWrite(PIN_12V, 0);
-					pwm_set(0);
-				}
-
-				// Check button to toggle enable
-				if (btn == 0 && prev_btn == 1) {
-					enabled = !enabled;
-					if (enabled) {
-						pwm_on();
-					} else {
-						pwm_off();
-					}
-				}
-				break;
+				const uint16_t tim_max = FUNCONF_SYSTEM_CORE_CLOCK / PWM_FREQ_HZ - 1;
+				pwm_set(((u32)duty*tim_max)/100);
+				u8g2_DrawBox(u8g2, x_off+92, y_off+0, 4, 4);
+			} else {
+				funDigitalWrite(PIN_12V, 0);
 			}
-		} else {
-			// No PD capability, just display a message
-			u8g2_DrawStr(u8g2, x_off+0, y_off+7, "NO PD");
-		}
 
+			// move to menu mode when encoder is turned
+			if (encoder != 0) {
+				state = STATE_MENU;
+				funDigitalWrite(PIN_12V, 0);
+				pwm_set(0);
+			}
+
+			// Check button to toggle enable
+			if (button_falling(btn)) {
+				enabled = !enabled;
+				if (enabled) {
+					pwm_on();
+				} else {
+					pwm_off();
+				}
+			}
+			break;
+		}
 		u8g2_SendBuffer(u8g2);
-
-		prev_btn = btn;
-
-		elapsed = funSysTick32() - start;
-		if (elapsed > 0 && elapsed < Ticks_from_Ms(FRAME_TIME_MS)) {
-			DelaySysTick(Ticks_from_Ms(FRAME_TIME_MS) - elapsed);
-		}
 	}
 }
