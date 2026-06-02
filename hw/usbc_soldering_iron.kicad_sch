@@ -20087,7 +20087,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "1k"
+		(property "Value" "1k 0.1%"
 			(at 136.906 130.81 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -25093,7 +25093,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "10k"
+		(property "Value" "10k 0.1%"
 			(at 136.906 121.92 0)
 			(show_name no)
 			(do_not_autoplace no)
