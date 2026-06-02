@@ -679,8 +679,13 @@
         "uuid": "7095b018-eac3-4b01-b374-28e3216c4fd8"
       }
     ],
-    "used_designators": "",
-    "variants": []
+    "used_designators": "J2,J6-17",
+    "variants": [
+      {
+        "description": "Pen-style design",
+        "name": "Pen"
+      }
+    ]
   },
   "sheets": [
     [
