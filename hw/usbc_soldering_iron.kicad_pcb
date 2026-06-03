@@ -115,7 +115,6 @@
 		)
 		(capping no)
 		(filling no)
-		(zone_defaults)
 		(grid_origin 100.5 158.2)
 		(pcbplotparams
 			(layerselection 0x00000000_00000000_55555555_5755f5ff)
@@ -2269,7 +2268,7 @@
 	(footprint "Connector_Wire:SolderWire-1sqmm_1x01_D1.4mm_OD2.7mm"
 		(layer "F.Cu")
 		(uuid "20ef986c-8fb8-430e-8533-3b4d5b2b3d60")
-		(at 56.325 117.805)
+		(at 192.3 154.1)
 		(descr "Soldered wire connection, for a single 1 mm² wire, basic insulation, conductor diameter 1.4mm, outer diameter 2.7mm, size source Multi-Contact FLEXI-E 1.0 (https://www.staubli.com/content/dam/ecs/catalogs-brochures/TM/CAB-Main-11014119-en.pdf#page=9), bend radius 3 times outer diameter")
 		(tags "connector wire 1sqmm")
 		(property "Reference" "J14"
@@ -3855,7 +3854,7 @@
 	(footprint "Connector_Wire:SolderWire-1sqmm_1x01_D1.4mm_OD2.7mm"
 		(layer "F.Cu")
 		(uuid "3c7c22cf-e951-439a-aee4-55db9d357e88")
-		(at 45.825 127.425)
+		(at 160.8 150.1)
 		(descr "Soldered wire connection, for a single 1 mm² wire, basic insulation, conductor diameter 1.4mm, outer diameter 2.7mm, size source Multi-Contact FLEXI-E 1.0 (https://www.staubli.com/content/dam/ecs/catalogs-brochures/TM/CAB-Main-11014119-en.pdf#page=9), bend radius 3 times outer diameter")
 		(tags "connector wire 1sqmm")
 		(property "Reference" "J8"
@@ -4136,7 +4135,7 @@
 	(footprint "Connector_Wire:SolderWire-1sqmm_1x01_D1.4mm_OD2.7mm"
 		(layer "F.Cu")
 		(uuid "42380127-49a0-4d01-8cfc-7580feb4548d")
-		(at 51.075 132.235)
+		(at 176.6 149.6)
 		(descr "Soldered wire connection, for a single 1 mm² wire, basic insulation, conductor diameter 1.4mm, outer diameter 2.7mm, size source Multi-Contact FLEXI-E 1.0 (https://www.staubli.com/content/dam/ecs/catalogs-brochures/TM/CAB-Main-11014119-en.pdf#page=9), bend radius 3 times outer diameter")
 		(tags "connector wire 1sqmm")
 		(property "Reference" "J13"
@@ -4268,7 +4267,7 @@
 	(footprint "Connector_Wire:SolderWire-1sqmm_1x01_D1.4mm_OD2.7mm"
 		(layer "F.Cu")
 		(uuid "4309d6d1-5ca7-47a1-811c-e5fbd163c7cf")
-		(at 51.075 122.615)
+		(at 170.9 149.6)
 		(descr "Soldered wire connection, for a single 1 mm² wire, basic insulation, conductor diameter 1.4mm, outer diameter 2.7mm, size source Multi-Contact FLEXI-E 1.0 (https://www.staubli.com/content/dam/ecs/catalogs-brochures/TM/CAB-Main-11014119-en.pdf#page=9), bend radius 3 times outer diameter")
 		(tags "connector wire 1sqmm")
 		(property "Reference" "J11"
@@ -4708,7 +4707,7 @@
 	(footprint "Connector_Wire:SolderWire-1sqmm_1x01_D1.4mm_OD2.7mm"
 		(layer "F.Cu")
 		(uuid "519a0ab6-afae-46ce-9c9e-ce90da9e8211")
-		(at 45.825 122.615)
+		(at 164.6 152.6)
 		(descr "Soldered wire connection, for a single 1 mm² wire, basic insulation, conductor diameter 1.4mm, outer diameter 2.7mm, size source Multi-Contact FLEXI-E 1.0 (https://www.staubli.com/content/dam/ecs/catalogs-brochures/TM/CAB-Main-11014119-en.pdf#page=9), bend radius 3 times outer diameter")
 		(tags "connector wire 1sqmm")
 		(property "Reference" "J7"
@@ -6861,7 +6860,7 @@
 	(footprint "Connector_Wire:SolderWire-1sqmm_1x01_D1.4mm_OD2.7mm"
 		(layer "F.Cu")
 		(uuid "7932cf41-9f93-4ef5-a65f-4255720c235c")
-		(at 51.075 117.805)
+		(at 170.9 153.1)
 		(descr "Soldered wire connection, for a single 1 mm² wire, basic insulation, conductor diameter 1.4mm, outer diameter 2.7mm, size source Multi-Contact FLEXI-E 1.0 (https://www.staubli.com/content/dam/ecs/catalogs-brochures/TM/CAB-Main-11014119-en.pdf#page=9), bend radius 3 times outer diameter")
 		(tags "connector wire 1sqmm")
 		(property "Reference" "J10"
@@ -9647,7 +9646,7 @@
 	(footprint "Connector_Wire:SolderWire-1sqmm_1x01_D1.4mm_OD2.7mm"
 		(layer "F.Cu")
 		(uuid "95abb174-6d2c-4494-b661-56b9aab45ce8")
-		(at 45.825 117.805)
+		(at 164.6 150.1)
 		(descr "Soldered wire connection, for a single 1 mm² wire, basic insulation, conductor diameter 1.4mm, outer diameter 2.7mm, size source Multi-Contact FLEXI-E 1.0 (https://www.staubli.com/content/dam/ecs/catalogs-brochures/TM/CAB-Main-11014119-en.pdf#page=9), bend radius 3 times outer diameter")
 		(tags "connector wire 1sqmm")
 		(property "Reference" "J6"
@@ -10604,7 +10603,7 @@
 	(footprint "Connector_Wire:SolderWire-1sqmm_1x01_D1.4mm_OD2.7mm"
 		(layer "F.Cu")
 		(uuid "a961e8e7-2285-445f-bf6a-af23b81205db")
-		(at 45.825 132.235)
+		(at 160.8 152.6)
 		(descr "Soldered wire connection, for a single 1 mm² wire, basic insulation, conductor diameter 1.4mm, outer diameter 2.7mm, size source Multi-Contact FLEXI-E 1.0 (https://www.staubli.com/content/dam/ecs/catalogs-brochures/TM/CAB-Main-11014119-en.pdf#page=9), bend radius 3 times outer diameter")
 		(tags "connector wire 1sqmm")
 		(property "Reference" "J9"
@@ -11613,7 +11612,7 @@
 	(footprint "Connector_Wire:SolderWire-1sqmm_1x01_D1.4mm_OD2.7mm"
 		(layer "F.Cu")
 		(uuid "b6edc2e3-8c2a-4338-9e71-a036f9df6a56")
-		(at 51.075 127.425)
+		(at 176.6 153.1)
 		(descr "Soldered wire connection, for a single 1 mm² wire, basic insulation, conductor diameter 1.4mm, outer diameter 2.7mm, size source Multi-Contact FLEXI-E 1.0 (https://www.staubli.com/content/dam/ecs/catalogs-brochures/TM/CAB-Main-11014119-en.pdf#page=9), bend radius 3 times outer diameter")
 		(tags "connector wire 1sqmm")
 		(property "Reference" "J12"
@@ -11894,7 +11893,7 @@
 	(footprint "Connector_Wire:SolderWire-1sqmm_1x01_D1.4mm_OD2.7mm"
 		(layer "F.Cu")
 		(uuid "b8326785-714d-4416-bdfa-36b0af97bba9")
-		(at 56.325 127.425)
+		(at 198 154.1)
 		(descr "Soldered wire connection, for a single 1 mm² wire, basic insulation, conductor diameter 1.4mm, outer diameter 2.7mm, size source Multi-Contact FLEXI-E 1.0 (https://www.staubli.com/content/dam/ecs/catalogs-brochures/TM/CAB-Main-11014119-en.pdf#page=9), bend radius 3 times outer diameter")
 		(tags "connector wire 1sqmm")
 		(property "Reference" "J17"
@@ -13608,7 +13607,7 @@
 	(footprint "Connector_Wire:SolderWire-1sqmm_1x01_D1.4mm_OD2.7mm"
 		(layer "F.Cu")
 		(uuid "d8b2e7c7-e93c-459d-b14c-091cdb5aa199")
-		(at 56.325 122.615)
+		(at 192.3 148.6)
 		(descr "Soldered wire connection, for a single 1 mm² wire, basic insulation, conductor diameter 1.4mm, outer diameter 2.7mm, size source Multi-Contact FLEXI-E 1.0 (https://www.staubli.com/content/dam/ecs/catalogs-brochures/TM/CAB-Main-11014119-en.pdf#page=9), bend radius 3 times outer diameter")
 		(tags "connector wire 1sqmm")
 		(property "Reference" "J15"
@@ -14038,7 +14037,7 @@
 	(footprint "Connector_Wire:SolderWire-1sqmm_1x01_D1.4mm_OD2.7mm"
 		(layer "F.Cu")
 		(uuid "e26b20e6-9d35-4ac0-aec5-6c90c5e94b96")
-		(at 56.4 132.3 90)
+		(at 198 148.6 90)
 		(descr "Soldered wire connection, for a single 1 mm² wire, basic insulation, conductor diameter 1.4mm, outer diameter 2.7mm, size source Multi-Contact FLEXI-E 1.0 (https://www.staubli.com/content/dam/ecs/catalogs-brochures/TM/CAB-Main-11014119-en.pdf#page=9), bend radius 3 times outer diameter")
 		(tags "connector wire 1sqmm")
 		(property "Reference" "J16"
@@ -16634,205 +16633,65 @@
 			)
 		)
 	)
-	(gr_line
-		(start 100.5 148.3)
-		(end 101 148.3)
+	(gr_poly
+		(pts
+			(xy 158.1 152.6) (xy 157.5 152) (xy 157.5 150.7) (xy 158.1 150.1) (xy 166.2 150.1) (xy 166.7 149.6)
+			(xy 178.1 149.6) (xy 179.1 148.6) (xy 200.5 148.6) (xy 200.5 146.1) (xy 150.5 146.1) (xy 150.501034 144.737582)
+			(xy 101 144.7) (xy 101 148.3) (xy 100.5 148.3) (xy 100.5 154.6) (xy 101 154.6) (xy 101 158.2) (xy 150.499118 158.22685)
+			(xy 150.5 156.6) (xy 200.5 156.6) (xy 200.5 154.1) (xy 179.114347 154.113105) (xy 178.1 153.1) (xy 166.7 153.1)
+			(xy 166.2 152.6)
+		)
 		(stroke
-			(width 0.05)
+			(width 0.1)
+			(type solid)
+		)
+		(fill no)
+		(layer "Edge.Cuts")
+		(uuid "8d95d4e7-4340-4aba-9ddb-92dad54de74e")
+	)
+	(gr_rect
+		(start 150.5 146.1)
+		(end 200.5 156.6)
+		(stroke
+			(width 0.1)
 			(type default)
 		)
-		(layer "Edge.Cuts")
-		(uuid "f8a9c2c1-d324-4660-8d3a-62706eb602cc")
+		(fill no)
+		(layer "User.2")
+		(uuid "aa30d7ed-9702-4dd4-a95f-f39e81835e01")
 	)
-	(gr_line
-		(start 100.5 154.6)
-		(end 100.5 148.3)
-		(stroke
-			(width 0.05)
-			(type default)
-		)
-		(layer "Edge.Cuts")
-		(uuid "0da5e756-b9ff-4e19-8d28-1d98f19c3abb")
-	)
-	(gr_line
-		(start 100.5 154.6)
-		(end 101 154.6)
-		(stroke
-			(width 0.05)
-			(type default)
-		)
-		(layer "Edge.Cuts")
-		(uuid "10d830c4-eb5a-4901-9a00-4cf314205022")
-	)
-	(gr_line
-		(start 101 144.7)
-		(end 200.5 144.7)
-		(stroke
-			(width 0.05)
-			(type default)
-		)
-		(layer "Edge.Cuts")
-		(uuid "990ca295-c6a3-45fc-ad31-9fce5a0afa52")
-	)
-	(gr_line
-		(start 101 148.3)
-		(end 101 144.7)
-		(stroke
-			(width 0.05)
-			(type default)
-		)
-		(layer "Edge.Cuts")
-		(uuid "b3bf390b-8623-49c4-9f99-8119883ae31a")
-	)
-	(gr_line
-		(start 101 154.6)
-		(end 101 158.2)
-		(stroke
-			(width 0.05)
-			(type default)
-		)
-		(layer "Edge.Cuts")
-		(uuid "0d9e5cbd-b81c-4c19-aae9-4a060348908e")
-	)
-	(gr_line
-		(start 200.5 144.7)
-		(end 200.5 158.2)
-		(stroke
-			(width 0.05)
-			(type default)
-		)
-		(layer "Edge.Cuts")
-		(uuid "7007a907-177a-493b-8724-235c4f13b589")
-	)
-	(gr_line
-		(start 200.5 158.2)
-		(end 101 158.2)
-		(stroke
-			(width 0.05)
-			(type default)
-		)
-		(layer "Edge.Cuts")
-		(uuid "9e97e772-5c3e-475e-a6f9-f848e01aef58")
-	)
-	(gr_line
-		(start 166 149.95)
-		(end 166 152.95)
+	(gr_rect
+		(start 157.5 150.1)
+		(end 166.5 152.6)
 		(stroke
 			(width 0.1)
 			(type solid)
 		)
+		(fill no)
 		(layer "User.2")
-		(uuid "ac6cfceb-d2b9-40dc-a5c1-c8561688e1b6")
+		(uuid "f8cf8990-6f2c-4a8b-8610-5e8cdc774034")
 	)
-	(gr_line
-		(start 166 152.95)
-		(end 172 152.95)
+	(gr_rect
+		(start 166.5 149.6)
+		(end 178.5 153.1)
 		(stroke
 			(width 0.1)
 			(type solid)
 		)
+		(fill no)
 		(layer "User.2")
-		(uuid "6c7fd137-43a4-4b50-b9ca-1d2faec283f4")
+		(uuid "3d88d820-895e-452c-b930-def618856100")
 	)
-	(gr_line
-		(start 172 149.95)
-		(end 166 149.95)
+	(gr_rect
+		(start 178.5 148.6)
+		(end 200.5 154.1)
 		(stroke
 			(width 0.1)
 			(type solid)
 		)
+		(fill no)
 		(layer "User.2")
-		(uuid "8d627efe-170e-4936-8bd0-fbeca30e4d62")
-	)
-	(gr_line
-		(start 172 152.95)
-		(end 172 149.95)
-		(stroke
-			(width 0.1)
-			(type solid)
-		)
-		(layer "User.2")
-		(uuid "c301875e-f5c7-497d-afd9-7a5c0efff6c8")
-	)
-	(gr_line
-		(start 176.5 149.45)
-		(end 176.5 153.45)
-		(stroke
-			(width 0.1)
-			(type solid)
-		)
-		(layer "User.2")
-		(uuid "e4b53ef4-f247-49b0-be86-9440bbfe385d")
-	)
-	(gr_line
-		(start 176.5 153.45)
-		(end 184.5 153.45)
-		(stroke
-			(width 0.1)
-			(type solid)
-		)
-		(layer "User.2")
-		(uuid "ed070526-9061-4c05-8f81-d61adb5cb500")
-	)
-	(gr_line
-		(start 184.5 149.45)
-		(end 176.5 149.45)
-		(stroke
-			(width 0.1)
-			(type solid)
-		)
-		(layer "User.2")
-		(uuid "b3c131d1-ad26-481c-95b7-0e01854c3968")
-	)
-	(gr_line
-		(start 184.5 153.45)
-		(end 184.5 149.45)
-		(stroke
-			(width 0.1)
-			(type solid)
-		)
-		(layer "User.2")
-		(uuid "e5e4bb11-f338-4c69-981f-dab0f8479826")
-	)
-	(gr_line
-		(start 192.300003 148.7)
-		(end 192.300003 154.2)
-		(stroke
-			(width 0.1)
-			(type solid)
-		)
-		(layer "User.2")
-		(uuid "95a1a13c-bbcd-40ac-ba07-513d05462a9b")
-	)
-	(gr_line
-		(start 192.300003 154.2)
-		(end 200.300003 154.2)
-		(stroke
-			(width 0.1)
-			(type solid)
-		)
-		(layer "User.2")
-		(uuid "917566b4-d962-479b-b9ff-9df4fae5e32a")
-	)
-	(gr_line
-		(start 200.300003 148.7)
-		(end 192.300003 148.7)
-		(stroke
-			(width 0.1)
-			(type solid)
-		)
-		(layer "User.2")
-		(uuid "8801fa33-929d-4e68-89d9-f6f2ac85b6f7")
-	)
-	(gr_line
-		(start 200.300003 154.2)
-		(end 200.300003 148.7)
-		(stroke
-			(width 0.1)
-			(type solid)
-		)
-		(layer "User.2")
-		(uuid "911e147d-041b-48bb-a86d-fe06e993fa30")
+		(uuid "3769e9d7-cec4-4e08-bd6d-9d17b0b951cb")
 	)
 	(gr_text "USB-C Soldering Controller v0.1"
 		(at 104.4 98.275 0)
@@ -17207,13 +17066,9 @@
 		(members "5c60dfad-6841-4b16-9d22-aef7e5084501")
 	)
 	(group ""
-		(uuid "2086a84e-0bd1-4eca-98ca-d9158b21fb59")
-		(members "6c7fd137-43a4-4b50-b9ca-1d2faec283f4" "8801fa33-929d-4e68-89d9-f6f2ac85b6f7"
-			"8d627efe-170e-4936-8bd0-fbeca30e4d62" "911e147d-041b-48bb-a86d-fe06e993fa30"
-			"917566b4-d962-479b-b9ff-9df4fae5e32a" "95a1a13c-bbcd-40ac-ba07-513d05462a9b"
-			"ac6cfceb-d2b9-40dc-a5c1-c8561688e1b6" "b3c131d1-ad26-481c-95b7-0e01854c3968"
-			"c301875e-f5c7-497d-afd9-7a5c0efff6c8" "e4b53ef4-f247-49b0-be86-9440bbfe385d"
-			"e5e4bb11-f338-4c69-981f-dab0f8479826" "ed070526-9061-4c05-8f81-d61adb5cb500"
+		(uuid "ec14c89d-ecbb-4420-b4f9-cc0a0240e312")
+		(members "3769e9d7-cec4-4e08-bd6d-9d17b0b951cb" "3d88d820-895e-452c-b930-def618856100"
+			"f8cf8990-6f2c-4a8b-8610-5e8cdc774034"
 		)
 	)
 	(embedded_fonts no)
