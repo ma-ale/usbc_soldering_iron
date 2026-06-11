@@ -7669,6 +7669,12 @@
 		(uuid "3b65a788-4b4c-437e-96e5-165c51a854a4")
 	)
 	(junction
+		(at 198.12 223.52)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "3bd2d5e1-4cee-40d6-a4ce-c79de9663f2f")
+	)
+	(junction
 		(at 173.99 204.47)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -8024,6 +8030,16 @@
 	)
 	(wire
 		(pts
+			(xy 198.12 231.14) (xy 198.12 240.03)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0123c1b3-0776-4c41-8cb4-7e32b76c6102")
+	)
+	(wire
+		(pts
 			(xy 175.26 135.89) (xy 175.26 138.43)
 		)
 		(stroke
@@ -8264,6 +8280,16 @@
 			(type default)
 		)
 		(uuid "0d1da041-1604-484f-8588-64418e6780df")
+	)
+	(wire
+		(pts
+			(xy 195.58 223.52) (xy 198.12 223.52)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0d68f903-481a-4171-bbf5-3df366839c37")
 	)
 	(wire
 		(pts
@@ -11455,6 +11481,16 @@
 	)
 	(wire
 		(pts
+			(xy 198.12 223.52) (xy 198.12 226.06)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "daa213bd-1bde-41bc-9192-4f5364871089")
+	)
+	(wire
+		(pts
 			(xy 127 66.04) (xy 132.08 66.04)
 		)
 		(stroke
@@ -11638,6 +11674,16 @@
 	)
 	(wire
 		(pts
+			(xy 198.12 223.52) (xy 204.47 223.52)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ed926ca3-26fb-46d9-8a5e-1cb4bf292562")
+	)
+	(wire
+		(pts
 			(xy 262.89 85.09) (xy 262.89 87.63)
 		)
 		(stroke
@@ -11810,7 +11856,7 @@
 	)
 	(wire
 		(pts
-			(xy 186.69 223.52) (xy 204.47 223.52)
+			(xy 186.69 223.52) (xy 190.5 223.52)
 		)
 		(stroke
 			(width 0)
@@ -12489,7 +12535,7 @@
 		)
 		(uuid "e9d1e26e-d425-49f0-a700-4404398ce700")
 	)
-	(label "DISP_NRST"
+	(label "NRST"
 		(at 69.85 156.21 180)
 		(effects
 			(font
@@ -17282,6 +17328,83 @@
 	)
 	(symbol
 		(lib_id "power:GND")
+		(at 198.12 240.03 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "5c1250fe-b57f-40e0-9aff-16a791ee7f6b")
+		(property "Reference" "#PWR038"
+			(at 198.12 246.38 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 198.12 244.094 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 198.12 240.03 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 198.12 240.03 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 198.12 240.03 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "32bfc9de-a83b-4f09-b0a2-ec274a02304a")
+		)
+		(instances
+			(project "usbc_soldering_iron"
+				(path "/7095b018-eac3-4b01-b374-28e3216c4fd8"
+					(reference "#PWR038")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
 		(at 257.81 129.54 0)
 		(mirror y)
 		(unit 1)
@@ -20503,6 +20626,88 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:C_Small")
+		(at 198.12 228.6 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "a6105aba-3bdc-4976-a590-fb197c18f9e5")
+		(property "Reference" "C33"
+			(at 200.66 227.3362 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "TBD"
+			(at 200.66 229.8762 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+			(at 198.12 228.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 198.12 228.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Unpolarized capacitor, small symbol"
+			(at 198.12 228.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "2"
+			(uuid "932fc8b2-9a9b-4957-aa2e-bd0e7994586e")
+		)
+		(pin "1"
+			(uuid "3ab12f92-a10d-49d9-a685-6a5f47f069a8")
+		)
+		(instances
+			(project "usbc_soldering_iron"
+				(path "/7095b018-eac3-4b01-b374-28e3216c4fd8"
+					(reference "C33")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GND")
 		(at 69.85 54.61 0)
 		(unit 1)
@@ -23189,6 +23394,86 @@
 			(project "usbc_soldering_iron"
 				(path "/7095b018-eac3-4b01-b374-28e3216c4fd8"
 					(reference "C25")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R_Small")
+		(at 193.04 223.52 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "e26a645d-4708-4f4e-a4c8-209e6ed0a4fd")
+		(property "Reference" "R20"
+			(at 193.04 218.44 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.016 1.016)
+				)
+			)
+		)
+		(property "Value" "TBD"
+			(at 193.04 220.98 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 193.04 223.52 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 193.04 223.52 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Resistor, small symbol"
+			(at 193.04 223.52 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "2"
+			(uuid "9fcc5878-14cb-4ef4-9b19-e90687d8d0ee")
+		)
+		(pin "1"
+			(uuid "0f437202-5096-4961-98e2-5bb19ac7c078")
+		)
+		(instances
+			(project "usbc_soldering_iron"
+				(path "/7095b018-eac3-4b01-b374-28e3216c4fd8"
+					(reference "R20")
 					(unit 1)
 				)
 			)
