@@ -679,7 +679,7 @@
         "uuid": "7095b018-eac3-4b01-b374-28e3216c4fd8"
       }
     ],
-    "used_designators": "#PWR38,C33,R20,J2,J4-5,J18-22",
+    "used_designators": "",
     "variants": [
       {
         "description": "Pen-style design",
