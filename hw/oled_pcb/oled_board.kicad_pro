@@ -507,7 +507,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "usbc_soldering_iron.kicad_pro",
+    "filename": "oled_board.kicad_pro",
     "version": 3
   },
   "net_settings": {
@@ -674,12 +674,12 @@
     "subpart_id_separator": 0,
     "top_level_sheets": [
       {
-        "filename": "usbc_soldering_iron.kicad_sch",
-        "name": "usbc_soldering_iron",
+        "filename": "oled_board.kicad_sch",
+        "name": "oled_board",
         "uuid": "7095b018-eac3-4b01-b374-28e3216c4fd8"
       }
     ],
-    "used_designators": "H1-2",
+    "used_designators": "",
     "variants": [
       {
         "description": "Pen-style design",
@@ -690,7 +690,7 @@
   "sheets": [
     [
       "7095b018-eac3-4b01-b374-28e3216c4fd8",
-      "usbc_soldering_iron"
+      "oled_board"
     ]
   ],
   "text_variables": {},
