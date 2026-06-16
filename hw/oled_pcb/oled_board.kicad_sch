@@ -5,6 +5,129 @@
 	(uuid "7095b018-eac3-4b01-b374-28e3216c4fd8")
 	(paper "A3")
 	(lib_symbols
+		(symbol "Connector:TestPoint"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0.762)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "TP"
+				(at 0 6.858 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "TestPoint"
+				(at 0 5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "test point"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "test point tp"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "Pin* Test*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "TestPoint_0_1"
+				(circle
+					(center 0 3.302)
+					(radius 0.762)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "TestPoint_1_1"
+				(pin passive line
+					(at 0 0 90)
+					(length 2.54)
+					(name "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "Connector_Generic:Conn_01x01"
 			(pin_names
 				(offset 1.016)
@@ -937,9 +1060,13 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "Mechanical:MountingHole"
+		(symbol "Mechanical:MountingHole_Pad"
+			(pin_numbers
+				(hide yes)
+			)
 			(pin_names
 				(offset 1.016)
+				(hide yes)
 			)
 			(exclude_from_sim no)
 			(in_bom no)
@@ -947,7 +1074,7 @@
 			(in_pos_files yes)
 			(duplicate_pin_numbers_are_jumpers no)
 			(property "Reference" "H"
-				(at 0 5.08 0)
+				(at 0 6.35 0)
 				(show_name no)
 				(do_not_autoplace no)
 				(effects
@@ -956,8 +1083,8 @@
 					)
 				)
 			)
-			(property "Value" "MountingHole"
-				(at 0 3.175 0)
+			(property "Value" "MountingHole_Pad"
+				(at 0 4.445 0)
 				(show_name no)
 				(do_not_autoplace no)
 				(effects
@@ -988,7 +1115,7 @@
 					)
 				)
 			)
-			(property "Description" "Mounting Hole without connection"
+			(property "Description" "Mounting Hole with connection"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -1010,7 +1137,7 @@
 					)
 				)
 			)
-			(property "ki_fp_filters" "MountingHole*"
+			(property "ki_fp_filters" "MountingHole*Pad*"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -1021,9 +1148,9 @@
 					)
 				)
 			)
-			(symbol "MountingHole_0_1"
+			(symbol "MountingHole_Pad_0_1"
 				(circle
-					(center 0 0)
+					(center 0 1.27)
 					(radius 1.27)
 					(stroke
 						(width 1.27)
@@ -1031,6 +1158,26 @@
 					)
 					(fill
 						(type none)
+					)
+				)
+			)
+			(symbol "MountingHole_Pad_1_1"
+				(pin input line
+					(at 0 -2.54 90)
+					(length 2.54)
+					(name "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
 					)
 				)
 			)
@@ -1417,6 +1564,18 @@
 		(uuid "73b54f8a-8892-4f5c-ad2f-0a2e6cc384c3")
 	)
 	(junction
+		(at 153.67 162.56)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "84a4fb15-e844-4dca-8620-c83bf51a23da")
+	)
+	(junction
+		(at 149.86 149.86)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "a0aa6c6a-e537-4698-b656-265682eea877")
+	)
+	(junction
 		(at 158.75 132.08)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -1435,8 +1594,26 @@
 		(uuid "fe8484b6-d6a3-4b65-825d-468eb22a622a")
 	)
 	(no_connect
+		(at 247.65 153.67)
+		(uuid "0e6f817b-d5ac-44ab-8723-38cd49ce266d")
+	)
+	(no_connect
 		(at 168.91 154.94)
 		(uuid "8d801d13-32fe-4e34-8cc5-b8a86a497023")
+	)
+	(no_connect
+		(at 247.65 160.02)
+		(uuid "8d9ff69d-29cb-43c0-99b7-a342cf57cc56")
+	)
+	(wire
+		(pts
+			(xy 149.86 149.86) (xy 149.86 139.7)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "01be79eb-07f1-4257-af94-46e672eae48b")
 	)
 	(wire
 		(pts
@@ -1447,6 +1624,16 @@
 			(type default)
 		)
 		(uuid "034151cc-c871-41b0-986d-402b1b076b96")
+	)
+	(wire
+		(pts
+			(xy 152.4 149.86) (xy 149.86 149.86)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0572f0d8-bffe-4270-92aa-bf0b96f651a3")
 	)
 	(wire
 		(pts
@@ -1510,6 +1697,26 @@
 	)
 	(wire
 		(pts
+			(xy 133.35 184.15) (xy 133.35 180.34)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2c94f2e2-40b5-4e41-bb28-ed7844d1aa43")
+	)
+	(wire
+		(pts
+			(xy 133.35 157.48) (xy 143.51 157.48)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "39248b58-8169-4faa-a0fa-1d4a79e59554")
+	)
+	(wire
+		(pts
 			(xy 168.91 149.86) (xy 157.48 149.86)
 		)
 		(stroke
@@ -1520,13 +1727,33 @@
 	)
 	(wire
 		(pts
-			(xy 152.4 162.56) (xy 168.91 162.56)
+			(xy 152.4 162.56) (xy 153.67 162.56)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "3e7e3e9e-2270-4d22-887c-ad05a3264519")
+	)
+	(wire
+		(pts
+			(xy 143.51 157.48) (xy 143.51 163.83)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4115ad1f-4e84-45e3-9f3a-48218837d1e6")
+	)
+	(wire
+		(pts
+			(xy 153.67 163.83) (xy 153.67 162.56)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "443980e0-db19-4657-9877-b85863b191f1")
 	)
 	(wire
 		(pts
@@ -1570,13 +1797,23 @@
 	)
 	(wire
 		(pts
-			(xy 149.86 151.13) (xy 149.86 139.7)
+			(xy 149.86 151.13) (xy 149.86 149.86)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "577ad786-46a1-49d0-be25-405b8cd0b225")
+	)
+	(wire
+		(pts
+			(xy 152.4 157.48) (xy 152.4 149.86)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "74dc3b63-fc25-47c7-9ba5-30fb2e5e3b81")
 	)
 	(wire
 		(pts
@@ -1670,6 +1907,16 @@
 	)
 	(wire
 		(pts
+			(xy 143.51 163.83) (xy 153.67 163.83)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b140e84f-24bd-4deb-b6a6-b44359f1af8e")
+	)
+	(wire
+		(pts
 			(xy 168.91 172.72) (xy 154.94 172.72)
 		)
 		(stroke
@@ -1690,6 +1937,16 @@
 	)
 	(wire
 		(pts
+			(xy 168.91 157.48) (xy 152.4 157.48)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cbbc7eb0-f55a-4c55-82bc-4d50ef863799")
+	)
+	(wire
+		(pts
 			(xy 168.91 144.78) (xy 157.48 144.78)
 		)
 		(stroke
@@ -1707,6 +1964,16 @@
 			(type default)
 		)
 		(uuid "d4ac2cbd-1756-4f14-b13d-0982fc50ddde")
+	)
+	(wire
+		(pts
+			(xy 153.67 162.56) (xy 168.91 162.56)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d61a3138-460f-472e-bd00-2c0a26944d44")
 	)
 	(wire
 		(pts
@@ -1829,7 +2096,7 @@
 		(uuid "b6c0d1ba-1994-4df2-9402-af8b357965d4")
 	)
 	(symbol
-		(lib_id "Mechanical:MountingHole")
+		(lib_id "Mechanical:MountingHole_Pad")
 		(at 247.65 157.48 0)
 		(unit 1)
 		(body_style 1)
@@ -1841,7 +2108,7 @@
 		(fields_autoplaced yes)
 		(uuid "0a79e7b3-59bd-40bf-b7b4-07b96376d945")
 		(property "Reference" "H2"
-			(at 250.19 156.2099 0)
+			(at 250.19 154.9399 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1852,7 +2119,7 @@
 			)
 		)
 		(property "Value" "MountingHole"
-			(at 250.19 158.7499 0)
+			(at 250.19 157.4799 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1862,7 +2129,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "MountingHole:MountingHole_2.2mm_M2_ISO7380"
+		(property "Footprint" "Mounting_Wuerth:Mounting_Wuerth_WA-SMSI-M2_H0.5mm_9774005243"
 			(at 247.65 157.48 0)
 			(hide yes)
 			(show_name no)
@@ -1884,7 +2151,7 @@
 				)
 			)
 		)
-		(property "Description" "Mounting Hole without connection"
+		(property "Description" "Mounting Hole with connection"
 			(at 247.65 157.48 0)
 			(hide yes)
 			(show_name no)
@@ -1894,6 +2161,9 @@
 					(size 1.27 1.27)
 				)
 			)
+		)
+		(pin "1"
+			(uuid "f4904b6f-ed18-4c3d-8a5f-40b5e36c5828")
 		)
 		(instances
 			(project "oled_board"
@@ -2060,6 +2330,83 @@
 			(project "oled_board"
 				(path "/7095b018-eac3-4b01-b374-28e3216c4fd8"
 					(reference "J21")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 133.35 157.48 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "247c136c-47e9-4d47-b51d-bbb9d1c03494")
+		(property "Reference" "TP1"
+			(at 130.048 152.4 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "TestPoint"
+			(at 130.048 154.94 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
+			(at 133.35 152.4 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 133.35 152.4 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "test point"
+			(at 133.35 157.48 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "bd1eee77-50ad-4bea-829b-478049bb5158")
+		)
+		(instances
+			(project "oled_board"
+				(path "/7095b018-eac3-4b01-b374-28e3216c4fd8"
+					(reference "TP1")
 					(unit 1)
 				)
 			)
@@ -2308,7 +2655,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Mechanical:MountingHole")
+		(lib_id "Mechanical:MountingHole_Pad")
 		(at 247.65 151.13 0)
 		(unit 1)
 		(body_style 1)
@@ -2320,7 +2667,7 @@
 		(fields_autoplaced yes)
 		(uuid "4e3891e5-e0da-4a2a-828e-2e0de613dff3")
 		(property "Reference" "H1"
-			(at 250.19 149.8599 0)
+			(at 250.19 148.5899 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -2331,7 +2678,7 @@
 			)
 		)
 		(property "Value" "MountingHole"
-			(at 250.19 152.3999 0)
+			(at 250.19 151.1299 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -2341,7 +2688,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "MountingHole:MountingHole_2.2mm_M2_ISO7380"
+		(property "Footprint" "Mounting_Wuerth:Mounting_Wuerth_WA-SMSI-M2_H0.5mm_9774005243"
 			(at 247.65 151.13 0)
 			(hide yes)
 			(show_name no)
@@ -2363,7 +2710,7 @@
 				)
 			)
 		)
-		(property "Description" "Mounting Hole without connection"
+		(property "Description" "Mounting Hole with connection"
 			(at 247.65 151.13 0)
 			(hide yes)
 			(show_name no)
@@ -2374,10 +2721,93 @@
 				)
 			)
 		)
+		(pin "1"
+			(uuid "ea4edb7b-2766-4e41-a910-acd92398abdc")
+		)
 		(instances
 			(project "oled_board"
 				(path "/7095b018-eac3-4b01-b374-28e3216c4fd8"
 					(reference "H1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x01")
+		(at 128.27 180.34 0)
+		(mirror y)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "5b9c516c-d799-46b9-b06d-ceac9466ea6f")
+		(property "Reference" "J22"
+			(at 125.73 179.0699 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "Conn_01x01"
+			(at 125.73 181.6099 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_Wire:SolderWirePad_1x01_SMD_1x2mm"
+			(at 128.27 180.34 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 128.27 180.34 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 128.27 180.34 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "a117811e-05a2-4202-8050-913a3103bb69")
+		)
+		(instances
+			(project "oled_board"
+				(path "/7095b018-eac3-4b01-b374-28e3216c4fd8"
+					(reference "J22")
 					(unit 1)
 				)
 			)
@@ -2460,6 +2890,84 @@
 			(project "oled_board"
 				(path "/7095b018-eac3-4b01-b374-28e3216c4fd8"
 					(reference "R13")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "PCM_SparkFun-PowerSymbol:GND")
+		(at 133.35 184.15 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "7e5f06a3-e0c5-4398-a0f2-87e0a743a668")
+		(property "Reference" "#PWR05"
+			(at 133.35 190.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 133.35 187.96 0)
+			(show_name no)
+			(do_not_autoplace yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 133.35 184.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 133.35 184.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 133.35 193.04 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "80c3131a-36d4-43cf-96ee-747cb863d68a")
+		)
+		(instances
+			(project "oled_board"
+				(path "/7095b018-eac3-4b01-b374-28e3216c4fd8"
+					(reference "#PWR05")
 					(unit 1)
 				)
 			)
